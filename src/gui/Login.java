@@ -205,7 +205,6 @@ public class Login extends javax.swing.JFrame {
           }
     }//GEN-LAST:event_btnLoginActionPerformed
 
-    
      public static void main(String args[]) throws ClassNotFoundException, InstantiationException, UnsupportedLookAndFeelException {
 
         try {
