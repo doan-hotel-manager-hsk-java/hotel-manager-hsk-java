@@ -192,7 +192,6 @@ public class frmRoom extends javax.swing.JInternalFrame {
         jPanel7.setBackground(new java.awt.Color(255, 255, 255));
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btnDatPhong.setBackground(new java.awt.Color(255, 255, 255));
         btnDatPhong.setText("Sửa");
         btnDatPhong.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnDatPhong.setkEndColor(new java.awt.Color(51, 255, 255));
@@ -203,7 +202,6 @@ public class frmRoom extends javax.swing.JInternalFrame {
         btnDatPhong.setkStartColor(new java.awt.Color(51, 51, 255));
         jPanel7.add(btnDatPhong, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 10, 130, -1));
 
-        btnThem.setBackground(new java.awt.Color(255, 255, 255));
         btnThem.setText("Thêm");
         btnThem.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnThem.setkEndColor(new java.awt.Color(51, 255, 255));
@@ -214,7 +212,6 @@ public class frmRoom extends javax.swing.JInternalFrame {
         btnThem.setkStartColor(new java.awt.Color(51, 51, 255));
         jPanel7.add(btnThem, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 130, -1));
 
-        btnXoa.setBackground(new java.awt.Color(255, 255, 255));
         btnXoa.setText("Xóa");
         btnXoa.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnXoa.setkEndColor(new java.awt.Color(51, 255, 255));
