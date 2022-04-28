@@ -14,7 +14,6 @@ public class frmAddAccount extends javax.swing.JFrame {
      * Creates new form frame1
      */
     public frmAddAccount() {
-        this.setUndecorated(true);
         this.setAlwaysOnTop(true);
         initComponents();
     }
@@ -35,7 +34,7 @@ public class frmAddAccount extends javax.swing.JFrame {
         kButton1 = new com.k33ptoo.components.KButton();
         kButton2 = new com.k33ptoo.components.KButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Mã nhân viên: ");
@@ -65,6 +64,7 @@ public class frmAddAccount extends javax.swing.JFrame {
 
         kButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons-create.png"))); // NOI18N
         kButton1.setText("Tạo tài khoản");
+        kButton1.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         kButton1.setkEndColor(new java.awt.Color(51, 255, 255));
         kButton1.setkHoverEndColor(new java.awt.Color(102, 255, 255));
         kButton1.setkHoverForeGround(new java.awt.Color(0, 204, 0));
@@ -74,6 +74,7 @@ public class frmAddAccount extends javax.swing.JFrame {
 
         kButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Button-Close-icon-16.png"))); // NOI18N
         kButton2.setText("Thoát");
+        kButton2.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         kButton2.setkEndColor(new java.awt.Color(51, 255, 255));
         kButton2.setkHoverEndColor(new java.awt.Color(102, 255, 255));
         kButton2.setkHoverForeGround(new java.awt.Color(0, 204, 0));

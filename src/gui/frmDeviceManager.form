@@ -101,7 +101,7 @@
             <Component class="javax.swing.JLabel" name="lblTitile">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Segoe UI Semilight" size="14" style="1"/>
+                  <Font name="Segoe UI" size="14" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="QU&#x1ea2;N L&#xdd; THI&#x1ebe;T B&#x1eca;"/>
               </Properties>
