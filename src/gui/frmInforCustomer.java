@@ -64,7 +64,7 @@ public class frmInforCustomer extends javax.swing.JInternalFrame {
 
         pnlTitle.setLayout(new java.awt.BorderLayout());
 
-        lblTitile.setFont(new java.awt.Font("Segoe UI Semilight", 1, 14)); // NOI18N
+        lblTitile.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTitile.setText("QUẢN LÝ DỊCH VỤ");
         pnlTitle.add(lblTitile, java.awt.BorderLayout.CENTER);
 

@@ -522,7 +522,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
 
-       frmHome frame = new frmHome();
+       frmHomeManager frame = new frmHomeManager();
        openComponent(frame);
 
     }//GEN-LAST:event_pnlHomeMousePressed
@@ -549,7 +549,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
 
-        frmService frame = new frmService();
+        frmServiceManager frame = new frmServiceManager();
         openComponent(frame);
     }//GEN-LAST:event_pnlServiceMousePressed
 
@@ -562,7 +562,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
 
-        frmDevice frame = new frmDevice();
+        frmDeviceManager frame = new frmDeviceManager();
         openComponent(frame);
     }//GEN-LAST:event_pnlDeviceMousePressed
 
@@ -575,7 +575,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
 
-        frmEmployee frame = new frmEmployee();
+        frmEmployeeManager frame = new frmEmployeeManager();
         openComponent(frame);
     }//GEN-LAST:event_pnlEmployeeMousePressed
 
@@ -615,7 +615,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
 
-       frmHome frame = new frmHome();
+       frmHomeManager frame = new frmHomeManager();
         openComponent(frame);
 
        
