@@ -7,7 +7,7 @@ package gui;
 import com.k33ptoo.components.KButton;
 import com.k33ptoo.components.KGradientPanel;
 import gui.frmBookRoom;
-import gui.frmRoom;
+import gui.frmService;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -64,15 +64,15 @@ public class MainEmployee extends javax.swing.JFrame {
         jPanel11 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnLogout = new com.k33ptoo.components.KButton();
-        pnlHome = new javax.swing.JPanel();
-        jLabel15 = new javax.swing.JLabel();
-        lblHome = new javax.swing.JLabel();
-        pnlDatPhong = new javax.swing.JPanel();
+        pnlRoom = new javax.swing.JPanel();
         jLabel29 = new javax.swing.JLabel();
-        lblDatphong = new javax.swing.JLabel();
-        pnlQuanLyPhong = new javax.swing.JPanel();
+        lblRoom = new javax.swing.JLabel();
+        pnlService = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
-        lblQuanLyPhong = new javax.swing.JLabel();
+        lblService = new javax.swing.JLabel();
+        pnlPay = new javax.swing.JPanel();
+        jLabel19 = new javax.swing.JLabel();
+        lblPay = new javax.swing.JLabel();
         pnlTitile = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         pnlForm = new javax.swing.JPanel();
@@ -83,7 +83,6 @@ public class MainEmployee extends javax.swing.JFrame {
         pnlMain.setLayout(new java.awt.BorderLayout());
 
         pnlSlide.setBackground(new java.awt.Color(237, 240, 250));
-        pnlSlide.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         pnlSlide.setPreferredSize(new java.awt.Dimension(250, 200));
 
         pnlImage.setBackground(new java.awt.Color(237, 240, 250));
@@ -91,7 +90,7 @@ public class MainEmployee extends javax.swing.JFrame {
 
         jLabel17.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel17.setText("Admin");
+        jLabel17.setText("Nhân viên");
 
         jLabel18.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel18.setText("Võ Minh Phương");
@@ -170,53 +169,12 @@ public class MainEmployee extends javax.swing.JFrame {
 
         pnlSlide.add(pnlImage);
 
-        pnlHome.setBackground(new java.awt.Color(255, 255, 255));
-        pnlHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        pnlHome.setPreferredSize(new java.awt.Dimension(250, 40));
-        pnlHome.addMouseListener(new java.awt.event.MouseAdapter() {
+        pnlRoom.setBackground(new java.awt.Color(255, 255, 255));
+        pnlRoom.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        pnlRoom.setPreferredSize(new java.awt.Dimension(250, 40));
+        pnlRoom.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                pnlHomeMousePressed(evt);
-            }
-        });
-
-        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/home-page-16.png"))); // NOI18N
-        jLabel15.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        jLabel15.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jLabel15.setPreferredSize(new java.awt.Dimension(30, 30));
-
-        lblHome.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        lblHome.setText("Trang chủ");
-        lblHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
-        javax.swing.GroupLayout pnlHomeLayout = new javax.swing.GroupLayout(pnlHome);
-        pnlHome.setLayout(pnlHomeLayout);
-        pnlHomeLayout.setHorizontalGroup(
-            pnlHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlHomeLayout.createSequentialGroup()
-                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(lblHome)
-                .addGap(0, 132, Short.MAX_VALUE))
-        );
-        pnlHomeLayout.setVerticalGroup(
-            pnlHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlHomeLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(pnlHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblHome))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-
-        pnlSlide.add(pnlHome);
-
-        pnlDatPhong.setBackground(new java.awt.Color(255, 255, 255));
-        pnlDatPhong.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        pnlDatPhong.setPreferredSize(new java.awt.Dimension(250, 40));
-        pnlDatPhong.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                pnlDatPhongMousePressed(evt);
+                pnlRoomMousePressed(evt);
             }
         });
 
@@ -226,38 +184,38 @@ public class MainEmployee extends javax.swing.JFrame {
         jLabel29.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel29.setPreferredSize(new java.awt.Dimension(30, 30));
 
-        lblDatphong.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        lblDatphong.setText("Đặt Phòng");
-        lblDatphong.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblRoom.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        lblRoom.setText("Phòng");
+        lblRoom.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        javax.swing.GroupLayout pnlDatPhongLayout = new javax.swing.GroupLayout(pnlDatPhong);
-        pnlDatPhong.setLayout(pnlDatPhongLayout);
-        pnlDatPhongLayout.setHorizontalGroup(
-            pnlDatPhongLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlDatPhongLayout.createSequentialGroup()
+        javax.swing.GroupLayout pnlRoomLayout = new javax.swing.GroupLayout(pnlRoom);
+        pnlRoom.setLayout(pnlRoomLayout);
+        pnlRoomLayout.setHorizontalGroup(
+            pnlRoomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlRoomLayout.createSequentialGroup()
                 .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(lblDatphong)
-                .addGap(0, 129, Short.MAX_VALUE))
+                .addComponent(lblRoom)
+                .addGap(0, 159, Short.MAX_VALUE))
         );
-        pnlDatPhongLayout.setVerticalGroup(
-            pnlDatPhongLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlDatPhongLayout.createSequentialGroup()
+        pnlRoomLayout.setVerticalGroup(
+            pnlRoomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlRoomLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(pnlDatPhongLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(pnlRoomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDatphong))
+                    .addComponent(lblRoom))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        pnlSlide.add(pnlDatPhong);
+        pnlSlide.add(pnlRoom);
 
-        pnlQuanLyPhong.setBackground(new java.awt.Color(255, 255, 255));
-        pnlQuanLyPhong.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        pnlQuanLyPhong.setPreferredSize(new java.awt.Dimension(250, 40));
-        pnlQuanLyPhong.addMouseListener(new java.awt.event.MouseAdapter() {
+        pnlService.setBackground(new java.awt.Color(255, 255, 255));
+        pnlService.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        pnlService.setPreferredSize(new java.awt.Dimension(250, 40));
+        pnlService.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                pnlQuanLyPhongMousePressed(evt);
+                pnlServiceMousePressed(evt);
             }
         });
 
@@ -267,31 +225,72 @@ public class MainEmployee extends javax.swing.JFrame {
         jLabel16.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel16.setPreferredSize(new java.awt.Dimension(30, 30));
 
-        lblQuanLyPhong.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
-        lblQuanLyPhong.setText("Quản lý phòng");
-        lblQuanLyPhong.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblService.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        lblService.setText("Dịch vụ");
+        lblService.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        javax.swing.GroupLayout pnlQuanLyPhongLayout = new javax.swing.GroupLayout(pnlQuanLyPhong);
-        pnlQuanLyPhong.setLayout(pnlQuanLyPhongLayout);
-        pnlQuanLyPhongLayout.setHorizontalGroup(
-            pnlQuanLyPhongLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlQuanLyPhongLayout.createSequentialGroup()
+        javax.swing.GroupLayout pnlServiceLayout = new javax.swing.GroupLayout(pnlService);
+        pnlService.setLayout(pnlServiceLayout);
+        pnlServiceLayout.setHorizontalGroup(
+            pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlServiceLayout.createSequentialGroup()
                 .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(lblQuanLyPhong)
-                .addGap(0, 99, Short.MAX_VALUE))
+                .addComponent(lblService)
+                .addGap(0, 149, Short.MAX_VALUE))
         );
-        pnlQuanLyPhongLayout.setVerticalGroup(
-            pnlQuanLyPhongLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlQuanLyPhongLayout.createSequentialGroup()
+        pnlServiceLayout.setVerticalGroup(
+            pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlServiceLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(pnlQuanLyPhongLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(pnlServiceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblQuanLyPhong))
+                    .addComponent(lblService))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        pnlSlide.add(pnlQuanLyPhong);
+        pnlSlide.add(pnlService);
+
+        pnlPay.setBackground(new java.awt.Color(255, 255, 255));
+        pnlPay.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        pnlPay.setPreferredSize(new java.awt.Dimension(250, 40));
+        pnlPay.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                pnlPayMousePressed(evt);
+            }
+        });
+
+        jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/service.png"))); // NOI18N
+        jLabel19.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        jLabel19.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel19.setPreferredSize(new java.awt.Dimension(30, 30));
+
+        lblPay.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        lblPay.setText("Thanh toán");
+        lblPay.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        javax.swing.GroupLayout pnlPayLayout = new javax.swing.GroupLayout(pnlPay);
+        pnlPay.setLayout(pnlPayLayout);
+        pnlPayLayout.setHorizontalGroup(
+            pnlPayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPayLayout.createSequentialGroup()
+                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(lblPay)
+                .addGap(0, 122, Short.MAX_VALUE))
+        );
+        pnlPayLayout.setVerticalGroup(
+            pnlPayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPayLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(pnlPayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPay))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        pnlSlide.add(pnlPay);
 
         pnlMain.add(pnlSlide, java.awt.BorderLayout.WEST);
 
@@ -324,28 +323,31 @@ public class MainEmployee extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
-    private void pnlHomeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlHomeMousePressed
-
-       
-
-    }//GEN-LAST:event_pnlHomeMousePressed
-
-    private void pnlDatPhongMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlDatPhongMousePressed
-        setColor(pnlDatPhong, lblDatphong);
-        resetColor(pnlHome, lblHome);
-        resetColor(pnlQuanLyPhong, lblQuanLyPhong);
+    private void pnlRoomMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlRoomMousePressed
+        setColor(pnlRoom, lblRoom);
+        resetColor(pnlService, lblService);
+        resetColor(pnlPay, lblPay);
         frmBookRoom frame = new frmBookRoom();
         openComponent(frame);
-    }//GEN-LAST:event_pnlDatPhongMousePressed
+    }//GEN-LAST:event_pnlRoomMousePressed
 
-    private void pnlQuanLyPhongMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlQuanLyPhongMousePressed
-        setColor(pnlQuanLyPhong, lblQuanLyPhong);
-        resetColor(pnlDatPhong, lblDatphong);
-        resetColor(pnlHome, lblHome);
+    private void pnlServiceMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlServiceMousePressed
+        setColor(pnlService, lblService);
+        resetColor(pnlPay, lblPay);
+        resetColor(pnlRoom, lblRoom);
 
-        frmRoom frame = new frmRoom();
+        frmService frame = new frmService();
         openComponent(frame);
-    }//GEN-LAST:event_pnlQuanLyPhongMousePressed
+    }//GEN-LAST:event_pnlServiceMousePressed
+
+    private void pnlPayMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlPayMousePressed
+        setColor(pnlPay, lblPay);
+        resetColor(pnlService, lblService);
+        resetColor(pnlRoom, lblRoom);
+        
+        frmPay frame = new frmPay();
+        openComponent(frame);
+    }//GEN-LAST:event_pnlPayMousePressed
 
     void openComponent(JInternalFrame frame) {
         Component[] components = pnlForm.getComponents();
@@ -369,25 +371,23 @@ public class MainEmployee extends javax.swing.JFrame {
         panel.setBackground(new Color(255, 255, 255));
         label.setForeground(new Color(0, 0, 0));
     }
+    
     public MainEmployee(KButton btnLogout, JLabel jLabel1, JLabel jLabel15, JLabel jLabel16, JLabel jLabel17, JLabel jLabel18, JLabel jLabel19, JLabel jLabel2, JLabel jLabel20, JLabel jLabel21, JLabel jLabel22, JLabel jLabel29, JPanel jPanel11, KGradientPanel kGradientPanel1, JLabel lblContactInfo, JLabel lblDevice, JLabel lblEmployee, JLabel lblHome, JLabel lblRoom, JLabel lblService, JLabel lblStatistics, JPanel pnlContacInfo, JPanel pnlDevice, JPanel pnlEmployee, JPanel pnlForm, JPanel pnlHome, JPanel pnlImage, JPanel pnlMain, JPanel pnlRoom, JPanel pnlService, JPanel pnlSlide, JPanel pnlStatistics, JPanel pnlTitile) throws HeadlessException {
         this.btnLogout = btnLogout;
         this.jLabel1 = jLabel1;
-        this.jLabel15 = jLabel15;
         this.jLabel16 = jLabel16;
         this.jLabel17 = jLabel17;
         this.jLabel18 = jLabel18;
         this.jLabel2 = jLabel2;
         this.jLabel29 = jLabel29;
         this.jPanel11 = jPanel11;
-        this.lblHome = lblHome;
-        this.lblDatphong = lblRoom;
-        this.lblQuanLyPhong = lblService;
+        this.lblRoom = lblRoom;
+        this.lblService = lblService;
         this.pnlForm = pnlForm;
-        this.pnlHome = pnlHome;
         this.pnlImage = pnlImage;
         this.pnlMain = pnlMain;
-        this.pnlDatPhong = pnlRoom;
-        this.pnlQuanLyPhong = pnlService;
+        this.pnlRoom = pnlRoom;
+        this.pnlService = pnlService;
         this.pnlSlide = pnlSlide;
         this.pnlTitile = pnlTitile;
     }
@@ -434,22 +434,22 @@ public class MainEmployee extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.k33ptoo.components.KButton btnLogout;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JPanel jPanel11;
-    private javax.swing.JLabel lblDatphong;
-    private javax.swing.JLabel lblHome;
-    private javax.swing.JLabel lblQuanLyPhong;
-    private javax.swing.JPanel pnlDatPhong;
+    private javax.swing.JLabel lblPay;
+    private javax.swing.JLabel lblRoom;
+    private javax.swing.JLabel lblService;
     private javax.swing.JPanel pnlForm;
-    private javax.swing.JPanel pnlHome;
     private javax.swing.JPanel pnlImage;
     private javax.swing.JPanel pnlMain;
-    private javax.swing.JPanel pnlQuanLyPhong;
+    private javax.swing.JPanel pnlPay;
+    private javax.swing.JPanel pnlRoom;
+    private javax.swing.JPanel pnlService;
     private javax.swing.JPanel pnlSlide;
     private javax.swing.JPanel pnlTitile;
     // End of variables declaration//GEN-END:variables

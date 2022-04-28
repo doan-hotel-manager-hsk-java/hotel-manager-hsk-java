@@ -14,7 +14,6 @@ public class frmAddServiceType extends javax.swing.JFrame {
      * Creates new form frame1
      */
     public frmAddServiceType() {
-        this.setUndecorated(true);
         this.setAlwaysOnTop(true);
         initComponents();
     }
@@ -31,7 +30,7 @@ public class frmAddServiceType extends javax.swing.JFrame {
         kButton1 = new com.k33ptoo.components.KButton();
         kButton2 = new com.k33ptoo.components.KButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Tên dịch vụ: ");

@@ -82,7 +82,7 @@ public class frmStatistical extends javax.swing.JInternalFrame {
 
         pnlTitle.setLayout(new java.awt.BorderLayout());
 
-        lblTitile.setFont(new java.awt.Font("Segoe UI Semilight", 1, 14)); // NOI18N
+        lblTitile.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTitile.setText("THỐNG KÊ DOANH THU");
         pnlTitle.add(lblTitile, java.awt.BorderLayout.CENTER);
 
