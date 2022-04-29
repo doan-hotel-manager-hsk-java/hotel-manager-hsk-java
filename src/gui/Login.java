@@ -183,7 +183,7 @@ public class Login extends javax.swing.JFrame {
           String username = txtUserName.getText();
           String password = new String(txtPassword.getPassword());
           
-          //Phuong abc alo alo cc
+          //Phuong abc alo alo \dd
           if(username.equals("admin") && password.equals("admin")) {
             MainManager mainManager = new MainManager();
             mainManager.setLocationRelativeTo(this);
