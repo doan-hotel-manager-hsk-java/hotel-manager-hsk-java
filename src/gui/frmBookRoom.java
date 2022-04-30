@@ -34,7 +34,9 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                 = this.getUI();
         ((javax.swing.plaf.basic.BasicInternalFrameUI) ui).setNorthPane(null);
         initComponents();
+        pnlListRoom.setAutoscrolls(true);
         createRoom();
+        
     }
 
     /**
@@ -68,6 +70,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         txtSearch = new javax.swing.JTextField();
         pnlTitle = new javax.swing.JPanel();
         lblTitile = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
         pnlListRoom = new javax.swing.JPanel();
 
         setBorder(null);
@@ -207,13 +210,14 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jPanel10.setBackground(new java.awt.Color(255, 255, 255));
 
         btnMoPhong.setBackground(new java.awt.Color(255, 255, 255));
+        btnMoPhong.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/opened-door-aperture.png"))); // NOI18N
         btnMoPhong.setText("Mở Phòng");
         btnMoPhong.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         btnMoPhong.setkEndColor(new java.awt.Color(51, 255, 255));
@@ -224,6 +228,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         btnMoPhong.setkStartColor(new java.awt.Color(51, 51, 255));
 
         btnHuy.setBackground(new java.awt.Color(255, 255, 255));
+        btnHuy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exchange.png"))); // NOI18N
         btnHuy.setText("Đổi phòng");
         btnHuy.setActionCommand("");
         btnHuy.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
@@ -235,6 +240,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         btnHuy.setkStartColor(new java.awt.Color(51, 51, 255));
 
         btnDatPhong.setBackground(new java.awt.Color(255, 255, 255));
+        btnDatPhong.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/smartphone.png"))); // NOI18N
         btnDatPhong.setText("Đặt Phòng");
         btnDatPhong.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         btnDatPhong.setkEndColor(new java.awt.Color(51, 255, 255));
@@ -295,8 +301,11 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         lblTitile.setText("Phòng");
         pnlTitle.add(lblTitile, java.awt.BorderLayout.CENTER);
 
+        jScrollPane2.setAutoscrolls(true);
+
         pnlListRoom.setBackground(new java.awt.Color(255, 255, 255));
-        pnlListRoom.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách phòng"));
+        pnlListRoom.setBorder(javax.swing.BorderFactory.createTitledBorder(" Danh sách phòng thường"));
+        jScrollPane2.setViewportView(pnlListRoom);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -314,8 +323,8 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                             .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(pnlListRoom, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -325,13 +334,13 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                 .addComponent(pnlTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(pnlListRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18))
@@ -364,7 +373,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
     private void btnDatPhongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatPhongActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnDatPhongActionPerformed
-
+// forcus search
     private void txtSearchFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchFocusGained
         if(txtSearch.getText().equals("Tìm khách hàng")){
             txtSearch.setText("");
@@ -372,7 +381,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
             txtSearch.setForeground(Color.BLACK);
         }
     }//GEN-LAST:event_txtSearchFocusGained
-
+// no focusc search
     private void txtSearchFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchFocusLost
         if(txtSearch.getText() != null){
             txtSearch.setText("Tìm khách hàng");
@@ -386,7 +395,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         JPanel pnlRom;
         JLabel lblRom;
          
-        for(int i = 1; i<20; i++){
+        for(int i = 1; i<35; i++){
             pnlRom = new JPanel();
             pnlRom.setLayout(new BorderLayout());
             pnlRom.setPreferredSize(new Dimension(100,100));
@@ -401,6 +410,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
             lblRom.setHorizontalAlignment((int) CENTER_ALIGNMENT);
             
             pnlRom.add(lblRom,BorderLayout.CENTER);
+            
             
             pnlListRoom.add(pnlRom);
         }
@@ -422,6 +432,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;

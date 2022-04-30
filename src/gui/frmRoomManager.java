@@ -4,7 +4,6 @@
  */
 package gui;
 
-import gui.frmAddRoomType;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -30,7 +29,7 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
         this.setFocusable(true);
        
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -61,7 +60,6 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
         pnlAddSerice = new javax.swing.JPanel();
         pnlService = new javax.swing.JPanel();
         btnAddService = new com.k33ptoo.components.KButton();
-        btnAddRoomType = new com.k33ptoo.components.KButton();
 
         setBorder(null);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -278,22 +276,6 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
         });
         pnlService.add(btnAddService, java.awt.BorderLayout.CENTER);
 
-        btnAddRoomType.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icon-plus.png"))); // NOI18N
-        btnAddRoomType.setText("Thêm loại phòng");
-        btnAddRoomType.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnAddRoomType.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnAddRoomType.setkHoverEndColor(new java.awt.Color(0, 204, 153));
-        btnAddRoomType.setkHoverForeGround(new java.awt.Color(0, 255, 204));
-        btnAddRoomType.setkHoverStartColor(new java.awt.Color(0, 204, 102));
-        btnAddRoomType.setkPressedColor(new java.awt.Color(0, 204, 51));
-        btnAddRoomType.setkSelectedColor(new java.awt.Color(0, 153, 0));
-        btnAddRoomType.setkStartColor(new java.awt.Color(0, 204, 0));
-        btnAddRoomType.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddRoomTypeActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
         pnlMainLayout.setHorizontalGroup(
@@ -313,14 +295,13 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
                         .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlMainLayout.createSequentialGroup()
                                 .addComponent(pnlTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(pnlService, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnAddRoomType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(3, 3, 3)
+                        .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pnlService, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(pnlAddSerice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
@@ -331,8 +312,7 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(pnlTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pnlAddSerice, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pnlService, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddRoomType, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pnlService, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -371,11 +351,6 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txtSearchFocusLost
 
-    private void btnAddRoomTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRoomTypeActionPerformed
-        frmAddRoomType frame = new frmAddRoomType();
-        frame.setVisible(true);
-    }//GEN-LAST:event_btnAddRoomTypeActionPerformed
-
     private void btnAddServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddServiceActionPerformed
         frmAddDeviceForRoom frame = new frmAddDeviceForRoom();
         frame.setVisible(true);
@@ -383,7 +358,6 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.k33ptoo.components.KButton btnAddRoomType;
     private com.k33ptoo.components.KButton btnAddService;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
