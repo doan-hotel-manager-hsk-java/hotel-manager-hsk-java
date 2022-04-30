@@ -92,6 +92,9 @@ public class MainManager extends javax.swing.JFrame {
         pnlContacInfo = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
         lblContactInfo = new javax.swing.JLabel();
+        pnlChangePass = new javax.swing.JPanel();
+        jLabel23 = new javax.swing.JLabel();
+        lblChangePass = new javax.swing.JLabel();
         pnlTitile = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         pnlForm = new javax.swing.JPanel();
@@ -480,6 +483,47 @@ public class MainManager extends javax.swing.JFrame {
 
         pnlSlide.add(pnlContacInfo);
 
+        pnlChangePass.setBackground(new java.awt.Color(255, 255, 255));
+        pnlChangePass.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        pnlChangePass.setPreferredSize(new java.awt.Dimension(250, 40));
+        pnlChangePass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                pnlChangePassMousePressed(evt);
+            }
+        });
+
+        jLabel23.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel23.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/padlock.png"))); // NOI18N
+        jLabel23.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        jLabel23.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel23.setPreferredSize(new java.awt.Dimension(30, 30));
+
+        lblChangePass.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
+        lblChangePass.setText("Đổi mật khẩu");
+        lblChangePass.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        javax.swing.GroupLayout pnlChangePassLayout = new javax.swing.GroupLayout(pnlChangePass);
+        pnlChangePass.setLayout(pnlChangePassLayout);
+        pnlChangePassLayout.setHorizontalGroup(
+            pnlChangePassLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlChangePassLayout.createSequentialGroup()
+                .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(lblChangePass)
+                .addGap(0, 105, Short.MAX_VALUE))
+        );
+        pnlChangePassLayout.setVerticalGroup(
+            pnlChangePassLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlChangePassLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(pnlChangePassLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblChangePass))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        pnlSlide.add(pnlChangePass);
+
         pnlMain.add(pnlSlide, java.awt.BorderLayout.WEST);
 
         pnlTitile.setBackground(new java.awt.Color(41, 141, 71));
@@ -521,9 +565,9 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlEmployee, lblEmployee);
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
-
-       frmHomeManager frame = new frmHomeManager();
-       openComponent(frame);
+        resetColor(pnlChangePass, lblChangePass);
+        frmHomeManager frame = new frmHomeManager();
+        openComponent(frame);
 
     }//GEN-LAST:event_pnlHomeMousePressed
 
@@ -535,7 +579,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlEmployee, lblEmployee);
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
-
+        resetColor(pnlChangePass, lblChangePass);
         frmRoomManager frame = new frmRoomManager();
         openComponent(frame);
     }//GEN-LAST:event_pnlRoomMousePressed
@@ -548,7 +592,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlEmployee, lblEmployee);
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
-
+        resetColor(pnlChangePass, lblChangePass);
         frmServiceManager frame = new frmServiceManager();
         openComponent(frame);
     }//GEN-LAST:event_pnlServiceMousePressed
@@ -561,7 +605,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlEmployee, lblEmployee);
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
-
+        resetColor(pnlChangePass, lblChangePass);
         frmDeviceManager frame = new frmDeviceManager();
         openComponent(frame);
     }//GEN-LAST:event_pnlDeviceMousePressed
@@ -574,7 +618,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlHome, lblHome);
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
-
+        resetColor(pnlChangePass, lblChangePass);
         frmEmployeeManager frame = new frmEmployeeManager();
         openComponent(frame);
     }//GEN-LAST:event_pnlEmployeeMousePressed
@@ -587,7 +631,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlEmployee, lblEmployee);
         resetColor(pnlHome, lblHome);
         resetColor(pnlContacInfo, lblContactInfo);
-
+        resetColor(pnlChangePass, lblChangePass);
         frmStatistical frame = new frmStatistical();
         openComponent(frame);
     }//GEN-LAST:event_pnlStatisticsMousePressed
@@ -600,10 +644,10 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlEmployee, lblEmployee);
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlHome, lblHome);
-
+        resetColor(pnlChangePass, lblChangePass);
         frmInforCustomer frame = new frmInforCustomer();
         openComponent(frame);
-      
+
     }//GEN-LAST:event_pnlContacInfoMousePressed
 
     private void pnlHomeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pnlHomeFocusGained
@@ -614,12 +658,26 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlEmployee, lblEmployee);
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
-
-       frmHomeManager frame = new frmHomeManager();
+        resetColor(pnlChangePass, lblChangePass);
+        frmHomeManager frame = new frmHomeManager();
         openComponent(frame);
 
-       
+
     }//GEN-LAST:event_pnlHomeFocusGained
+
+    private void pnlChangePassMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlChangePassMousePressed
+        setColor(pnlChangePass, lblChangePass);
+        resetColor(pnlHome, lblHome);
+        resetColor(pnlRoom, lblRoom);
+        resetColor(pnlService, lblService);
+        resetColor(pnlDevice, lblDevice);
+        resetColor(pnlEmployee, lblEmployee);
+        resetColor(pnlStatistics, lblStatistics);
+        resetColor(pnlContacInfo, lblContactInfo);
+
+        frmChangePassEManager frm = new frmChangePassEManager();
+        frm.setVisible(true);
+    }//GEN-LAST:event_pnlChangePassMousePressed
 
     void openComponent(JInternalFrame frame) {
         Component[] components = pnlForm.getComponents();
@@ -724,8 +782,10 @@ public class MainManager extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JPanel jPanel11;
+    private javax.swing.JLabel lblChangePass;
     private javax.swing.JLabel lblContactInfo;
     private javax.swing.JLabel lblDevice;
     private javax.swing.JLabel lblEmployee;
@@ -733,6 +793,7 @@ public class MainManager extends javax.swing.JFrame {
     private javax.swing.JLabel lblRoom;
     private javax.swing.JLabel lblService;
     private javax.swing.JLabel lblStatistics;
+    private javax.swing.JPanel pnlChangePass;
     private javax.swing.JPanel pnlContacInfo;
     private javax.swing.JPanel pnlDevice;
     private javax.swing.JPanel pnlEmployee;
