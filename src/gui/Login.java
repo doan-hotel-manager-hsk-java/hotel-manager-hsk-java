@@ -213,10 +213,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
     }
-    /**
-     * @param args the command line arguments
-     */
-
+ 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.k33ptoo.components.KButton btnExit;
