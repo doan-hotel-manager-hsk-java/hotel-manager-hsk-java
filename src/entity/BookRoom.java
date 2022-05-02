@@ -4,28 +4,30 @@
  */
 package entity;
 
+import java.util.Objects;
+
 public class BookRoom {
-    private String maDDP;
-    private String ngayDat;
-    private String gioDat;
-    private String ngayNhan;
-    private String gioNhan;
-    private String maPhong;
-    private String maKH;
-    private String maNV;
+   private String maDDP;
+   private String ngayDat;
+   private String gioDat;
+   private String ngayNhan;
+   private String gioNhan;
+   private Room room;
+   private Customer customer;
+   private Staff staff;
 
     public BookRoom() {
     }
-    
-    public BookRoom(String maDDP, String ngayDat, String gioDat, String ngayNhan, String gioNhan, String maPhong, String maKH, String maNV) {
+
+    public BookRoom(String maDDP, String ngayDat, String gioDat, String ngayNhan, String gioNhan, Room room, Customer customer, Staff staff) {
         this.maDDP = maDDP;
         this.ngayDat = ngayDat;
         this.gioDat = gioDat;
         this.ngayNhan = ngayNhan;
         this.gioNhan = gioNhan;
-        this.maPhong = maPhong;
-        this.maKH = maKH;
-        this.maNV = maNV;
+        this.room = room;
+        this.customer = customer;
+        this.staff = staff;
     }
 
     public String getMaDDP() {
@@ -68,27 +70,51 @@ public class BookRoom {
         this.gioNhan = gioNhan;
     }
 
-    public String getMaPhong() {
-        return maPhong;
+    public Room getRoom() {
+        return room;
     }
 
-    public void setMaPhong(String maPhong) {
-        this.maPhong = maPhong;
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
-    public String getMaKH() {
-        return maKH;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setMaKH(String maKH) {
-        this.maKH = maKH;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
-    public String getMaNV() {
-        return maNV;
+    public Staff getStaff() {
+        return staff;
     }
 
-    public void setMaNV(String maNV) {
-        this.maNV = maNV;
+    public void setStaff(Staff staff) {
+        this.staff = staff;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.maDDP);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BookRoom other = (BookRoom) obj;
+        return Objects.equals(this.maDDP, other.maDDP);
+    }
+   
+   
 }
