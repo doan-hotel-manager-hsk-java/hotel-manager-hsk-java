@@ -10,16 +10,18 @@ public class Customer {
     private String soDT;
     private boolean gioiTinh;
     private String diaChi;
+    private String ghiChu;
 
     public Customer() {
     }
-    
-    public Customer(String maKH, String tenKH, String soDT, boolean gioiTinh, String diaChi) {
+
+    public Customer(String maKH, String tenKH, String soDT, boolean gioiTinh, String diaChi, String ghiChu) {
         this.maKH = maKH;
         this.tenKH = tenKH;
         this.soDT = soDT;
         this.gioiTinh = gioiTinh;
         this.diaChi = diaChi;
+        this.ghiChu = ghiChu;
     }
 
     public String getMaKH() {
@@ -61,6 +63,13 @@ public class Customer {
     public void setDiaChi(String diaChi) {
         this.diaChi = diaChi;
     }
-    
+
+    public String getGhiChu() {
+        return ghiChu;
+    }
+
+    public void setGhiChu(String ghiChu) {
+        this.ghiChu = ghiChu;
+    }
     
 }
