@@ -29,12 +29,10 @@ import javax.swing.SwingUtilities;
  * @author vomin
  */
 public class MainEmployee extends javax.swing.JFrame {
-
-    /**
-     * Creates new form MainManager1
-     */
-    public MainEmployee() {
-        // set resizable
+    private static String username;
+    
+    public MainEmployee(String _userName) {
+        username = _userName;
         this.setUndecorated(true);
         this.setResizable(true);
         this.setVisible(true);
@@ -324,7 +322,10 @@ public class MainEmployee extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        System.exit(0);
+        this.setVisible(false);
+        Login login = new Login();
+        login.setLocationRelativeTo(null);
+        login.setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void pnlRoomMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlRoomMousePressed
@@ -356,7 +357,7 @@ public class MainEmployee extends javax.swing.JFrame {
         resetColor(pnlService, lblService);
         resetColor(pnlRoom, lblRoom);
         
-        frmChangePassEmp frm = new frmChangePassEmp();
+        frmChangePass frm = new frmChangePass(username);
         frm.setVisible(true);
     }//GEN-LAST:event_pnlChangePassMousePressed
     // open frame when click panel
@@ -408,7 +409,7 @@ public class MainEmployee extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainEmployee().setVisible(true);
+                new MainEmployee(username).setVisible(true);
             }
         });
     }
