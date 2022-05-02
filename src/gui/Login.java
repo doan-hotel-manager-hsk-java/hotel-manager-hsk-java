@@ -1,24 +1,23 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package gui;
 
+import dao.AccountDAO;
+import dao.StaffDAO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.DocFlavor;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-/**
- *
- * @author vomin
- */
 public class Login extends javax.swing.JFrame {
+
+    AccountDAO accountDAO;
+    StaffDAO staffDAO;
 
     public Login() {
         initComponents();
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -118,6 +117,11 @@ public class Login extends javax.swing.JFrame {
 
         lblForgotPass.setForeground(new java.awt.Color(255, 0, 51));
         lblForgotPass.setText("Bạn quên mật khẩu ?");
+        lblForgotPass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblForgotPassMousePressed(evt);
+            }
+        });
         jPanel7.add(lblForgotPass, java.awt.BorderLayout.EAST);
 
         jPanel4.add(jPanel7);
@@ -176,27 +180,48 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        System.exit(0);
+       if(JOptionPane.showConfirmDialog(this, "Bạn có muốn thoát ?", "Thoát", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+           System.exit(0);
+       }
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-          String username = txtUserName.getText();
-          String password = new String(txtPassword.getPassword());
-          
-          if(username.equals("admin") && password.equals("admin")) {
-            MainManager mainManager = new MainManager();
-            mainManager.setLocationRelativeTo(this);
-            mainManager.setVisible(true);
-            dispose();
-          } else {
-            MainEmployee mainEmployee = new MainEmployee();
-            mainEmployee.setLocationRelativeTo(this);
-            mainEmployee.setVisible(true);
-            dispose();
-          }
+        accountDAO = new AccountDAO();
+        staffDAO = new StaffDAO();
+        
+        String username = accountDAO.findUserName(txtUserName.getText().toUpperCase());
+        String passwordData = accountDAO.findPass(username);
+        String employeeType = staffDAO.getMaLoaiNVBYID(username);
+        String passwordInput = String.valueOf(txtPassword.getPassword());
+        
+        System.out.println(txtUserName.getText());
+        System.out.println(passwordInput);
+        if (txtUserName.getText().equals("") || passwordInput.equals("")) {
+           JOptionPane.showMessageDialog(this, "Bạn chưa nhập tài khoản hoặc mật khẩu");
+        } else {
+             if (username != null && passwordData.equals(passwordInput)) {
+                if (employeeType.equals("LNV001")) {
+                    this.setVisible(false);
+                    MainManager mainManager = new MainManager(username);
+                    mainManager.setLocationRelativeTo(this);
+                    mainManager.setVisible(true);
+                    dispose();
+                } else if(employeeType.equals("LNV002")){
+                    this.setVisible(false);
+                    MainEmployee mainEmployee = new MainEmployee(username);
+                    mainEmployee.setVisible(true);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Bạn nhập sai mật khẩu hoặc tài khoản");
+            }
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
-     public static void main(String args[]) throws ClassNotFoundException, InstantiationException, UnsupportedLookAndFeelException {
+    private void lblForgotPassMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblForgotPassMousePressed
+       JOptionPane.showMessageDialog(this, "Vui lòng liên hệ quản lý");
+    }//GEN-LAST:event_lblForgotPassMousePressed
+
+    public static void main(String args[]) throws ClassNotFoundException, InstantiationException, UnsupportedLookAndFeelException {
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -213,7 +238,6 @@ public class Login extends javax.swing.JFrame {
             }
         });
     }
- 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.k33ptoo.components.KButton btnExit;

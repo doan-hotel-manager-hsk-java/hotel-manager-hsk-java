@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package gui;
 
 import com.k33ptoo.components.KButton;
@@ -28,11 +24,9 @@ import javax.swing.SwingUtilities;
  * @author vomin
  */
 public class MainManager extends javax.swing.JFrame {
-
-    /**
-     * Creates new form MainManager1
-     */
-    public MainManager() {
+    private static String username;
+    public MainManager(String _userName) {
+        username = _userName;
         this.setUndecorated(true);
         this.setAlwaysOnTop(true);
         this.setResizable(true);
@@ -67,7 +61,7 @@ public class MainManager extends javax.swing.JFrame {
         pnlSlide = new javax.swing.JPanel();
         pnlImage = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
+        txtNameManager = new javax.swing.JLabel();
         jPanel11 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnLogout = new com.k33ptoo.components.KButton();
@@ -112,10 +106,10 @@ public class MainManager extends javax.swing.JFrame {
 
         jLabel17.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel17.setText("Admin");
+        jLabel17.setText("Quản lý");
 
-        jLabel18.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        jLabel18.setText("Võ Minh Phương");
+        txtNameManager.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        txtNameManager.setText("Võ Minh Phương");
 
         jPanel11.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -165,7 +159,7 @@ public class MainManager extends javax.swing.JFrame {
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlImageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                    .addComponent(txtNameManager, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
                     .addGroup(pnlImageLayout.createSequentialGroup()
                         .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -182,7 +176,7 @@ public class MainManager extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jLabel17)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel18)
+                        .addComponent(txtNameManager)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(5, 5, 5)))
@@ -554,7 +548,10 @@ public class MainManager extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        System.exit(0);
+        this.setVisible(false);
+        Login login = new Login();
+        login.setLocationRelativeTo(null);
+        login.setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void pnlHomeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlHomeMousePressed
@@ -675,7 +672,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
 
-        frmChangePassEManager frm = new frmChangePassEManager();
+        frmChangePass frm = new frmChangePass(username);
         frm.setVisible(true);
     }//GEN-LAST:event_pnlChangePassMousePressed
 
@@ -708,7 +705,7 @@ public class MainManager extends javax.swing.JFrame {
         this.jLabel15 = jLabel15;
         this.jLabel16 = jLabel16;
         this.jLabel17 = jLabel17;
-        this.jLabel18 = jLabel18;
+        this.txtNameManager = jLabel18;
         this.jLabel19 = jLabel19;
         this.jLabel2 = jLabel2;
         this.jLabel20 = jLabel20;
@@ -738,34 +735,9 @@ public class MainManager extends javax.swing.JFrame {
     }
 
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainManager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainManager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainManager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainManager.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainManager().setVisible(true);
+                new MainManager(username).setVisible(true);
             }
         });
     }
@@ -776,7 +748,6 @@ public class MainManager extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
@@ -806,5 +777,6 @@ public class MainManager extends javax.swing.JFrame {
     private javax.swing.JPanel pnlSlide;
     private javax.swing.JPanel pnlStatistics;
     private javax.swing.JPanel pnlTitile;
+    private javax.swing.JLabel txtNameManager;
     // End of variables declaration//GEN-END:variables
 }
