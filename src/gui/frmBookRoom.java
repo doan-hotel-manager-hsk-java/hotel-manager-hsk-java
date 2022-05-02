@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
- */
+
 package gui;
 
 import java.awt.BorderLayout;
@@ -14,10 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Huy
- */
 public class frmBookRoom extends javax.swing.JInternalFrame {
 
     DefaultTableModel model;
@@ -72,7 +65,8 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Thông tin đặt phòng"));
 
-        txtNgayDat.setDateFormatString("dd-MM,-yyyy");
+        txtNgayDat.setDate(new java.util.Date(1651482476000L));
+        txtNgayDat.setDateFormatString("yyyy-MM-dd");
         txtNgayDat.setDoubleBuffered(false);
         txtNgayDat.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
@@ -99,8 +93,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         jLabel5.setText("Ngày nhận phòng:");
 
         txtNgayNhan.setDate(new java.util.Date(1651384556000L));
-        txtNgayNhan.setDateFormatString("dd-MM-yyyy");
-        txtNgayNhan.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        txtNgayNhan.setDateFormatString("yyyy-MM-dd");
         txtNgayNhan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         jLabel4.setBackground(new java.awt.Color(255, 255, 255));
@@ -222,7 +215,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -334,7 +327,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
-                                .addComponent(scrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 843, Short.MAX_VALUE)))
+                                .addComponent(scrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
