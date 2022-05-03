@@ -23,7 +23,7 @@ public class RoomTypeDAO {
     private final String DONGIA = "DONGIA";
     
     private final String SELECT_ALL_ROOMTYPE = "SELECT * FROM LOAIPHONG";
-    private final String SELECT_ALL_ROOMTYPE_BY_ID = "SELECT * FROM WHERE MALOAIPHONG = ?";
+    private final String SELECT_ALL_ROOMTYPE_BY_ID = "SELECT * FROM LOAIPHONG WHERE MALOAIPHONG = ?";
     
     public List<RoomType> getAllRoomTypes() {
         List<RoomType> roomTypeList = new ArrayList<>();

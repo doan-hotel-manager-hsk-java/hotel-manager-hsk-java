@@ -4,18 +4,32 @@
  */
 package gui;
 
+import dao.DeviceDAO;
+import dao.RoomDAO;
+import entity.Device;
+import entity.Room;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+
 /**
  *
  * @author vomin
  */
 public class frmAddDeviceForRoom extends javax.swing.JFrame {
-
+    private DefaultComboBoxModel<String> nameRoomBoxModel;
+    private DefaultComboBoxModel<String> nameDeviceBoxModel;
+    private RoomDAO roomDAO;
+    private DeviceDAO deviceDAO;
+    
     /**
      * Creates new form frmAddDeviceForRoom
      */
     public frmAddDeviceForRoom() {
         this.setAlwaysOnTop(true);
         initComponents();
+        
+        roomDAO = new RoomDAO();
+        deviceDAO = new DeviceDAO();
     }
 
     /**
@@ -29,26 +43,31 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblDeviceForRoom = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        kButton4 = new com.k33ptoo.components.KButton();
-        kButton5 = new com.k33ptoo.components.KButton();
-        kButton6 = new com.k33ptoo.components.KButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        btnAdd = new com.k33ptoo.components.KButton();
+        btnChange = new com.k33ptoo.components.KButton();
+        btnDel = new com.k33ptoo.components.KButton();
+        cboNameDevice = new javax.swing.JComboBox<>();
+        cboNameRoom = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtNumber = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách trang thiết bị"));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblDeviceForRoom.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"", null},
                 {"", null},
@@ -59,7 +78,7 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
                 "Tên trang thiết bị", "Số lượng tồn"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblDeviceForRoom);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -87,49 +106,49 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Số phòng");
 
-        kButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icon-add.png"))); // NOI18N
-        kButton4.setText("Thêm");
-        kButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        kButton4.setIconTextGap(25);
-        kButton4.setkEndColor(new java.awt.Color(51, 255, 255));
-        kButton4.setkHoverEndColor(new java.awt.Color(102, 255, 255));
-        kButton4.setkHoverForeGround(new java.awt.Color(0, 204, 0));
-        kButton4.setkHoverStartColor(new java.awt.Color(0, 204, 255));
-        kButton4.setkPressedColor(new java.awt.Color(0, 153, 153));
-        kButton4.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icon-add.png"))); // NOI18N
+        btnAdd.setText("Thêm");
+        btnAdd.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAdd.setIconTextGap(25);
+        btnAdd.setkEndColor(new java.awt.Color(51, 255, 255));
+        btnAdd.setkHoverEndColor(new java.awt.Color(102, 255, 255));
+        btnAdd.setkHoverForeGround(new java.awt.Color(0, 204, 0));
+        btnAdd.setkHoverStartColor(new java.awt.Color(0, 204, 255));
+        btnAdd.setkPressedColor(new java.awt.Color(0, 153, 153));
+        btnAdd.setkStartColor(new java.awt.Color(51, 51, 255));
 
-        kButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons-edit.png"))); // NOI18N
-        kButton5.setText("Sửa");
-        kButton5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        kButton5.setIconTextGap(25);
-        kButton5.setkEndColor(new java.awt.Color(51, 255, 255));
-        kButton5.setkHoverEndColor(new java.awt.Color(102, 255, 255));
-        kButton5.setkHoverForeGround(new java.awt.Color(0, 204, 0));
-        kButton5.setkHoverStartColor(new java.awt.Color(0, 204, 255));
-        kButton5.setkPressedColor(new java.awt.Color(0, 153, 153));
-        kButton5.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnChange.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons-edit.png"))); // NOI18N
+        btnChange.setText("Sửa");
+        btnChange.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnChange.setIconTextGap(25);
+        btnChange.setkEndColor(new java.awt.Color(51, 255, 255));
+        btnChange.setkHoverEndColor(new java.awt.Color(102, 255, 255));
+        btnChange.setkHoverForeGround(new java.awt.Color(0, 204, 0));
+        btnChange.setkHoverStartColor(new java.awt.Color(0, 204, 255));
+        btnChange.setkPressedColor(new java.awt.Color(0, 153, 153));
+        btnChange.setkStartColor(new java.awt.Color(51, 51, 255));
 
-        kButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Button-Close-icon-16.png"))); // NOI18N
-        kButton6.setText("Xóa");
-        kButton6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        kButton6.setIconTextGap(25);
-        kButton6.setkEndColor(new java.awt.Color(51, 255, 255));
-        kButton6.setkHoverEndColor(new java.awt.Color(102, 255, 255));
-        kButton6.setkHoverForeGround(new java.awt.Color(0, 204, 0));
-        kButton6.setkHoverStartColor(new java.awt.Color(0, 204, 255));
-        kButton6.setkPressedColor(new java.awt.Color(0, 153, 153));
-        kButton6.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnDel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Button-Close-icon-16.png"))); // NOI18N
+        btnDel.setText("Xóa");
+        btnDel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnDel.setIconTextGap(25);
+        btnDel.setkEndColor(new java.awt.Color(51, 255, 255));
+        btnDel.setkHoverEndColor(new java.awt.Color(102, 255, 255));
+        btnDel.setkHoverForeGround(new java.awt.Color(0, 204, 0));
+        btnDel.setkHoverStartColor(new java.awt.Color(0, 204, 255));
+        btnDel.setkPressedColor(new java.awt.Color(0, 153, 153));
+        btnDel.setkStartColor(new java.awt.Color(51, 51, 255));
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboNameDevice.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        cboNameDevice.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jComboBox2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboNameRoom.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        cboNameRoom.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Số lượng");
 
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtNumber.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -144,19 +163,19 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
                             .addComponent(jLabel2))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(cboNameDevice, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cboNameRoom, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(kButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(kButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnChange, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(kButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnDel, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(76, 76, 76)
-                        .addComponent(jTextField3)))
+                        .addComponent(txtNumber)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -165,24 +184,24 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cboNameDevice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cboNameRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(kButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(kButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(kButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnChange, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        kButton6.getAccessibleContext().setAccessibleName("");
+        btnDel.getAccessibleContext().setAccessibleName("");
 
         jPanel2.setLayout(new java.awt.BorderLayout());
 
@@ -220,6 +239,36 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        loadNameRoomToComboBox();
+    }//GEN-LAST:event_formWindowOpened
+    
+    private void loadNameRoomToComboBox() {
+        nameRoomBoxModel = new DefaultComboBoxModel<>();
+        List<Room> rooms = roomDAO.getAllRooms();
+        loadDataRoomToModel(rooms, nameRoomBoxModel);
+        
+        nameDeviceBoxModel = new DefaultComboBoxModel<>();
+        List<Device> devices = deviceDAO.getAllDevices();
+        loadDataDeviceToModel(devices, nameDeviceBoxModel);
+    }
+    
+    private void loadDataRoomToModel(List<Room> list, DefaultComboBoxModel model) {
+        for(Room item : list) {
+            model.addElement(item.getTenPhong());
+        }
+        
+        cboNameRoom.setModel(model);
+    }
+    
+    private void loadDataDeviceToModel(List<Device> list, DefaultComboBoxModel model) {
+        for(Device item : list) {
+            model.addElement(item.getTenTTB());
+        }
+        
+        cboNameDevice.setModel(model);
+    }
     /**
      * @param args the command line arguments
      */
@@ -254,10 +303,13 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
             }
         });
     }
-
+     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private com.k33ptoo.components.KButton btnAdd;
+    private com.k33ptoo.components.KButton btnChange;
+    private com.k33ptoo.components.KButton btnDel;
+    private javax.swing.JComboBox<String> cboNameDevice;
+    private javax.swing.JComboBox<String> cboNameRoom;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -266,10 +318,7 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField3;
-    private com.k33ptoo.components.KButton kButton4;
-    private com.k33ptoo.components.KButton kButton5;
-    private com.k33ptoo.components.KButton kButton6;
+    private javax.swing.JTable tblDeviceForRoom;
+    private javax.swing.JTextField txtNumber;
     // End of variables declaration//GEN-END:variables
 }

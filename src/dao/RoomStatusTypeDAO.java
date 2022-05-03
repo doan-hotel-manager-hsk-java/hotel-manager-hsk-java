@@ -19,10 +19,10 @@ import java.util.List;
 public class RoomStatusTypeDAO {
     //tuan
     private final String MA_LTTP = "MALTTP";
-    private final String TEN_LTTP = "TENLTTP";
+    private final String TEN_LTTP = "TENLOAI";
     
     private final String SELECT_ALL_ROOM_STATUS_TYPE = "SELECT * FROM LOAITRANGTHAIPHONG";
-    private final String SELECT_ALL_ROOM_STATUS_TYPE_BY_ID = "SELECT * FROM WHERE MALTTP = ?";
+    private final String SELECT_ALL_ROOM_STATUS_TYPE_BY_ID = "SELECT * FROM LOAITRANGTHAIPHONG WHERE MALTTP = ?";
     
     public List<RoomStatusType> getAllRoomStatusTypes() {
         List<RoomStatusType> roomStatusTypes = new ArrayList<>();
