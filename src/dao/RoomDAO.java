@@ -23,6 +23,7 @@ public class RoomDAO {
 
     private final String SELECT_ALL_ROOM = "SELECT * FROM PHONG";
     private final String SELECT_ROOM_BY_NAME = "SELECT * FROM PHONG WHERE TENPHONG = ?";
+
     private final String SELECT_ROOM_BY_ID = "SELECT * FROM PHONG WHERE MAPHONG = ?";
     private final String SELECT_ROOM_BY_ID_LOAI = "SELECT * FROM PHONG WHERE MALOAIPHONG = ?";
 
@@ -30,11 +31,13 @@ public class RoomDAO {
     private final RoomStatusTypeDAO roomStatusTypeDAO = new RoomStatusTypeDAO();
     private final StaffDAO staffDAO = new StaffDAO();
 
+
     public List<Room> getAllRooms() {
         List<Room> rooms = new ArrayList<>();
 
-        try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_ROOM)) {
-            try ( ResultSet rs = pstmt.executeQuery()) {
+        try (Connection conn = DatabaseConnection.opConnection();
+                PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_ROOM)) {
+            try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     RoomType roomType = roomTypeDAO.findRoomTypeById(rs.getString(MA_LOAI_PHONG));
                     RoomStatusType romStatusType = roomStatusTypeDAO.finRoomStatusTypeById(rs.getString(MA_LOAT_TRANG_THAI_PHONG));
@@ -137,7 +140,6 @@ public class RoomDAO {
             System.err.println("getAllRooms(): connect db fail");
             e.printStackTrace();
         }
-
         return null;
     }
 }
