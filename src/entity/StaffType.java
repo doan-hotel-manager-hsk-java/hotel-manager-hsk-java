@@ -24,6 +24,12 @@ public class StaffType {
         this.mucLuong = mucLuong;
     }
 
+    public StaffType( String tenLoaiNV, double mucLuong) {
+        this.idLoaiNV = idLoaiNV;
+        this.tenLoaiNV = tenLoaiNV;
+        this.mucLuong = mucLuong;
+    }
+    
     public String getIdLoaiNV() {
         return idLoaiNV;
     }
