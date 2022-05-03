@@ -23,7 +23,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
     List<Room> listRooms = roomDAO.getAllRooms();
     List<Room> listRoomVip = roomDAO.findRoomByIDLoaiPhong("LP001");
     List<Room> listRoomNormals = roomDAO.findRoomByIDLoaiPhong("LP002");
-
+    
     public frmBookRoom() {
         this.setRootPaneCheckingEnabled(false);
         javax.swing.plaf.InternalFrameUI ui
@@ -452,7 +452,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
             }
 
             numberRoomNormal++;
-            if (numberRoomNormal > listRoomNormals.size()) {
+            if (numberRoomNormal == listRoomNormals.size()) {
                 lblListVip = new JLabel("Danh sách phòng Vip");
                 lblListVip.setBounds(20, y, 300, 30);
                 lblListVip.setFont(new Font("Segoe UI", Font.BOLD, 14));

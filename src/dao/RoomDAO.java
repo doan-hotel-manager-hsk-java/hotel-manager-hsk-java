@@ -13,14 +13,15 @@ import java.util.List;
 
 public class RoomDAO {
     //tuan
-
+    //variable
     private final String Ma_PHONG = "MAPHONG";
     private final String TEN_PHONG = "TENPHONG";
     private final String TANG = "TANG";
     private final String MA_LOAI_PHONG = "MALOAIPHONG";
     private final String MA_LOAT_TRANG_THAI_PHONG = "MALTTP";
     private final String MA_NV = "MANV";
-
+    
+    //sql sever
     private final String SELECT_ALL_ROOM = "SELECT * FROM PHONG";
     private final String SELECT_ROOM_BY_NAME = "SELECT * FROM PHONG WHERE TENPHONG = ?";
 
