@@ -20,6 +20,16 @@ public class Service {
 
     public Service() {
     }
+    
+    public Service(String tenDV) {
+        this.tenDV = tenDV;
+    }
+    
+    public Service(String tenDV, double donGia, String trangThai) {
+        this.tenDV = tenDV;
+        this.donGia = donGia;
+        this.trangThai = trangThai;
+    }
 
     public Service(String maDV, String tenDV, double donGia, String trangThai, ServiceType serviceType, Staff staff) {
         this.maDV = maDV;
