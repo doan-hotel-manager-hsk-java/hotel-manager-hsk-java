@@ -399,7 +399,6 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txtSearchFocusLost
 
-
 // Create Room
     private void createRoom() {
         JPanel pnlRom;
