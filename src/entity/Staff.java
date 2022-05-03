@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entity;
 
 import java.util.Objects;
@@ -30,6 +26,16 @@ public class Staff {
         this.staffType = staffType;
     }
 
+    public Staff(String tenNV, String gioiTinh, String email, String cmnd, String sdt, String trangThai, StaffType staffType) {
+        this.tenNV = tenNV;
+        this.gioiTinh = gioiTinh;
+        this.email = email;
+        this.cmnd = cmnd;
+        this.sdt = sdt;
+        this.trangThai = trangThai;
+        this.staffType = staffType;
+    }
+    
     public String getTrangThai() {
         return trangThai;
     }

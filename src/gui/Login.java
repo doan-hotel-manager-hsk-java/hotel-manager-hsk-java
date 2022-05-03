@@ -2,9 +2,9 @@ package gui;
 
 import dao.AccountDAO;
 import dao.StaffDAO;
+import entity.Staff;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.print.DocFlavor;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -191,11 +191,11 @@ public class Login extends javax.swing.JFrame {
         
         String username = accountDAO.findUserName(txtUserName.getText().toUpperCase());
         String passwordData = accountDAO.findPass(username);
-        String employeeType = staffDAO.getMaLoaiNVBYID(username);
+        String employeeType = staffDAO.getEmployeeBYID(username).getStaffType().getIdLoaiNV();
+        System.out.println(employeeType);
+        System.out.println(username);
         String passwordInput = String.valueOf(txtPassword.getPassword());
-        
-        System.out.println(txtUserName.getText());
-        System.out.println(passwordInput);
+
         if (txtUserName.getText().equals("") || passwordInput.equals("")) {
            JOptionPane.showMessageDialog(this, "Bạn chưa nhập tài khoản hoặc mật khẩu");
         } else {
