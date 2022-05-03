@@ -180,36 +180,39 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-       if(JOptionPane.showConfirmDialog(this, "Bạn có muốn thoát ?", "Thoát", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
-           System.exit(0);
-       }
+        if (JOptionPane.showConfirmDialog(this, "Bạn có muốn thoát ?", "Thoát", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         accountDAO = new AccountDAO();
         staffDAO = new StaffDAO();
-        
+
         String username = accountDAO.findUserName(txtUserName.getText().toUpperCase());
         String passwordData = accountDAO.findPass(username);
-        String employeeType = staffDAO.getEmployeeBYID(username).getStaffType().getIdLoaiNV();
-        System.out.println(employeeType);
-        System.out.println(username);
+        String statusNV = staffDAO.getEmployeeBYID(username).getTrangThai();
         String passwordInput = String.valueOf(txtPassword.getPassword());
 
         if (txtUserName.getText().equals("") || passwordInput.equals("")) {
-           JOptionPane.showMessageDialog(this, "Bạn chưa nhập tài khoản hoặc mật khẩu");
+            JOptionPane.showMessageDialog(this, "Bạn chưa nhập tài khoản hoặc mật khẩu");
         } else {
-             if (username != null && passwordData.equals(passwordInput)) {
-                if (employeeType.equals("LNV001")) {
-                    this.setVisible(false);
-                    MainManager mainManager = new MainManager(username);
-                    mainManager.setLocationRelativeTo(this);
-                    mainManager.setVisible(true);
-                    dispose();
-                } else if(employeeType.equals("LNV002")){
-                    this.setVisible(false);
-                    MainEmployee mainEmployee = new MainEmployee(username);
-                    mainEmployee.setVisible(true);
+            if (username != null && passwordData.equals(passwordInput)) {
+                if (statusNV != null) {
+                    String employeeType = staffDAO.getEmployeeBYID(username).getStaffType().getIdLoaiNV();
+                    if (employeeType.equals("LNV001")) {
+                        this.setVisible(false);
+                        MainManager mainManager = new MainManager(username);
+                        mainManager.setLocationRelativeTo(this);
+                        mainManager.setVisible(true);
+                        dispose();
+                    } else if (employeeType.equals("LNV002")) {
+                        this.setVisible(false);
+                        MainEmployee mainEmployee = new MainEmployee(username);
+                        mainEmployee.setVisible(true);
+                    }
+                } else{
+                    JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại");
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Bạn nhập sai mật khẩu hoặc tài khoản");
@@ -218,7 +221,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void lblForgotPassMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblForgotPassMousePressed
-       JOptionPane.showMessageDialog(this, "Vui lòng liên hệ quản lý");
+        JOptionPane.showMessageDialog(this, "Vui lòng liên hệ quản lý");
     }//GEN-LAST:event_lblForgotPassMousePressed
 
     public static void main(String args[]) throws ClassNotFoundException, InstantiationException, UnsupportedLookAndFeelException {
