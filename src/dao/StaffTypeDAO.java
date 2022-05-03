@@ -37,7 +37,6 @@ public class StaffTypeDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 }
