@@ -45,7 +45,7 @@ public class StaffTypeDAO {
         return null;
     }
     
-    public StaffType finRoomStatusTypeById(String id) {
+    public StaffType findStaffTypeById(String id) {
         try(Connection conn = DatabaseConnection.opConnection();
                PreparedStatement pstmt = conn.prepareStatement(SELECT_STAFF_TYPE_BY_ID) ) {
             pstmt.setString(1, id);
