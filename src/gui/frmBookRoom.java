@@ -450,7 +450,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                 y += width + 20;
                 x = 20;
             }
-
+// đã sữa
             numberRoomNormal++;
             if (numberRoomNormal == listRoomNormals.size()) {
                 lblListVip = new JLabel("Danh sách phòng Vip");
