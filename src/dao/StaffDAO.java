@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 
 public class StaffDAO {
 
+    private final String SELECT_LOAINV_BYID = "select maLoaiNV from NhanVien where maNV = ?";
+
     StaffTypeDAO staffTypeDAO;
 
     //Phuong
@@ -32,7 +34,7 @@ public class StaffDAO {
             try (ResultSet rs = ptm.executeQuery()) {               
                 Staff staff = new Staff();
                 if(rs.next()) {
-                    StaffType staffType = staffTypeDAO.getByID(rs.getString(MA_LOAI_NV));
+                    StaffType staffType = staffTypeDAO.findStaffTypeById(rs.getString(MA_LOAI_NV));
                     staff.setMaNV(maNV);
                     staff.setTenNV(rs.getString(TEN_NV));
                     staff.setGioiTinh(rs.getString(GIOI_TINH));
