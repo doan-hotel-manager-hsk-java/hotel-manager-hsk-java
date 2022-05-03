@@ -3,9 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/dao/AccountDAO.java</file>
+            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/dao/RoomStatusTypeDAO.java</file>
+            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/dao/StaffTypeDAO.java</file>
+            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/entity/Staff.java</file>
+            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/dao/StaffDAO.java</file>
             <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/dao/RoomDAO.java</file>
-            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/dao/RoomTypeDAO.java</file>
+            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/dao/RoomDeviceDAO.java</file>
             <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/gui/Login.java</file>
         </group>
     </open-files>
