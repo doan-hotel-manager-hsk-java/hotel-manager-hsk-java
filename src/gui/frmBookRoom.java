@@ -1,18 +1,28 @@
 package gui;
 
+import dao.RoomDAO;
+import entity.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.List;
+import java.util.Properties;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.text.DateFormatter;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 public class frmBookRoom extends javax.swing.JInternalFrame {
 
-    DefaultTableModel model;
+    RoomDAO roomDAO = new RoomDAO();
+    List<Room> listRooms = roomDAO.getAllRooms();
+    List<Room> listRoomVip = roomDAO.findRoomByIDLoaiPhong("LP001");
+    List<Room> listRoomNormals = roomDAO.findRoomByIDLoaiPhong("LP002");
 
     public frmBookRoom() {
         this.setRootPaneCheckingEnabled(false);
@@ -21,22 +31,41 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         ((javax.swing.plaf.basic.BasicInternalFrameUI) ui).setNorthPane(null);
         initComponents();
         createRoom();
-    }
+        
+        // create ngayNhan
+        UtilDateModel modelNgayNhan = new UtilDateModel();
+        Properties pNhan = new Properties();
+        pNhan.put("text.today", "Today");
+        pNhan.put("text.month", "Month");
+        pNhan.put("text.year", "Year");
+        JDatePanelImpl dateNhan = new JDatePanelImpl(modelNgayNhan, pNhan);
+        JDatePickerImpl datePickerNhan = new JDatePickerImpl(dateNhan, new DateLabelFormatter());
 
+        pnlNgayNhan.add(datePickerNhan);
+        
+         // create ngayNhan
+        UtilDateModel modelNgayDat = new UtilDateModel();
+        Properties pDat= new Properties();
+        pDat.put("text.today", "Today");
+        pDat.put("text.month", "Month");
+        pDat.put("text.year", "Year");
+        JDatePanelImpl dateDat = new JDatePanelImpl(modelNgayDat, pDat);
+        JDatePickerImpl datePickerDat = new JDatePickerImpl(dateDat, new DateLabelFormatter());
+
+        pnlNgayDat.add(datePickerDat);
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel6 = new javax.swing.JPanel();
-        txtNgayDat = new com.toedter.calendar.JDateChooser();
-        txtCMND = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtSDT = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         txtTenKH = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        txtNgayNhan = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         cboGioiTinh = new javax.swing.JComboBox<>();
@@ -44,6 +73,9 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         txtDiaChi = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        txtCMND = new javax.swing.JTextField();
+        pnlNgayDat = new javax.swing.JPanel();
+        pnlNgayNhan = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblDsDatPhong = new javax.swing.JTable();
@@ -63,13 +95,6 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Thông tin đặt phòng"));
-
-        txtNgayDat.setDate(new java.util.Date(1651482476000L));
-        txtNgayDat.setDateFormatString("yyyy-MM-dd");
-        txtNgayDat.setDoubleBuffered(false);
-        txtNgayDat.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-
-        txtCMND.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -91,10 +116,6 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Ngày nhận phòng:");
 
-        txtNgayNhan.setDate(new java.util.Date(1651384556000L));
-        txtNgayNhan.setDateFormatString("yyyy-MM-dd");
-        txtNgayNhan.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-
         jLabel4.setBackground(new java.awt.Color(255, 255, 255));
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Ngày đặt phòng:");
@@ -115,6 +136,12 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
+        txtCMND.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+
+        pnlNgayDat.setLayout(new java.awt.BorderLayout());
+
+        pnlNgayNhan.setLayout(new java.awt.BorderLayout());
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -126,10 +153,10 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(31, 31, 31)
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtTenKH)
-                            .addComponent(txtSDT)))
+                            .addComponent(txtCMND)
+                            .addComponent(txtTenKH)))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -138,22 +165,23 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                             .addComponent(jLabel4)
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8))
-                        .addGap(21, 21, 21)
+                        .addGap(8, 8, 8)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNgayNhan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtDiaChi, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(cboGioiTinh, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtCMND)
-                            .addComponent(txtNgayDat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextField1))))
+                            .addComponent(cboGioiTinh, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtSDT)
+                            .addComponent(txtDiaChi)
+                            .addComponent(jTextField1)
+                            .addComponent(pnlNgayDat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pnlNgayNhan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1)
-                    .addComponent(txtSDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCMND, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -161,28 +189,28 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(txtCMND, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtSDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(cboGioiTinh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(txtDiaChi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txtDiaChi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
+                    .addComponent(pnlNgayDat, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(pnlNgayNhan, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(txtNgayDat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(txtNgayNhan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addGap(63, 63, 63))
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(66, 66, 66))
         );
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
@@ -214,7 +242,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -270,7 +298,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                 .addComponent(btnMoPhong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnDoiPhong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -322,11 +350,11 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                             .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
-                                .addComponent(scrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)))
+                                .addComponent(scrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -335,15 +363,15 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(pnlTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(9, 9, 9)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(scrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(scrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -371,6 +399,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txtSearchFocusLost
 
+
 // Create Room
     private void createRoom() {
         JPanel pnlRom;
@@ -387,6 +416,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         pnlListRoom.setPreferredSize(new Dimension(600, 830));
 
         JLabel lblListVip;
+
         int x = 20;
         int y = 60;
         int width = 100;
@@ -394,13 +424,13 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         int countWith = 0;
         int numberRoomNormal = 1;
 
-        while (numberRoomNormal <= 30) {
+        while (numberRoomNormal <= listRooms.size()) {
             //Room
             pnlRom = new JPanel();
             pnlRom.setLayout(new BorderLayout());
-            if(numberRoomNormal <= 15){
+            if (numberRoomNormal <= listRoomNormals.size()) {
                 pnlRom.setBounds(x, y, width, height);
-            } else{
+            } else {
                 countWith = y + 40;
                 pnlRom.setBounds(x, countWith, width, height);
             }
@@ -417,13 +447,13 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
             pnlListRoom.add(pnlRom);
             x += width + 20;
 
-            if (numberRoomNormal % 5 == 0) {
+            if (numberRoomNormal % 5 == 0 || numberRoomNormal == listRoomNormals.size()) {
                 y += width + 20;
                 x = 20;
             }
 
             numberRoomNormal++;
-            if (numberRoomNormal == 16) {
+            if (numberRoomNormal > listRoomNormals.size()) {
                 lblListVip = new JLabel("Danh sách phòng Vip");
                 lblListVip.setBounds(20, y, 300, 30);
                 lblListVip.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -432,7 +462,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         }
         // Titile Vip
         pnlListRoom.add(lblListNormal);
-    
+
         scrollPanel.setViewportView(pnlListRoom);
     }
 
@@ -456,13 +486,13 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lblTitile;
+    private javax.swing.JPanel pnlNgayDat;
+    private javax.swing.JPanel pnlNgayNhan;
     private javax.swing.JPanel pnlTitle;
     private javax.swing.JScrollPane scrollPanel;
     private javax.swing.JTable tblDsDatPhong;
     private javax.swing.JTextField txtCMND;
     private javax.swing.JTextField txtDiaChi;
-    private com.toedter.calendar.JDateChooser txtNgayDat;
-    private com.toedter.calendar.JDateChooser txtNgayNhan;
     private javax.swing.JTextField txtSDT;
     private javax.swing.JTextField txtSearch;
     private javax.swing.JTextField txtTenKH;
