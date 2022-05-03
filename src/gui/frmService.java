@@ -4,21 +4,55 @@
  */
 package gui;
 
+import dao.OrderDetail_Room_DAO;
+import dao.RoomDAO;
+import dao.ServiceDAO;
+import entity.OrderDetail_Room;
+import entity.Room;
+import entity.Service;
+import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Huy
  */
 public class frmService extends javax.swing.JInternalFrame {
 
+    // INIT
+    private DefaultTableModel modellListServices, modelListServicesAdded;
+    
+    private RoomDAO roomDAO;
+    private ServiceDAO serviceDAO;
+    private OrderDetail_Room_DAO orderDetailRoomDAO;
+    
     /**
      * Creates new form QuanLyPhong
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.sql.SQLException
      */
-    public frmService() {
+    public frmService() throws ClassNotFoundException, SQLException {
         this.setRootPaneCheckingEnabled(false);
         javax.swing.plaf.InternalFrameUI ui
                 = this.getUI();
         ((javax.swing.plaf.basic.BasicInternalFrameUI) ui).setNorthPane(null);
         initComponents();
+        
+        // TABLE MODEL
+        modellListServices = new DefaultTableModel();
+        modelListServicesAdded = new DefaultTableModel();
+        
+        // DAO
+        roomDAO = new RoomDAO();
+        serviceDAO = new ServiceDAO();
+        orderDetailRoomDAO = new OrderDetail_Room_DAO();
+        
+        // CALLING
+        loadDataToCombobox();
+        initColsListServices();
+        loadDataToTblListServices();
+        initColsListServicesAdded();
+        loadDataToTblListServicesAdded();
     }
 
     /**
@@ -39,17 +73,17 @@ public class frmService extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cboTenPhong = new javax.swing.JComboBox<>();
         btnThem = new com.k33ptoo.components.KButton();
         btnDatPhong = new com.k33ptoo.components.KButton();
         btnXoa = new com.k33ptoo.components.KButton();
         btnTaoHoaDon = new com.k33ptoo.components.KButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblListServicesAdded = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tblListServices = new javax.swing.JTable();
 
         setBorder(null);
         setFrameIcon(null);
@@ -78,11 +112,10 @@ public class frmService extends javax.swing.JInternalFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Chọn Phòng: ");
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        cboTenPhong.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        cboTenPhong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                cboTenPhongActionPerformed(evt);
             }
         });
 
@@ -145,7 +178,7 @@ public class frmService extends javax.swing.JInternalFrame {
                             .addComponent(jLabel3))
                         .addGap(12, 12, 12)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cboTenPhong, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jTextField2)
                             .addComponent(jTextField1))
                         .addContainerGap())
@@ -165,7 +198,7 @@ public class frmService extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel1)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cboTenPhong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(9, 9, 9)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -186,7 +219,7 @@ public class frmService extends javax.swing.JInternalFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách dịch vụ đã thêm"));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblListServicesAdded.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -197,7 +230,7 @@ public class frmService extends javax.swing.JInternalFrame {
                 "Số phòng", "Tên dịch vụ", "Số lượng", "Tổng tiền"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(tblListServicesAdded);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -219,7 +252,7 @@ public class frmService extends javax.swing.JInternalFrame {
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách dịch vụ"));
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tblListServices.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -230,7 +263,7 @@ public class frmService extends javax.swing.JInternalFrame {
                 "Tên dịch vụ", "Đơn giá", "Trạng thái"
             }
         ));
-        jScrollPane3.setViewportView(jTable2);
+        jScrollPane3.setViewportView(tblListServices);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -293,9 +326,58 @@ public class frmService extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    // LOAD DATA TO COMBOBOX
+    private void loadDataToCombobox() {
+        for (Room room : roomDAO.getAllRooms()) {
+            cboTenPhong.addItem(room.getTenPhong());
+        }
+    }
+    
+    // CREATE TITLE COLUMNS OF LIST SERVICE
+    private void initColsListServices() {
+        modellListServices.setColumnIdentifiers(new String[] {
+            "Tên dich vu", "Ðon giá", "Trang thái"
+        });
+        tblListServices.setModel(modellListServices);
+    }
+    
+    // LOAD DATA TO TABLE LIST SERVICE
+    private void loadDataToTblListServices() throws ClassNotFoundException, SQLException {
+        modellListServices.setRowCount(0);
+        
+        for (Service service : serviceDAO.getServices()) {
+            Object[] row = new Object[] {
+              service.getTenDV(), service.getDonGia(), service.getTrangThai()  
+            };
+            modellListServices.addRow(row);
+        }
+        modellListServices.fireTableDataChanged();
+    }
+    
+    // CREATE TITLE COLUMNS OF LIST SERVICE ADDED
+    private void initColsListServicesAdded() {
+        modelListServicesAdded.setColumnIdentifiers(new String[] {
+            "So phòng", "Tên dich vu", "So luong", "Tong Tien"
+        });
+        tblListServicesAdded.setModel(modelListServicesAdded);
+    }
+    
+    // LOAD DATA TO TABLE LIST SERVICE ADDED
+    private void loadDataToTblListServicesAdded() throws ClassNotFoundException, SQLException {
+        modelListServicesAdded.setRowCount(0);
+        
+        for (OrderDetail_Room or : orderDetailRoomDAO.getListServicesAdded()) {
+            Object[] row = new Object[] {
+              or.getTenPhong(), or.getService().getTenDV(), or.getSoLuong(), or.getTongTien()
+            };
+            modelListServicesAdded.addRow(row);
+        }
+        modelListServicesAdded.fireTableDataChanged();
+    }
+    
+    private void cboTenPhongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTenPhongActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_cboTenPhongActionPerformed
 
     private void btnTaoHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoHoaDonActionPerformed
         frmBill frm = new frmBill();
@@ -308,7 +390,7 @@ public class frmService extends javax.swing.JInternalFrame {
     private com.k33ptoo.components.KButton btnTaoHoaDon;
     private com.k33ptoo.components.KButton btnThem;
     private com.k33ptoo.components.KButton btnXoa;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cboTenPhong;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -319,10 +401,10 @@ public class frmService extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JPanel pnlTitle;
+    private javax.swing.JTable tblListServices;
+    private javax.swing.JTable tblListServicesAdded;
     // End of variables declaration//GEN-END:variables
 }

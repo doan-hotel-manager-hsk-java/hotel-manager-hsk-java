@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dao;
 
 import connection.DatabaseConnection;
@@ -15,10 +11,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author vomin
- */
 public class RoomDAO {
 
     //tuan
@@ -32,6 +24,7 @@ public class RoomDAO {
     private final String SELECT_ALL_ROOM = "SELECT * FROM PHONG";
     private final String SELECT_ROOM_BY_NAME = "SELECT * FROM PHONG WHERE TENPHONG = ?";
     private final String SELECT_ROOM_BY_ID = "SELECT * FROM PHONG WHERE MAPHONG = ?";
+    private final String SELECT_ROOM_BY_ID_LOAI = "SELECT * FROM PHONG WHERE MALOAIPHONG = ?";
 
     private final RoomTypeDAO roomTypeDAO = new RoomTypeDAO();
     private final RoomStatusTypeDAO roomStatusTypeDAO = new RoomStatusTypeDAO();
@@ -92,7 +85,7 @@ public class RoomDAO {
 
         return null;
     }
-    
+
     public Room findRoomByNameRoom(String name) {
         try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(SELECT_ROOM_BY_NAME)) {
             pstmt.setString(1, name);
@@ -113,6 +106,35 @@ public class RoomDAO {
             }
         } catch (Exception e) {
             System.err.println("findRoomById(): connect db fail");
+        }
+        return null;
+    }
+    
+
+    public List<Room> findRoomByIDLoaiPhong(String IDLoaiPhong) {
+        List<Room> rooms = new ArrayList<>();
+
+        try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(SELECT_ROOM_BY_ID_LOAI)) {
+            pstmt.setString(1, IDLoaiPhong);
+            try ( ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    RoomType roomType = roomTypeDAO.findRoomTypeById(rs.getString(MA_LOAI_PHONG));
+                    RoomStatusType romStatusType = roomStatusTypeDAO.finRoomStatusTypeById(rs.getString(MA_LOAT_TRANG_THAI_PHONG));
+                    Staff staff = staffDAO.getEmployeeBYID(rs.getString(MA_NV));
+
+                    Room room = new Room(rs.getString(Ma_PHONG), rs.getString(TEN_PHONG),
+                            rs.getInt(TANG), roomType, romStatusType, staff);
+
+                    rooms.add(room);
+                }
+
+                return rooms;
+            } catch (Exception e) {
+                System.err.println("get data fail");
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.err.println("getAllRooms(): connect db fail");
             e.printStackTrace();
         }
 
