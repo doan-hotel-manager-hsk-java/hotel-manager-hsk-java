@@ -6,10 +6,6 @@ package entity;
 
 import java.util.Objects;
 
-/**
- *
- * @author ltuan
- */
 public class Staff {
     private String maNV;
     private String tenNV;
@@ -17,19 +13,29 @@ public class Staff {
     private String email;
     private String cmnd;
     private String sdt;
+    private String trangThai;
     private StaffType staffType;
 
     public Staff() {
     }
 
-    public Staff(String maNV, String tenNV, String gioiTinh, String email, String cmnd, String sdt, StaffType staffType) {
+    public Staff(String maNV, String tenNV, String gioiTinh, String email, String cmnd, String sdt, String trangThai, StaffType staffType) {
         this.maNV = maNV;
         this.tenNV = tenNV;
         this.gioiTinh = gioiTinh;
         this.email = email;
         this.cmnd = cmnd;
         this.sdt = sdt;
+        this.trangThai = trangThai;
         this.staffType = staffType;
+    }
+
+    public String getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(String trangThai) {
+        this.trangThai = trangThai;
     }
 
     public String getMaNV() {
