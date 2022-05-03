@@ -15,6 +15,9 @@ import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.Label;
 import java.awt.Toolkit;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -337,11 +340,17 @@ public class MainEmployee extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlRoomMousePressed
 
     private void pnlServiceMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlServiceMousePressed
-        setColor(pnlService, lblService);
-        resetColor(pnlRoom, lblRoom);
-        resetColor(pnlChangePass, lblChangePass);
-        frmService frame = new frmService();
-        openComponent(frame);
+        try {
+            setColor(pnlService, lblService);
+            resetColor(pnlRoom, lblRoom);
+            resetColor(pnlChangePass, lblChangePass);
+            frmService frame = new frmService();
+            openComponent(frame);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainEmployee.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MainEmployee.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_pnlServiceMousePressed
 
     private void pnlRoomFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pnlRoomFocusGained
