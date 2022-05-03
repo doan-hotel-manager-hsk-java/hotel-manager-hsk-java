@@ -16,13 +16,13 @@ public class Device {
     private int soLuongTon;
     private String donVi;
     private double gia;
-    private String trangThai;
+    private int trangThai;
     private Staff staff;
 
     public Device() {
     }
 
-    public Device(String maTTB, String tenTTB, int soLuongTon, String donVi, double gia, String trangThai, Staff staff) {
+    public Device(String maTTB, String tenTTB, int soLuongTon, String donVi, double gia, int trangThai, Staff staff) {
         this.maTTB = maTTB;
         this.tenTTB = tenTTB;
         this.soLuongTon = soLuongTon;
@@ -72,11 +72,11 @@ public class Device {
         this.gia = gia;
     }
 
-    public String getTrangThai() {
+    public int getTrangThai() {
         return trangThai;
     }
 
-    public void setTrangThai(String trangThai) {
+    public void setTrangThai(int trangThai) {
         this.trangThai = trangThai;
     }
 
