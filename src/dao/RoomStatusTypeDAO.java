@@ -6,7 +6,6 @@ package dao;
 
 import connection.DatabaseConnection;
 import entity.RoomStatusType;
-import entity.RoomType;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,14 +40,14 @@ public class RoomStatusTypeDAO {
                 return roomStatusTypes;
             }
         }catch(Exception e) {
-             System.err.println("getAllRoomType(): connect db fail");
+             System.err.println("getAllRoomStatusTypes(): connect db fail");
             e.printStackTrace();
         }
         
         return null;
     }
     
-    public RoomStatusType finRoomStatusType(String id) {
+    public RoomStatusType finRoomStatusTypeById(String id) {
         try(Connection conn = DatabaseConnection.opConnection();
                PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_ROOM_STATUS_TYPE_BY_ID) ) {
             pstmt.setString(1, id);
@@ -63,7 +62,7 @@ public class RoomStatusTypeDAO {
                 }
             }
         }catch(Exception e) {
-             System.err.println("findRoomTypeById(): connect db fail");
+             System.err.println("finRoomStatusTypeById(): connect db fail");
             e.printStackTrace();
         }
         

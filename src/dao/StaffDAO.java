@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class StaffDAO {
-
+    
     private final String SELECT_LOAINV_BYID = "select maLoaiNV from NhanVien where maNV = ?";
 
     public String getMaLoaiNVBYID(String maNV) {
