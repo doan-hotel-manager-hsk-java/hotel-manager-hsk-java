@@ -35,14 +35,14 @@ public class CustomerDAO {
             pstmt.setString(1, id);
 
             try ( ResultSet rs = pstmt.executeQuery()) {
-                if(rs.next()) {
+                if (rs.next()) {
                     String ma = rs.getString(MA_KH);
                     String ten = rs.getString(TEN_KH);
                     String sdt = rs.getString(SDT);
                     boolean gioiTinh = rs.getInt(GIOI_TINH) == 1;
                     String diaChi = rs.getString(DIA_CHI);
-                    
-                    Customer cus = new Customer(ma, ten, sdt, gioiTinh, diaChi, diaChi);
+
+                    Customer cus = new Customer(ma, ten, sdt, gioiTinh, diaChi);
                     return cus;
                 }
             } catch (Exception e) {
@@ -53,24 +53,24 @@ public class CustomerDAO {
             System.err.println("findCustomerById(): connect db fail");
             e.printStackTrace();
         }
-        
+
         return null;
     }
-    
+
     public List<Customer> findCustomerByLastName(String name) {
         List<Customer> customers = new ArrayList<>();
         try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(SELECT_CUSTOMER_BY_LASTNAME)) {
             pstmt.setString(1, "%" + name);
 
             try ( ResultSet rs = pstmt.executeQuery()) {
-                while(rs.next()) {
+                while (rs.next()) {
                     String ma = rs.getString(MA_KH);
                     String ten = rs.getString(TEN_KH);
                     String sdt = rs.getString(SDT);
                     boolean gioiTinh = rs.getInt(GIOI_TINH) == 1;
                     String diaChi = rs.getString(DIA_CHI);
-                    
-                    Customer cus = new Customer(ma, ten, sdt, gioiTinh, diaChi, diaChi);
+
+                    Customer cus = new Customer(ma, ten, sdt, gioiTinh, diaChi);
                     customers.add(cus);
                 }
                 return customers;
@@ -82,24 +82,24 @@ public class CustomerDAO {
             System.err.println("findCustomerById(): connect db fail");
             e.printStackTrace();
         }
-        
+
         return null;
     }
-    
+
     public List<Customer> findCustomerByFirstName(String name) {
         List<Customer> customers = new ArrayList<>();
         try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(SELECT_CUSTOMER_BY_FIRSTNAME)) {
             pstmt.setString(1, name + "%");
 
             try ( ResultSet rs = pstmt.executeQuery()) {
-                while(rs.next()) {
+                while (rs.next()) {
                     String ma = rs.getString(MA_KH);
                     String ten = rs.getString(TEN_KH);
                     String sdt = rs.getString(SDT);
                     boolean gioiTinh = rs.getInt(GIOI_TINH) == 1;
                     String diaChi = rs.getString(DIA_CHI);
-                    
-                    Customer cus = new Customer(ma, ten, sdt, gioiTinh, diaChi, diaChi);
+
+                    Customer cus = new Customer(ma, ten, sdt, gioiTinh, diaChi);
                     customers.add(cus);
                 }
                 return customers;
@@ -111,8 +111,24 @@ public class CustomerDAO {
             System.err.println("findCustomerByFirstName(): connect db fail");
             e.printStackTrace();
         }
-        
+
         return null;
+    }
+
+    public boolean updateCustomerById(Customer customer) {
+        try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(UPDATE_CUSTOMER_BY_ID)) {
+            pstmt.setString(1, customer.getTenKH());
+            pstmt.setString(2, customer.getSoDT());
+            pstmt.setInt(3, customer.isGioiTinh() == true ? 1 : 0);
+            pstmt.setString(4, customer.getDiaChi());
+            pstmt.setString(5, customer.getMaKH());
+
+            return pstmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.err.println("updateCustomerById(): get data fail");
+            e.printStackTrace();
+        }
+        return false;
     }
     
 }
