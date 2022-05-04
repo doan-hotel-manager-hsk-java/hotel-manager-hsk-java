@@ -12,5 +12,7 @@ public class BookRoomDAO {
     
     //Phương
     //Variable
-//    private final 
+    private final String MA_DDP = "maDDP";
+    private final String NGAY_DAT = "ngayDat";
+    
 }
