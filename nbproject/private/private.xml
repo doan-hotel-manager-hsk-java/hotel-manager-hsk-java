@@ -3,21 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-
-            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/dao/RoomStatusTypeDAO.java</file>
-            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/gui/MainEmployee.java</file>
-            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/dao/StaffDAO.java</file>
-            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/connection/DatabaseConnection.java</file>
-            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/dao/RoomDAO.java</file>
-            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/dao/RoomDeviceDAO.java</file>
-            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/gui/frmAddDeviceForRoom.java</file>
-            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/dao/BookRoomDAO.java</file>
-            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/dao/ServiceDAO.java</file>
-            <file>file:/F:/IUH.STUDY/K2N3_2022/hsk/do-an/hotel-manager-hsk-java/src/gui/Login.java</file>
-
-            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/entity/Room.java</file>
-            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/dao/RoomTypeDAO.java</file>
-            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/gui/frmBookRoom.java</file>
+            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/ServiceDAO.java</file>
+            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/entity/OrderDetail.java</file>
+            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/gui/frmService.java</file>
+            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/OrderDAO.java</file>
+            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/OrdeerDetailDAO.java</file>
         </group>
     </open-files>
 </project-private>
