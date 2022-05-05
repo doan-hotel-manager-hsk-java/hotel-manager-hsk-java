@@ -6,7 +6,10 @@ package dao;
 
 import connection.DatabaseConnection;
 import entity.Service;
+import entity.ServiceType;
+import entity.Staff;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -37,6 +40,56 @@ public class ServiceDAO {
                 listService.add(service);
             }
             return listService;
+        }
+    }
+    
+    // FIND BY ID SERVICE
+    public Service getServiceById(String maDV) throws SQLException, ClassNotFoundException {
+        String sql = "SELECT * FROM DichVu WHERE maDV = ?";
+        try(
+                Connection con = DatabaseConnection.opConnection();
+                PreparedStatement pres = con.prepareStatement(sql);
+            ) {
+            
+            pres.setString(1, maDV);
+            ResultSet res = pres.executeQuery();
+            
+            if(res.next()) {
+                Service service = new Service();
+                service.setMaDV(res.getString("maDV"));
+                service.setTenDV(res.getString("tenDV"));
+                service.setDonGia(res.getDouble("donGia"));
+                service.setTrangThai(res.getString("trangThai"));
+                
+                return service;
+            }
+            return null;
+        }
+    }
+    
+    // FIND BY NAME SERVICE
+    public Service getServiceByName(String tenDV) throws SQLException, ClassNotFoundException {
+        String sql = "SELECT * FROM DichVu WHERE tenDV = ?";
+        try(
+                Connection con = DatabaseConnection.opConnection();
+                PreparedStatement pres = con.prepareStatement(sql);
+            ) {
+            
+            pres.setString(1, tenDV);
+            ResultSet res = pres.executeQuery();
+            
+            if(res.next()) {
+                Service service = new Service();
+                service.setMaDV(res.getString("maDV"));
+                service.setTenDV(res.getString("tenDV"));
+                service.setDonGia(res.getDouble("donGia"));
+                service.setTrangThai(res.getString("trangThai"));
+                //service.setServiceType(res.getObject(res.getString("maLDV"), ServiceType.class));
+                //service.setStaff(res.getObject(res.getString("maNV"), Staff.class));
+                
+                return service;
+            }
+            return null;
         }
     }
     
