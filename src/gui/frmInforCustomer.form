@@ -413,6 +413,9 @@
                   <Color blue="ff" green="33" red="33" type="rgb"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnChangeInforCustomerMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -485,6 +488,9 @@
               <Color blue="0" green="cc" red="0" type="rgb"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnExportDataMouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

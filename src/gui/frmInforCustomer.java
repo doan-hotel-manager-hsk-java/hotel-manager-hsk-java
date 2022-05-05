@@ -9,6 +9,14 @@ import dao.OrderDAO;
 import entity.Customer;
 import entity.Order;
 import java.awt.Color;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -16,8 +24,16 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import regex.RegexHelper;
 
 /**
  *
@@ -70,20 +86,20 @@ public class frmInforCustomer extends javax.swing.JInternalFrame {
 
     private void loadDataToModel(List<Order> list) {
         customerTableModel.setRowCount(0);
-        
+
         for (Order item : list) {
             customerTableModel.addRow(new String[]{item.getCustomer().getMaKH(), item.getCustomer().getTenKH(),
-                "0" + item.getCustomer().getSoDT(), item.getCustomer().isGioiTinh() == true ? "Nam" : "Nữ", 
-                item.getCustomer().getDiaChi(), item.getNgayVao(), reverseDate(item.getNgayRa())});
+                item.getCustomer().getSoDT(), item.getCustomer().isGioiTinh() == true ? "Nam" : "Nữ",
+                item.getCustomer().getDiaChi(), reverseDate(item.getNgayVao()), reverseDate(item.getNgayRa())});
         }
     }
-    
+
     private void loadDataToModelByFind(List<Customer> list) {
         customerTableModel.setRowCount(0);
-        
+
         for (Customer item : list) {
             customerTableModel.addRow(new String[]{item.getMaKH(), item.getTenKH(),
-                "0" + item.getSoDT(), item.isGioiTinh() == true ? "Nam" : "Nữ", 
+                "0" + item.getSoDT(), item.isGioiTinh() == true ? "Nam" : "Nữ",
                 item.getDiaChi(), "", ""});
         }
     }
@@ -92,17 +108,74 @@ public class frmInforCustomer extends javax.swing.JInternalFrame {
         SimpleDateFormat sdfSQL = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdfClient = new SimpleDateFormat("dd-MM-yyyy");
         Date dateTemp;
-        try{
+        try {
             dateTemp = sdfSQL.parse(date);
             String dateFormatToString = sdfClient.format(dateTemp);
             return dateFormatToString;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "ERROR!";
+    }
+
+    private void eventChangeComboBox() {
+        switch (cboFilter.getSelectedItem().toString()) {
+            case "Hôm nay" -> {
+                List<Order> orders = orderDAO.getAllOrderToDay();
+                loadDataToModel(orders);
+            }
+            case "Tháng này" -> {
+                List<Order> orders = orderDAO.getAllOrderToMonth();
+                loadDataToModel(orders);
+            }
+            default -> {
+                List<Order> orders = orderDAO.getAllOrderToYear();
+                loadDataToModel(orders);
+            }
+        }
+    }
+
+    private void clearInput() {
+        txtAddress.setText("");
+        txtCustomerName.setText("");
+        txtIdCustomer.setText("");
+        txtPhoneNumber.setText("");
+        cboGender.setSelectedIndex(0);
+        cboFilter.setSelectedIndex(0);
+    }
+
+    public boolean exportFileExcel(JTable table, String part) {
+        TableModel model = table.getModel();
+        
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Danh sách khách hàng");
+        
+        Row headerRow = sheet.createRow(0);
+        
+        for(int i = 0; i < model.getColumnCount(); ++i) {
+            headerRow.createCell(i).setCellValue(model.getColumnName(i));
+        }
+        
+        
+        for(int i = 0; i < model.getRowCount(); i++) {
+            Row curentRow = sheet.createRow(i + 1);
+            for(int j = 0; j < model.getColumnCount(); j++) {
+                curentRow.createCell(j).setCellValue(model.getValueAt(i, j).toString());
+                System.err.println(model.getValueAt(i, j).toString());
+            }
+        }
+        
+        try(FileOutputStream fos = new FileOutputStream(new File(part))){
+            workbook.write(fos);
+            return true;
         }catch(Exception e) {
             e.printStackTrace();
         }
         
-        return "ERROR!";
+        return false;
     }
-   
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -220,6 +293,11 @@ public class frmInforCustomer extends javax.swing.JInternalFrame {
         btnChangeInforCustomer.setkHoverStartColor(new java.awt.Color(0, 204, 255));
         btnChangeInforCustomer.setkPressedColor(new java.awt.Color(0, 153, 153));
         btnChangeInforCustomer.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnChangeInforCustomer.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnChangeInforCustomerMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -321,6 +399,11 @@ public class frmInforCustomer extends javax.swing.JInternalFrame {
         btnExportData.setkPressedColor(new java.awt.Color(0, 204, 51));
         btnExportData.setkSelectedColor(new java.awt.Color(0, 153, 0));
         btnExportData.setkStartColor(new java.awt.Color(0, 204, 0));
+        btnExportData.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnExportDataMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
         pnlMain.setLayout(pnlMainLayout);
@@ -396,38 +479,69 @@ public class frmInforCustomer extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tblCustomerMouseClicked
 
     private void cboFilterItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboFilterItemStateChanged
-        switch (cboFilter.getSelectedItem().toString()) {
-            case "Hôm nay" ->  {
-                List<Order> orders = orderDAO.getAllOrderToDay();
-                loadDataToModel(orders);
-            }
-            case "Tháng này" ->  {
-                List<Order> orders = orderDAO.getAllOrderToMonth();
-                loadDataToModel(orders);
-            }
-            default ->  {
-                List<Order> orders = orderDAO.getAllOrderToYear();
-                loadDataToModel(orders);
-            }
-        }
+        eventChangeComboBox();
     }//GEN-LAST:event_cboFilterItemStateChanged
 
     private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
         // TODO add your handling code here:
         String textFind = txtSearch.getText().trim();
         List<Customer> customers = customerDAO.findCustomerByFirstName(textFind);
-        
-        if(customers.isEmpty()) {
+
+        if (customers.isEmpty()) {
             customers = customerDAO.findCustomerByLastName(textFind);
         }
-        
-        if(customers.isEmpty()) {
+
+        if (customers.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng này!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-        }else {
+            return;
+        } else {
             loadDataToModelByFind(customers);
         }
 
     }//GEN-LAST:event_txtSearchActionPerformed
+
+    private void btnChangeInforCustomerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnChangeInforCustomerMouseClicked
+        int index = tblCustomer.getSelectedRow();
+        if (index < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một khách hàng để thực hiện chỉnh sửa!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+        } else {
+            String maKH = txtIdCustomer.getText().trim();
+            String tenKH = txtCustomerName.getText().trim();
+            String sdt = txtPhoneNumber.getText().trim();
+            boolean gioiTinh = cboGender.getSelectedItem().toString().equals("Nam");
+            String diaChi = txtAddress.getText().trim();
+
+            if (!RegexHelper.regexCustomerName(tenKH)) {
+                JOptionPane.showMessageDialog(this, "Tên khách hàng sai định dạng!\n VD: Lê Tuấn", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            } else if (!RegexHelper.regexPhoneNumber(sdt)) {
+                JOptionPane.showMessageDialog(this, "Số điện thoại không chứa ký tự chữ, phải đủ 10 số và bắt đầu bằng các đầu số hợp lệ!\n VD: 0343229978", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            } else {
+                Customer customer = new Customer(maKH, tenKH, sdt, gioiTinh, diaChi);
+                customerDAO.updateCustomerById(customer);
+                loadDataToTable();
+
+                clearInput();
+            }
+
+        }
+    }//GEN-LAST:event_btnChangeInforCustomerMouseClicked
+
+    private void btnExportDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportDataMouseClicked
+        JFileChooser fileChooser = new JFileChooser();
+        int option = fileChooser.showSaveDialog(this);
+        if (option == JFileChooser.APPROVE_OPTION) {
+            String name = fileChooser.getSelectedFile().getName();
+            String path = fileChooser.getSelectedFile().getParentFile().getPath();
+            String pathFile = path + "\\" + name + ".xlsx";
+            if(exportFileExcel(tblCustomer, pathFile)) {
+                JOptionPane.showMessageDialog(this, "Xuất file thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }else {
+                JOptionPane.showMessageDialog(this, "Xuất file thất bại!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnExportDataMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
