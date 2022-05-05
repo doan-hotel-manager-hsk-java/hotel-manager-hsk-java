@@ -60,7 +60,10 @@ public class RoomStatusTypeDAO {
                     RoomStatusType roomStatusType = new RoomStatusType(maLTTP, tenLTTP);
                     return roomStatusType;
                 }
-            }
+            } catch(Exception e) {
+             System.err.println("error result set fin room status type");
+            e.printStackTrace();
+        }
         }catch(Exception e) {
              System.err.println("finRoomStatusTypeById(): connect db fail");
             e.printStackTrace();

@@ -3,11 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/ServiceDAO.java</file>
             <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/entity/OrderDetail.java</file>
             <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/gui/frmService.java</file>
             <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/OrderDAO.java</file>
             <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/OrdeerDetailDAO.java</file>
+=======
+            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/dao/CustomerDAO.java</file>
+            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/gui/DateLabelFormatter.java</file>
+            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/dao/BookRoomDAO.java</file>
+            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/entity/Customer.java</file>
+            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/gui/frmBookRoom.java</file>
+            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/gui/MainEmployee.java</file>
+>>>>>>> Overview
         </group>
     </open-files>
 </project-private>

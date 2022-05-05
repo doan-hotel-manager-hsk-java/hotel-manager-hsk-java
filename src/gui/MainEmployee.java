@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package gui;
 
 import com.k33ptoo.components.KButton;
@@ -16,6 +12,7 @@ import java.awt.HeadlessException;
 import java.awt.Label;
 import java.awt.Toolkit;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JInternalFrame;
@@ -32,8 +29,9 @@ import javax.swing.SwingUtilities;
  * @author vomin
  */
 public class MainEmployee extends javax.swing.JFrame {
+
     private static String username;
-    
+
     public MainEmployee(String _userName) {
         username = _userName;
         this.setUndecorated(true);
@@ -332,11 +330,13 @@ public class MainEmployee extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void pnlRoomMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlRoomMousePressed
+
         setColor(pnlRoom, lblRoom);
         resetColor(pnlService, lblService);
         resetColor(pnlChangePass, lblChangePass);
         frmBookRoom frame = new frmBookRoom();
         openComponent(frame);
+
     }//GEN-LAST:event_pnlRoomMousePressed
 
     private void pnlServiceMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlServiceMousePressed
@@ -354,18 +354,20 @@ public class MainEmployee extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlServiceMousePressed
 
     private void pnlRoomFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pnlRoomFocusGained
+
         setColor(pnlRoom, lblRoom);
         resetColor(pnlService, lblService);
         resetColor(pnlChangePass, lblChangePass);
         frmBookRoom frame = new frmBookRoom();
         openComponent(frame);
+
     }//GEN-LAST:event_pnlRoomFocusGained
 
     private void pnlChangePassMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlChangePassMousePressed
         setColor(pnlChangePass, lblChangePass);
         resetColor(pnlService, lblService);
         resetColor(pnlRoom, lblRoom);
-        
+
         frmChangePass frm = new frmChangePass(username);
         frm.setVisible(true);
     }//GEN-LAST:event_pnlChangePassMousePressed
