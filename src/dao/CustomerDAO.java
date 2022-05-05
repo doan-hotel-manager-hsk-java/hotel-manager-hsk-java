@@ -31,7 +31,8 @@ public class CustomerDAO {
     private final String UPDATE_CUSTOMER_BY_ID = "UPDATE KHACHHANG SET TENKH = ?, SDT = ?, GIOITINH = ?, DIACHI = ? WHERE MAKH = ?";
 
     public Customer findCustomerById(String id) {
-        try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(SELECT_CUSTOMER_BY_ID)) {
+        try ( Connection conn = DatabaseConnection.opConnection();  
+                PreparedStatement pstmt = conn.prepareStatement(SELECT_CUSTOMER_BY_ID)) {
             pstmt.setString(1, id);
 
             try ( ResultSet rs = pstmt.executeQuery()) {
