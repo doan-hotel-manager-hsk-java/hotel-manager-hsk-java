@@ -12,8 +12,6 @@ public class OrderDetail {
     private int soLuong;
     private Order order;
     private Service service;
-    
-    private double tongTien;
 
     public OrderDetail() {
     }
@@ -22,13 +20,6 @@ public class OrderDetail {
         this.soLuong = soLuong;
         this.order = order;
         this.service = service;
-    }
-    
-    public OrderDetail(int soLuong, Order order, Service service, double tongTien) {
-        this.soLuong = soLuong;
-        this.order = order;
-        this.service = service;
-        this.tongTien = tongTien;
     }
 
     public int getSoLuong() {
@@ -54,17 +45,6 @@ public class OrderDetail {
     public void setService(Service service) {
         this.service = service;
     }
-
-    public double getTongTien() {
-        return tongTien;
-    }
-
-    public void setTongTien(double tongTien) {
-        this.tongTien = tongTien;
-    }
     
-    // HANDLE GET TONG TIEN
-    public double getTongSoTien() {
-        return tongTien = service.getDonGia() * getSoLuong();
-    }
+    
 }
