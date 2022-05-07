@@ -24,6 +24,7 @@ public class RoomTypeDAO {
     
     private final String SELECT_ALL_ROOMTYPE = "SELECT * FROM LOAIPHONG";
     private final String SELECT_ALL_ROOMTYPE_BY_ID = "SELECT * FROM LOAIPHONG WHERE MALOAIPHONG = ?";
+    private final String SELECT_ROOMTYPE_BY_NAME = "SELECT * FROM LOAIPHONG WHERE TENLOAIPHONG  = ?";
     
     public List<RoomType> getAllRoomTypes() {
         List<RoomType> roomTypeList = new ArrayList<>();
@@ -66,6 +67,28 @@ public class RoomTypeDAO {
             }
         }catch(Exception e) {
              System.err.println("findRoomTypeById(): connect db fail");
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+     public RoomType findRoomTypeByName(String name) {
+        try(Connection conn = DatabaseConnection.opConnection();
+               PreparedStatement pstmt = conn.prepareStatement(SELECT_ROOMTYPE_BY_NAME) ) {
+            pstmt.setString(1, name);
+            System.err.println(name);
+            try(ResultSet rs = pstmt.executeQuery()) {
+                if(rs.next()) {
+                    String maLP = rs.getString(MA_LP);
+                    String tenLP = rs.getString(TEN_LP);
+                    Double donGia = rs.getDouble(DONGIA);
+                    
+                    RoomType roomType = new RoomType(maLP, tenLP, donGia);
+                    return roomType;
+                }
+            }
+        }catch(Exception e) {
+             System.err.println("findRoomTypeByName(): connect db fail");
             e.printStackTrace();
         }
         

@@ -577,7 +577,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
         resetColor(pnlChangePass, lblChangePass);
-        frmRoomManager frame = new frmRoomManager();
+        frmRoomManager frame = new frmRoomManager(username);
         openComponent(frame);
     }//GEN-LAST:event_pnlRoomMousePressed
 
@@ -590,7 +590,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
         resetColor(pnlChangePass, lblChangePass);
-        frmServiceManager frame = new frmServiceManager();
+        frmServiceManager frame = new frmServiceManager(username);
         openComponent(frame);
     }//GEN-LAST:event_pnlServiceMousePressed
 
