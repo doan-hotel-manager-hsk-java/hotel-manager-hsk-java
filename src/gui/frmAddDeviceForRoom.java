@@ -164,7 +164,6 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
         });
 
         cboNameRoom.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cboNameRoom.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cboNameRoom.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cboNameRoomItemStateChanged(evt);
@@ -172,7 +171,6 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
         });
 
         cboNameDevice.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cboNameDevice.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Số lượng");
