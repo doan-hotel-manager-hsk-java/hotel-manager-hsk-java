@@ -88,21 +88,44 @@ public class OrderDAO {
             ResultSet res = pres.executeQuery();
             
             Room room = new Room();
+            Customer customer = new Customer();
             
             if(res.next()) {
                 Order order = new Order();
                 order.setMaHD(res.getString("maHD"));
                 order.setNgayVao(res.getString("ngayVao"));
                 order.setGioVao(res.getString("gioVao"));
+                order.setNgayRa(res.getString("ngayRa"));
                 order.setGioRa(res.getString("gioRa"));
                 order.setNgayLapHD(res.getString("ngayLapHD"));
                 order.setChietKhau(res.getInt("chietKhau"));
                 room.setMaPhong(res.getString("maPhong"));
                 order.setRoom(room);
+                customer.setMaKH(res.getString("maKH"));
+                order.setCustomer(customer);
+                order.setTongTien(res.getDouble("tongTien"));
                 
                 return order;
             }
             return null;
+        }
+    }
+    
+    // UPDATE ORDER
+    public boolean updateServiceInOrder(Order od) throws SQLException, ClassNotFoundException {
+        String sql = "UPDATE HoaDon SET gioRa = ?, ngayRa = ? "
+                   + "WHERE maHD = ? AND maPhong = ?";
+        try(
+                Connection con = DatabaseConnection.opConnection();
+                PreparedStatement pres = con.prepareStatement(sql);
+            ) {
+            
+            pres.setString(1, od.getGioRa());
+            pres.setString(2, od.getNgayRa());
+            pres.setString(3, od.getMaHD());
+            pres.setString(4, od.getRoom().getMaPhong());
+            
+            return pres.executeUpdate() > 0;
         }
     }
     

@@ -4,18 +4,69 @@
  */
 package gui;
 
+import dao.CustomerDAO;
+import dao.OrdeerDetailDAO;
+import dao.OrderDAO;
+import dao.RoomDAO;
+import dao.RoomTypeDAO;
+import dao.ServiceDAO;
+import dao.StaffDAO;
+import entity.Customer;
+import entity.Order;
+import entity.OrderDetail;
+import entity.Room;
+import entity.RoomType;
+import entity.Service;
+import entity.Staff;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Huy
  */
 public class frmBill extends javax.swing.JFrame {
 
+    // INIT MODEL
+    private DefaultTableModel modelServiceOrder;
+    
+    // INIT DAO
+    private RoomDAO roomDAO;
+    private ServiceDAO serviceDAO;
+    private OrdeerDetailDAO orderDetailDAO;
+    private OrderDAO orderDAO;
+    private StaffDAO staffDAO;
+    private CustomerDAO customerDAO;
+    private RoomTypeDAO roomTypeDAO;
+    
+    
     /**
      * Creates new form frmBill
+     * @throws java.sql.SQLException
+     * @throws java.lang.ClassNotFoundException
      */
-    public frmBill() {
+    public frmBill() throws SQLException, ClassNotFoundException {
         setAlwaysOnTop(true);
         initComponents();
+        
+        // MODEL
+        modelServiceOrder = new DefaultTableModel();
+        
+        // DAO
+        roomDAO = new RoomDAO();
+        serviceDAO = new ServiceDAO();
+        orderDetailDAO = new OrdeerDetailDAO();
+        orderDAO = new OrderDAO();
+        staffDAO = new StaffDAO();
+        customerDAO = new CustomerDAO();
+        roomTypeDAO = new RoomTypeDAO();
+        
+        // CALLING
+        loadDataFromFormService();
+        initColsListServices();
+        loadDataToTblServicesInOrder();
     }
 
     /**
@@ -37,32 +88,32 @@ public class frmBill extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
-        jLabel23 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
-        jLabel25 = new javax.swing.JLabel();
+        lblMaHD = new javax.swing.JLabel();
+        lblTenNV = new javax.swing.JLabel();
+        lblNgayLapHD = new javax.swing.JLabel();
         jSeparator5 = new javax.swing.JSeparator();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel16 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        lblMaHoaDon = new javax.swing.JLabel();
+        lblTenKH = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        lblTenKhach = new javax.swing.JLabel();
+        lblSdt = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
-        lblSDT = new javax.swing.JLabel();
+        lblTenPhong = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        lblSoPhong = new javax.swing.JLabel();
+        lblCmnd = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         lblLoaiPhong = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        lblGioVao = new javax.swing.JLabel();
+        lblNgayVao = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        lblGioRa = new javax.swing.JLabel();
+        lblGioVao = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        lblNgayVao = new javax.swing.JLabel();
         lblNgayRa = new javax.swing.JLabel();
+        lblGioRa = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        lblDonGia = new javax.swing.JLabel();
+        lblGiaPhong = new javax.swing.JLabel();
         btnPrint = new com.k33ptoo.components.KButton();
         btnClose = new com.k33ptoo.components.KButton();
         jSeparator3 = new javax.swing.JSeparator();
@@ -82,7 +133,7 @@ public class frmBill extends javax.swing.JFrame {
         label3 = new java.awt.Label();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblServiceOrder = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(204, 255, 255));
@@ -130,14 +181,14 @@ public class frmBill extends javax.swing.JFrame {
         jLabel21.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel21.setText("Ngày:");
 
-        jLabel23.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel23.setText("ABC");
+        lblMaHD.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblMaHD.setText("ABC");
 
-        jLabel24.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel24.setText("ABC");
+        lblTenNV.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTenNV.setText("ABC");
 
-        jLabel25.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel25.setText("ABC");
+        lblNgayLapHD.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblNgayLapHD.setText("ABC");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -152,27 +203,26 @@ public class frmBill extends javax.swing.JFrame {
                 .addGap(80, 80, 80)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel20)
+                        .addGap(25, 25, 25)
+                        .addComponent(lblTenNV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel20)
-                        .addGap(54, 54, 54)))
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(57, 92, Short.MAX_VALUE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblMaHD, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(lblNgayLapHD, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(67, 67, 67))
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 51, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,18 +230,18 @@ public class frmBill extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel23))
+                    .addComponent(lblMaHD))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel20)
-                    .addComponent(jLabel24))
+                    .addComponent(lblTenNV))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jLabel21)
-                    .addComponent(jLabel25))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                    .addComponent(lblNgayLapHD))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -204,32 +254,32 @@ public class frmBill extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Tên khách:");
 
-        lblMaHoaDon.setBackground(new java.awt.Color(255, 255, 255));
-        lblMaHoaDon.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblMaHoaDon.setText("ABC");
+        lblTenKH.setBackground(new java.awt.Color(255, 255, 255));
+        lblTenKH.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblTenKH.setText("ABC");
 
         jLabel6.setBackground(new java.awt.Color(255, 255, 255));
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("Số điện thoại:");
 
-        lblTenKhach.setBackground(new java.awt.Color(255, 255, 255));
-        lblTenKhach.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblTenKhach.setText("ABC");
+        lblSdt.setBackground(new java.awt.Color(255, 255, 255));
+        lblSdt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblSdt.setText("ABC");
 
         jLabel22.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel22.setText("CMND: ");
 
-        lblSDT.setBackground(new java.awt.Color(255, 255, 255));
-        lblSDT.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblSDT.setText("ABC");
+        lblTenPhong.setBackground(new java.awt.Color(255, 255, 255));
+        lblTenPhong.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblTenPhong.setText("ABC");
 
         jLabel7.setBackground(new java.awt.Color(255, 255, 255));
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setText("Số phòng:");
 
-        lblSoPhong.setBackground(new java.awt.Color(255, 255, 255));
-        lblSoPhong.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblSoPhong.setText("ABC");
+        lblCmnd.setBackground(new java.awt.Color(255, 255, 255));
+        lblCmnd.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblCmnd.setText("ABC");
 
         jLabel8.setBackground(new java.awt.Color(255, 255, 255));
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -243,9 +293,9 @@ public class frmBill extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel9.setText("Giờ vào:");
 
-        lblGioVao.setBackground(new java.awt.Color(255, 255, 255));
-        lblGioVao.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblGioVao.setText("ABC");
+        lblNgayVao.setBackground(new java.awt.Color(255, 255, 255));
+        lblNgayVao.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblNgayVao.setText("ABC");
 
         jLabel10.setBackground(new java.awt.Color(255, 255, 255));
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -255,30 +305,30 @@ public class frmBill extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel11.setText("Ngày vào:");
 
-        lblGioRa.setBackground(new java.awt.Color(255, 255, 255));
-        lblGioRa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblGioRa.setText("ABC");
+        lblGioVao.setBackground(new java.awt.Color(255, 255, 255));
+        lblGioVao.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblGioVao.setText("ABC");
 
         jLabel12.setBackground(new java.awt.Color(255, 255, 255));
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel12.setText("Ngày ra:");
 
-        lblNgayVao.setBackground(new java.awt.Color(255, 255, 255));
-        lblNgayVao.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblNgayVao.setText("ABC");
-
         lblNgayRa.setBackground(new java.awt.Color(255, 255, 255));
         lblNgayRa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblNgayRa.setText("ABC");
+
+        lblGioRa.setBackground(new java.awt.Color(255, 255, 255));
+        lblGioRa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblGioRa.setText("ABC");
 
         jLabel14.setBackground(new java.awt.Color(255, 255, 255));
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel14.setText("Giá phòng: ");
         jLabel14.setToolTipText("");
 
-        lblDonGia.setBackground(new java.awt.Color(255, 255, 255));
-        lblDonGia.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblDonGia.setText("ABC");
+        lblGiaPhong.setBackground(new java.awt.Color(255, 255, 255));
+        lblGiaPhong.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblGiaPhong.setText("ABC");
 
         btnPrint.setText("In hóa đơn");
         btnPrint.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
@@ -355,7 +405,7 @@ public class frmBill extends javax.swing.JFrame {
         label3.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
         label3.setText("XIN CẢM ƠN VÀ HẸN GẶP LẠI QUÝ KHÁCH !");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblServiceOrder.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -366,7 +416,7 @@ public class frmBill extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblServiceOrder);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -406,18 +456,14 @@ public class frmBill extends javax.swing.JFrame {
                                     .addComponent(jLabel7)
                                     .addComponent(jLabel8))
                                 .addGap(22, 22, 22)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblMaHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblTenKhach, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblSoPhong, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblSDT, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblLoaiPhong, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(194, 194, 194)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel11)
-                                        .addGap(35, 35, 35)
-                                        .addComponent(lblGioVao, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lblSdt, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                                    .addComponent(lblCmnd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblTenKH, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblTenPhong, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblLoaiPhong, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(75, 75, 75)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel9)
@@ -426,10 +472,14 @@ public class frmBill extends javax.swing.JFrame {
                                             .addComponent(jLabel14))
                                         .addGap(25, 25, 25)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(lblNgayVao, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(lblGioRa, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(lblNgayRa, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(lblDonGia, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                            .addComponent(lblGioVao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(lblNgayRa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(lblGioRa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(lblGiaPhong, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel11)
+                                        .addGap(35, 35, 35)
+                                        .addComponent(lblNgayVao, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 720, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -454,19 +504,16 @@ public class frmBill extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel13)
                             .addComponent(jLabel5)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(139, 139, 139)
-                                    .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(139, 139, 139)
+                                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel30)
                             .addComponent(label3, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
                             .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -483,33 +530,33 @@ public class frmBill extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(lblMaHoaDon)
+                    .addComponent(lblTenKH)
                     .addComponent(jLabel11)
-                    .addComponent(lblGioVao))
+                    .addComponent(lblNgayVao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(lblTenKhach)
+                    .addComponent(lblSdt)
                     .addComponent(jLabel9)
-                    .addComponent(lblGioRa))
+                    .addComponent(lblGioVao))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel22)
-                    .addComponent(lblSoPhong)
+                    .addComponent(lblCmnd)
                     .addComponent(jLabel12)
-                    .addComponent(lblNgayVao))
+                    .addComponent(lblNgayRa))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(lblSDT)
+                    .addComponent(lblTenPhong)
                     .addComponent(jLabel10)
-                    .addComponent(lblNgayRa))
+                    .addComponent(lblGioRa))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(lblLoaiPhong)
                     .addComponent(jLabel14)
-                    .addComponent(lblDonGia))
+                    .addComponent(lblGiaPhong))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -572,6 +619,56 @@ public class frmBill extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    // HANDLE GET DATA FROM FORM SERVICE
+    private void loadDataFromFormService() throws SQLException, ClassNotFoundException {
+        // FIND
+        Order order = orderDAO.getOrderById("HD006");
+        Staff staff = staffDAO.getEmployeeBYID("NV002");
+        Room room = roomDAO.findRoomById(order.getRoom().getMaPhong());
+        Customer customer = customerDAO.findCustomerById(order.getCustomer().getMaKH());
+        RoomType roomtype = roomTypeDAO.findRoomTypeById(room.getRoomType().getMaLoaiPhong());
+        
+        // SET TEXT
+        lblMaHD.setText(order.getMaHD());
+        lblTenNV.setText(staff.getTenNV());
+        lblNgayLapHD.setText(order.getNgayLapHD());
+        lblTenKH.setText(customer.getTenKH());
+        lblSdt.setText(staff.getSdt());
+        lblCmnd.setText(customer.getMaKH());
+        lblTenPhong.setText(room.getTenPhong());
+        lblLoaiPhong.setText(roomtype.getTenLoaiPhong());
+        lblNgayVao.setText(order.getNgayVao());
+        lblGioVao.setText(order.getGioVao());
+        lblNgayRa.setText(order.getNgayRa());
+        lblGioRa.setText(order.getGioRa());
+        lblGiaPhong.setText(""+roomtype.getDonGia());
+        
+    }
+    
+    // CREATE TITLE COLUMNS OF SERVICE IN ORDER
+    private void initColsListServices() {
+        modelServiceOrder.setColumnIdentifiers(new String[] {
+            "STT", "Tên dich vu", "So luong", "Thành tien"
+        });
+        tblServiceOrder.setModel(modelServiceOrder);
+    }
+    
+    // LOAD DATA TO TABLE SERVICE IN ORDER
+    private void loadDataToTblServicesInOrder() throws ClassNotFoundException, SQLException {
+        int i = 1;
+        modelServiceOrder.setRowCount(0);
+        
+        for (OrderDetail od : orderDetailDAO.getListServicesAdded()) {
+            //if(orderDetailDAO.getOrderDetailById() != null) {
+                Object[] row = new Object[] {
+                  i++, od.getService().getTenDV(), od.getSoLuong(), od.getThanhTien()
+                };
+                modelServiceOrder.addRow(row);
+            //}
+        }
+        modelServiceOrder.fireTableDataChanged();
+    }
+    
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
           
     }//GEN-LAST:event_btnPrintActionPerformed
@@ -610,7 +707,13 @@ public class frmBill extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmBill().setVisible(true);
+                try {
+                    new frmBill().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmBill.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(frmBill.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -633,9 +736,6 @@ public class frmBill extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel23;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
@@ -654,23 +754,26 @@ public class frmBill extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel jlabel;
     private java.awt.Label label1;
     private java.awt.Label label3;
-    private javax.swing.JLabel lblDonGia;
+    private javax.swing.JLabel lblCmnd;
+    private javax.swing.JLabel lblGiaPhong;
     private javax.swing.JLabel lblGioRa;
     private javax.swing.JLabel lblGioVao;
     private javax.swing.JLabel lblLoaiPhong;
-    private javax.swing.JLabel lblMaHoaDon;
+    private javax.swing.JLabel lblMaHD;
+    private javax.swing.JLabel lblNgayLapHD;
     private javax.swing.JLabel lblNgayRa;
     private javax.swing.JLabel lblNgayVao;
-    private javax.swing.JLabel lblSDT;
-    private javax.swing.JLabel lblSoPhong;
-    private javax.swing.JLabel lblTenKhach;
+    private javax.swing.JLabel lblSdt;
+    private javax.swing.JLabel lblTenKH;
+    private javax.swing.JLabel lblTenNV;
+    private javax.swing.JLabel lblTenPhong;
     private javax.swing.JLabel lblTienDichVu;
     private javax.swing.JLabel lblTienPhong;
     private javax.swing.JLabel lblTongTien;
     private javax.swing.JLabel lblVAT;
+    private javax.swing.JTable tblServiceOrder;
     // End of variables declaration//GEN-END:variables
 }

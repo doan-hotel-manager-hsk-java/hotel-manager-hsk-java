@@ -26,7 +26,7 @@ public class OrdeerDetailDAO {
     // HANDLE LOAD ALL DATA TO TABLE LIST SERVICES ADDED
     public List<OrderDetail> getListServicesAdded() throws ClassNotFoundException, SQLException {
         List<OrderDetail> list = new ArrayList<>();
-        String sql = "SELECT p.tenPhong, dv.tenDV, cthd.soLuong, (cthd.soLuong*dv.donGia) AS TongTien FROM DichVu AS dv "
+        String sql = "SELECT p.tenPhong, dv.tenDV, cthd.soLuong, (cthd.soLuong*dv.donGia) AS ThanhTien FROM DichVu AS dv "
                    + "INNER JOIN ChiTietHoaDon as cthd on dv.maDV=cthd.maDV "
                    + "INNER JOIN HoaDon as hd on cthd.maHD=hd.maHD "
                    + "INNER JOIN Phong as p on hd.maPhong=p.maPhong "
@@ -53,9 +53,9 @@ public class OrdeerDetailDAO {
                 order.setRoom(room);
                 od.setOrder(order);
                 
-                double tongTien = res.getDouble("TongTien");
+                double thanhTien = res.getDouble("ThanhTien");
                 
-                OrderDetail odl = new OrderDetail(soLuong, order, service, tongTien);
+                OrderDetail odl = new OrderDetail(soLuong, order, service, thanhTien);
                 list.add(odl);
             }
             return list;
@@ -125,6 +125,33 @@ public class OrdeerDetailDAO {
             Order o = new Order();
             
             if(res.next()) {
+                OrderDetail od = new OrderDetail();
+                od.setSoLuong(res.getInt("soLuong"));
+                service.setMaDV(res.getString("maDV"));
+                od.setService(service);
+                o.setMaHD(res.getString("maHD"));
+                od.setOrder(o);
+                
+                return od;
+            }
+            return null;
+        }
+    }
+    
+     // FIND BY ID ID ORDER
+    public OrderDetail getOrderDetailById(String idOrder) throws ClassNotFoundException, SQLException {
+        String sql = "SELECT * FROM ChiTietHoaDon WHERE maHD = ?";
+        try(
+                Connection con = DatabaseConnection.opConnection();
+                PreparedStatement pres = con.prepareStatement(sql);
+            ) {
+
+            pres.setString(1, idOrder);
+            ResultSet res = pres.executeQuery();
+            
+            if(res.next()) {
+                Service service = new Service();
+                Order o = new Order();
                 OrderDetail od = new OrderDetail();
                 od.setSoLuong(res.getInt("soLuong"));
                 service.setMaDV(res.getString("maDV"));

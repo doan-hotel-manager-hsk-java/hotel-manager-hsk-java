@@ -17,6 +17,7 @@ public class Order {
     private Customer customer;
     private Room room;
     private Staff staff;
+    private double tongTien;
 
     public Order() {
     }
@@ -112,6 +113,14 @@ public class Order {
 
     public void setStaff(Staff staff) {
         this.staff = staff;
+    }
+
+    public double getTongTien() {
+        return tongTien;
+    }
+
+    public void setTongTien(double tongTien) {
+        this.tongTien = tongTien;
     }
 
     @Override

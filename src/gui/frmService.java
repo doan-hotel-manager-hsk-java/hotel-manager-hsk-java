@@ -8,10 +8,15 @@ import dao.OrdeerDetailDAO;
 import dao.OrderDAO;
 import dao.RoomDAO;
 import dao.ServiceDAO;
+import entity.Order;
 import entity.OrderDetail;
 import entity.Room;
 import entity.Service;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -54,9 +59,11 @@ public class frmService extends javax.swing.JInternalFrame {
         
         // SET COMBOBOX (INDEX = 0)
         cboTenPhong.addItem("Chon phong");
+        cboDichVu.addItem("Chon dich vu");
         
         // CALLING
-        loadDataToCombobox();
+        loadDataToComboboxNameRoom();
+        loadDataToComboboxService();
         initColsListServices();
         loadDataToTblListServices();
         initColsListServicesAdded();
@@ -77,7 +84,6 @@ public class frmService extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        txtDichVu = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtSoLuong = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -86,6 +92,7 @@ public class frmService extends javax.swing.JInternalFrame {
         btnSua = new com.k33ptoo.components.KButton();
         btnXoa = new com.k33ptoo.components.KButton();
         btnTaoHoaDon = new com.k33ptoo.components.KButton();
+        cboDichVu = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblListServicesAdded = new javax.swing.JTable();
@@ -113,8 +120,6 @@ public class frmService extends javax.swing.JInternalFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Dịch Vụ :");
-
-        txtDichVu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -192,6 +197,8 @@ public class frmService extends javax.swing.JInternalFrame {
             }
         });
 
+        cboDichVu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -207,8 +214,8 @@ public class frmService extends javax.swing.JInternalFrame {
                         .addGap(12, 12, 12)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cboTenPhong, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtDichVu)
-                            .addComponent(txtSoLuong))
+                            .addComponent(txtSoLuong)
+                            .addComponent(cboDichVu, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -227,14 +234,14 @@ public class frmService extends javax.swing.JInternalFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel1)
                     .addComponent(cboTenPhong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDichVu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cboDichVu, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -278,7 +285,7 @@ public class frmService extends javax.swing.JInternalFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -359,17 +366,25 @@ public class frmService extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    // LOAD DATA TO COMBOBOX
-    private void loadDataToCombobox() {
+    // LOAD DATA TO COMBOBOX TO NAME ROOM
+    private void loadDataToComboboxNameRoom() {
         for (Room room : roomDAO.getAllRooms()) {
             cboTenPhong.addItem(room.getTenPhong());
+        }
+    }
+    
+    // LOAD DATA TO COMBOBOX
+    private void loadDataToComboboxService() throws ClassNotFoundException, SQLException {
+        for (Service service : serviceDAO.getServices()) {
+            cboDichVu.addItem(service.getTenDV());
+            System.out.println(service.getTenDV());
         }
     }
     
     // CREATE TITLE COLUMNS OF LIST SERVICE
     private void initColsListServices() {
         modellListServices.setColumnIdentifiers(new String[] {
-            "Tên dich vu", "Ðon giá", "Trang thái"
+            "Tên dich vu", "Ðon giá"
         });
         tblListServices.setModel(modellListServices);
     }
@@ -380,7 +395,7 @@ public class frmService extends javax.swing.JInternalFrame {
         
         for (Service service : serviceDAO.getServices()) {
             Object[] row = new Object[] {
-              service.getTenDV(), service.getDonGia(), service.getTrangThai()  
+              service.getTenDV(), service.getDonGia()  
             };
             modellListServices.addRow(row);
         }
@@ -390,7 +405,7 @@ public class frmService extends javax.swing.JInternalFrame {
     // CREATE TITLE COLUMNS OF LIST SERVICE ADDED
     private void initColsListServicesAdded() {
         modelListServicesAdded.setColumnIdentifiers(new String[] {
-            "So phòng", "Tên dich vu", "So luong", "Tong Tien"
+            "So phòng", "Tên dich vu", "So luong", "Thanh Tien"
         });
         tblListServicesAdded.setModel(modelListServicesAdded);
     }
@@ -401,7 +416,7 @@ public class frmService extends javax.swing.JInternalFrame {
         
           for (OrderDetail od : orderDetailDAO.getListServicesAdded()) {
             Object[] row = new Object[] {
-              od.getOrder().getRoom().getTenPhong() , od.getService().getTenDV(), od.getSoLuong(), od.getTongTien()
+              od.getOrder().getRoom().getTenPhong() , od.getService().getTenDV(), od.getSoLuong(), od.getThanhTien()
             };
             modelListServicesAdded.addRow(row);
         }
@@ -412,29 +427,65 @@ public class frmService extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cboTenPhongActionPerformed
 
+    // HANDLE BUTTON CREATE ORDER
     private void btnTaoHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoHoaDonActionPerformed
-        frmBill frm = new frmBill();
-        frm.setVisible(true);
+        frmBill frm;
+        try {
+            // CHECK INPUTS
+            if(cboTenPhong.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(this, "Ban can chon phong de tao hoa don!");
+                return;
+            }
+            
+            if(roomDAO.findRoomByNameRoom(cboTenPhong.getSelectedItem().toString()).getTenPhong() != null) { 
+                Order order = orderDAO.getOrderById("HD006");
+                
+                // TIME
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss"); //yyyy/MM/dd 
+                LocalDateTime now = LocalDateTime.now();
+                String tam = dtf.format(now);
+                // DATE
+                DateTimeFormatter dtfNgayRa = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                LocalDateTime nowNgayRa = LocalDateTime.now();
+                String tamNgayRa = dtfNgayRa.format(nowNgayRa);
+                
+                order.setGioRa(tam);
+                order.setNgayRa(tamNgayRa);
+                
+                // UPDATE ORDER (TIME OUT)
+                orderDAO.updateServiceInOrder(order);
+                
+                frm = new frmBill();
+                frm.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Ban can chon phong de tao hoa don!");
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(frmService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(frmService.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnTaoHoaDonActionPerformed
 
     // HANDLE CLICK ON TABLE LIST SERVICE ADDED
     private void tblListServicesAddedMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblListServicesAddedMouseClicked
         // SET ENABLE IS TRUE
-        txtDichVu.setEnabled(true);
+        cboDichVu.setEnabled(true);
         cboTenPhong.setEnabled(true);
         int selected = tblListServicesAdded.getSelectedRow();
         
         if(selected >= 0) {
             String tam = (String) tblListServicesAdded.getValueAt(selected, 1);
             // SET ENABLE is FALSE
-            txtDichVu.setEnabled(false);
+            cboDichVu.setEnabled(false);
             cboTenPhong.setEnabled(false);
             try {
                 OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(tam).getMaDV(), "HD006");
                 
                 if(od != null) {
                     cboTenPhong.setSelectedItem(roomDAO.findRoomById(orderDAO.getOrderById(od.getOrder().getMaHD()).getRoom().getMaPhong()).getTenPhong());
-                    txtDichVu.setText(serviceDAO.getServiceById(od.getService().getMaDV()).getTenDV());
+                    cboDichVu.setSelectedItem(serviceDAO.getServiceById(od.getService().getMaDV()).getTenDV());
                     txtSoLuong.setText(""+od.getSoLuong());
                 }
                 
@@ -449,7 +500,7 @@ public class frmService extends javax.swing.JInternalFrame {
     // CLEAR INPUTS
     private void clearInps() {
         cboTenPhong.setSelectedIndex(0);
-        txtDichVu.setText("");
+        cboDichVu.setSelectedIndex(0);
         txtSoLuong.setText("");
         cboTenPhong.requestFocus();
     }
@@ -457,24 +508,24 @@ public class frmService extends javax.swing.JInternalFrame {
     // HANDLE BUTTON ADD SERVICE 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // SET ENABLE IS TRUE
-        txtDichVu.setEnabled(true);
+        cboDichVu.setEnabled(true);
         cboTenPhong.setEnabled(true);
         try {
             Room room = roomDAO.findRoomByNameRoom(cboTenPhong.getSelectedItem().toString());
             OrderDetail od = new OrderDetail();
             Service service = new Service();
             
-            if(txtDichVu.getText().equals("") || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
+            if(cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(this, "Can phai nhap day du cac thong tin!");
                 return;
             }
             
             if(room.getTenPhong() != null) {
                 // CHECK NAME SERVICE EXISTS (MaHD, MaDV)
-                if(orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(txtDichVu.getText()).getMaDV(), "HD006") != null) {
-                    JOptionPane.showMessageDialog(this, "Ten dich vu da co trong phong. Vui long thuc hien chuc nang sua!");
-                    return;
-                }
+//                if(orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(txtDichVu.getText()).getMaDV(), "HD006") != null) {
+//                    JOptionPane.showMessageDialog(this, "Ten dich vu da co trong phong. Vui long thuc hien chuc nang sua!");
+//                    return;
+//                }
                 
                 //if(serviceDAO.getServiceByName(txtDichVu.getText()).getMaDV() == null) {
                 //    JOptionPane.showMessageDialog(this, "Ten dich hien chua co. Vui long nhap ten dich vu ben danh sach dich vu!");
@@ -490,7 +541,7 @@ public class frmService extends javax.swing.JInternalFrame {
                 
                 od.setSoLuong(Integer.parseInt(txtSoLuong.getText()));
                 od.setOrder(orderDAO.getOrderById("HD006")); // GET ID HOADON FROM ROOM TO IT
-                service.setMaDV(serviceDAO.getServiceByName(txtDichVu.getText()).getMaDV());
+                service.setMaDV(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV());
                 od.setService(service);
 
                 // ADD
@@ -510,18 +561,18 @@ public class frmService extends javax.swing.JInternalFrame {
     // HANDLE BUTTON DELETE SERVICE
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
         // SET ENABLE IS TRUE
-        txtDichVu.setEnabled(true);
+        cboDichVu.setEnabled(true);
         cboTenPhong.setEnabled(true);
         try {
             // CHECK INPUTS
-            if(txtDichVu.getText().equals("") || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
+            if(cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(this, "Khong tim thay dich vu de xoa!");
                 return;
             }
             // DELETE
             int choose = JOptionPane.showConfirmDialog(this, "Ban co muon xoa dich vu nay khong?", "Thong bao", JOptionPane.YES_NO_OPTION);
             if(choose == JOptionPane.YES_OPTION) {
-                OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(txtDichVu.getText()).getMaDV(), "HD006");
+                OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), "HD006");
                 orderDetailDAO.deleteServiceOutOrderDetail(od);
                 JOptionPane.showMessageDialog(this, "Xoa thanh cong dich vu.");
                 clearInps();
@@ -537,14 +588,14 @@ public class frmService extends javax.swing.JInternalFrame {
     // HANDLE BUTTON UPDATE SERVICE
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         // SET ENABLE IS TRUE
-        txtDichVu.setEnabled(true);
+        cboDichVu.setEnabled(true);
         cboTenPhong.setEnabled(true);
         
         Room room = roomDAO.findRoomByNameRoom(cboTenPhong.getSelectedItem().toString());
         
         try {
             // CHECK INPUTS
-            if(txtDichVu.getText().equals("") || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
+            if(cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(this, "Khong tim thay dich vu de cap nhat!");
                 return;
             }
@@ -555,7 +606,7 @@ public class frmService extends javax.swing.JInternalFrame {
             
             if(room.getMaPhong() != null) {
                 // CHECK NAME SERVICE EXISTS (MaHD, MaDV)
-                if(orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(txtDichVu.getText()).getMaDV(), "HD006") == null) {
+                if(orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), "HD006") == null) {
                     JOptionPane.showMessageDialog(this, "Ten dich vu khong co trong phong. Vui long thuc hien chuc nang them!");
                     return;
                 }
@@ -564,7 +615,7 @@ public class frmService extends javax.swing.JInternalFrame {
                 
                 if(choose == JOptionPane.YES_OPTION) {
                     // UPDATE
-                    OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(txtDichVu.getText()).getMaDV(), "HD006");
+                    OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), "HD006");
 
                     od.setSoLuong(Integer.parseInt(txtSoLuong.getText()));
 
@@ -582,7 +633,7 @@ public class frmService extends javax.swing.JInternalFrame {
 
     private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
         // SET ENABLE IS TRUE
-        txtDichVu.setEnabled(true);
+        cboDichVu.setEnabled(true);
         cboTenPhong.setEnabled(true);
     }//GEN-LAST:event_jPanel5MouseClicked
 
@@ -592,6 +643,7 @@ public class frmService extends javax.swing.JInternalFrame {
     private com.k33ptoo.components.KButton btnTaoHoaDon;
     private com.k33ptoo.components.KButton btnThem;
     private com.k33ptoo.components.KButton btnXoa;
+    private javax.swing.JComboBox<String> cboDichVu;
     private javax.swing.JComboBox<String> cboTenPhong;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -606,7 +658,6 @@ public class frmService extends javax.swing.JInternalFrame {
     private javax.swing.JPanel pnlTitle;
     private javax.swing.JTable tblListServices;
     private javax.swing.JTable tblListServicesAdded;
-    private javax.swing.JTextField txtDichVu;
     private javax.swing.JTextField txtSoLuong;
     // End of variables declaration//GEN-END:variables
 }
