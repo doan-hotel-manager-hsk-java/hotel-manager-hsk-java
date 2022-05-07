@@ -21,7 +21,8 @@ public class StaffDAO {
 
     // sql Server
     private final String SELECT_STAFF_BYID = "select * from NhanVien where maNV = ?";
-
+   
+    
     // Lấy nhân viên bằng mã nhân viên
     public Staff getEmployeeBYID(String maNV) {
         staffTypeDAO = new StaffTypeDAO();
@@ -53,4 +54,6 @@ public class StaffDAO {
         }
         return null;
     }
+    
+    
 }

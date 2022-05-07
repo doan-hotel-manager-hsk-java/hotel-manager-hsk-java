@@ -212,7 +212,7 @@ public class Login extends javax.swing.JFrame {
                         mainEmployee.setVisible(true);
                     }
                 } else{
-                    JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại");
+                    JOptionPane.showMessageDialog(this, "Tài khoản đã bị xóa");
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Bạn nhập sai mật khẩu hoặc tài khoản");

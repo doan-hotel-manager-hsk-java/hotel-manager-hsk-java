@@ -19,7 +19,8 @@ public class BookRoom {
     public BookRoom() {
     }
 
-    public BookRoom(String maDDP, String ngayDat, String gioDat, String ngayNhan, String gioNhan, Room room, Customer customer, Staff staff) {
+    public BookRoom(String maDDP, String ngayDat, String gioDat, String ngayNhan, 
+            String gioNhan, Room room, Customer customer, Staff staff) {
         this.maDDP = maDDP;
         this.ngayDat = ngayDat;
         this.gioDat = gioDat;

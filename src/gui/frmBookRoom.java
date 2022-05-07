@@ -4,17 +4,23 @@ import dao.*;
 import entity.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 import java.util.Properties;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -22,22 +28,28 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
 public class frmBookRoom extends javax.swing.JInternalFrame {
+
     DefaultTableModel tblModel;
     JDatePickerImpl datePickerNhan;
-    JDatePanelImpl dateNhan;
     JDatePickerImpl datePickerDat;
+    JPanel pnlRoom;
+    JButton lblRoom;
+    private String usename;
+    String nameRoom;
+
     //dao
     RoomDAO roomDAO = new RoomDAO();
+    StaffDAO staffDAO = new StaffDAO();
     BookRoomDAO bookRoomDAO = new BookRoomDAO();
     RoomStatusTypeDAO roomStatusTypeDAO = new RoomStatusTypeDAO();
-    
+    CustomerDAO customerDAO = new CustomerDAO();
     //List
-    List<Room> listRooms = roomDAO.getAllRooms();
-    List<Room> listRoomVip = roomDAO.findRoomByIDLoaiPhong("LP001");
-    List<Room> listRoomNormals = roomDAO.findRoomByIDLoaiPhong("LP002");
-    List<BookRoom> listBookRooms = bookRoomDAO.getAlLBookRooms();
-    
-    public frmBookRoom() {
+    List<Room> listRoomVip;
+    List<Room> listRoomNormals;
+    List<BookRoom> listBookRooms;
+
+    public frmBookRoom(String _username) {
+        usename = _username;
         this.setRootPaneCheckingEnabled(false);
         javax.swing.plaf.InternalFrameUI ui
                 = this.getUI();
@@ -52,7 +64,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         pNhan.put("text.today", "Today");
         pNhan.put("text.month", "Month");
         pNhan.put("text.year", "Year");
-        dateNhan = new JDatePanelImpl(modelNgayNhan, pNhan);
+        JDatePanelImpl dateNhan = new JDatePanelImpl(modelNgayNhan, pNhan);
         datePickerNhan = new JDatePickerImpl(dateNhan, new DateLabelFormatter());
 
         pnlNhan.add(datePickerNhan);
@@ -68,25 +80,28 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
 
         pnlDat.add(datePickerDat);
     }
-    
+
+    // METHOD
+    //Create colum table
     private void initTable() {
         tblModel = new DefaultTableModel();
-        tblModel.setColumnIdentifiers(new String[]{"Số phòng", "Tên khách hàng", "CMND","Số điện thoại","Giới tính",
-            "Địa chỉ","Ngày đặt","Giờ đặt","Ngày nhận","Giờ nhận","Trạng thái"});
+        tblModel.setColumnIdentifiers(new String[]{"Số phòng", "Tên khách hàng", "CMND", "Số điện thoại", "Giới tính",
+            "Địa chỉ", "Ngày đặt", "Giờ đặt", "Ngày nhận", "Giờ nhận", "Trạng thái"});
         tblDsDatPhong.setModel(tblModel);
     }
-    
+
     // Load danh sách đặt phòng
-    private void loadAllDSDatPhong(){
+    private void loadAllDSDatPhong() {
         tblModel.setRowCount(0);
-        for(BookRoom bookRoom: listBookRooms){
+        listBookRooms = bookRoomDAO.getAlLBookRooms();
+        for (BookRoom bookRoom : listBookRooms) {
             String[] row = new String[]{
                 bookRoom.getRoom().getTenPhong(),
                 bookRoom.getCustomer().getTenKH(),
                 bookRoom.getCustomer().getMaKH(),
                 bookRoom.getCustomer().getSoDT(),
+                bookRoom.getCustomer().isGioiTinh() == true ? "Nam" : "Nữ",
                 bookRoom.getCustomer().getDiaChi(),
-                bookRoom.getCustomer().isGioiTinh() == true ? "Nam":"Nữ",
                 bookRoom.getNgayDat(),
                 bookRoom.getGioDat(),
                 bookRoom.getNgayNhan(),
@@ -97,6 +112,180 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         }
         tblModel.fireTableDataChanged();
     }
+
+    // Create list rooms
+    private void createRoom() {
+        listRoomVip = roomDAO.findRoomByIDLoaiPhong("LP001");
+        listRoomNormals = roomDAO.findRoomByIDLoaiPhong("LP002");
+
+        JLabel lblListNormal;
+        // Titile Normal
+        lblListNormal = new JLabel("Danh sách phòng thường");
+        lblListNormal.setBounds(20, 20, 300, 30);
+        lblListNormal.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+        // Danh sách phòng
+        JPanel pnlListRoom = new JPanel();
+        pnlListRoom.removeAll();
+        pnlListRoom.setBackground(Color.white);
+        pnlListRoom.setLayout(null);
+        pnlListRoom.setPreferredSize(new Dimension(600, 830));
+        pnlListRoom.add(lblListNormal);
+
+        JLabel lblListVip;
+
+        int x = 20;
+        int y = 60;
+        int width = 100;
+        int height = 100;
+        int countHeight = 0;
+        int numberRoomNormal = 1;
+        int countNumberRoomNormalRemove = 0;
+        int numberRoomVip = 1;
+        String trangThaiPhong;
+        for (Room room : listRoomNormals) {
+            trangThaiPhong = room.getRoomStatusType().getMaLoaiTTP().toUpperCase();
+            if (trangThaiPhong.equals("LTTP004")) {
+                countNumberRoomNormalRemove++;
+            }
+        }
+        for (Room room : listRoomNormals) {
+            trangThaiPhong = room.getRoomStatusType().getMaLoaiTTP().toUpperCase();
+            if (!trangThaiPhong.equals("LTTP004")) {
+                //Room
+                pnlRoom = new JPanel();
+                pnlRoom.setBackground(Color.white);
+                pnlRoom.setLayout(new BorderLayout());
+                pnlRoom.setBounds(x, y, width, height);
+
+                if (trangThaiPhong.equals("LTTP001")) {
+                    createStatusRoom(trangThaiPhong, new Color(241, 98, 86), pnlRoom);
+                    createNameRoom(room.getMaPhong(), pnlRoom, new Color(241, 91, 56));
+                } else if (trangThaiPhong.equals("LTTP002")) {
+                    createStatusRoom(trangThaiPhong, new Color(51, 176, 224), pnlRoom);
+                    createNameRoom(room.getMaPhong(), pnlRoom, new Color(113, 108, 176));
+                } else {
+                    createStatusRoom(trangThaiPhong, new Color(5, 154, 3), pnlRoom);
+                    createNameRoom(room.getMaPhong(), pnlRoom, Color.WHITE);
+                    lblRoom.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            nameRoom = room.getTenPhong();
+                            System.out.println(nameRoom);
+                        }
+                    });
+                }
+                pnlListRoom.add(pnlRoom, BorderLayout.CENTER);
+                x += width + 20;
+
+                if (numberRoomNormal % 5 == 0 || numberRoomNormal == listRoomNormals.size() - countNumberRoomNormalRemove) {
+                    y += width + 20;
+                    x = 20;
+                    countHeight = y + 40;
+                }
+                if (numberRoomNormal == listRoomNormals.size() - countNumberRoomNormalRemove) {
+                    lblListVip = new JLabel("Danh sách phòng Vip");
+                    lblListVip.setBounds(20, y, 300, 30);
+                    lblListVip.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                    pnlListRoom.add(lblListVip);
+                }
+                numberRoomNormal++;
+            }
+        }
+
+        for (Room room : listRoomVip) {
+            trangThaiPhong = room.getRoomStatusType().getMaLoaiTTP().toUpperCase();
+            if (!trangThaiPhong.equals("LTTP004")) {
+                //Room
+                pnlRoom = new JPanel();
+                pnlRoom.setBackground(Color.white);
+                pnlRoom.setLayout(new BorderLayout());
+                pnlRoom.setBounds(x, countHeight, width, height);
+
+                if (trangThaiPhong.equals("LTTP001")) {
+                    createStatusRoom(trangThaiPhong, new Color(241, 98, 86), pnlRoom);
+                    createNameRoom(room.getMaPhong(), pnlRoom, new Color(241, 91, 56));
+                } else if (trangThaiPhong.equals("LTTP002")) {
+                    createStatusRoom(trangThaiPhong, new Color(51, 176, 224), pnlRoom);
+                    createNameRoom(room.getMaPhong(), pnlRoom, new Color(113, 108, 176));
+                } else {
+                    createStatusRoom(trangThaiPhong, new Color(5, 154, 3), pnlRoom);
+                    createNameRoom(room.getMaPhong(), pnlRoom, Color.WHITE);
+
+                }
+                pnlListRoom.add(pnlRoom);
+                x += width + 20;
+
+                if (numberRoomVip % 5 == 0) {
+                    countHeight += width + 20;
+                    x = 20;
+                }
+                numberRoomVip++;
+            }
+        }
+
+        scrollPanel.setViewportView(pnlListRoom);
+    }
+
+// trạng thái phòng
+    private void createStatusRoom(String idTrangThai, Color color, JPanel pnlRom) {
+        TitledBorder titledBorder = BorderFactory.createTitledBorder(
+                roomStatusTypeDAO.finRoomStatusTypeById(idTrangThai).getTenLoai().toUpperCase());
+        titledBorder.setTitleColor(color);
+        titledBorder.setTitleFont(new Font("Segoe UI", Font.PLAIN, 10));
+        pnlRom.setBorder(titledBorder);
+    }
+// tên phòng
+
+    private void createNameRoom(String idPhong, JPanel pnlRom, Color colorBackground) {
+        lblRoom = new JButton();
+        lblRoom.setText(roomDAO.findRoomById(idPhong).getTenPhong());
+        lblRoom.setOpaque(true);
+        lblRoom.setBackground(colorBackground);
+        lblRoom.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblRoom.setHorizontalAlignment((int) CENTER_ALIGNMENT);
+
+        pnlRom.add(lblRoom, BorderLayout.CENTER);
+    }
+
+// create ID book room
+    public String idBookRoom() {
+        String id = "DDP0";
+        int i = 1;
+        for (BookRoom bookRoom : bookRoomDAO.getAlLBookRooms()) {
+            id += i;
+            if (bookRoom.getMaDDP().equals(id)) {
+                return id + i;
+            }
+            i++;
+        }
+        return id;
+    }
+
+    // create customer
+    private Customer createCustomer() {
+        Customer customer = new Customer(txtCMND.getText(), txtTenKH.getText(), txtSDT.getText(),
+                cboGioiTinh.getSelectedIndex() == 1 ? true : false, txtDiaChi.getText());
+        return customer;
+    }
+
+    // Check Data File
+    private boolean checkDataFile() {
+        if (txtCMND.getText().isEmpty() || txtDiaChi.getText().isEmpty()
+                || txtSDT.getText().isEmpty() || txtGioDat.getText().isEmpty() || txtGioNhan.getText().isEmpty()
+                || datePickerNhan.getJFormattedTextField().getText().isEmpty()
+                || datePickerDat.getJFormattedTextField().getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Bạn vui lòng nhập đầy đủ thông tin");
+            return false;
+        } else if (nameRoom == null) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn phòng");
+            return false;
+        } else {
+            return true;
+        }
+    }
+//cretate book room
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -184,11 +373,6 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         pnlDat.setLayout(new java.awt.BorderLayout());
 
         txtGioDat.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        txtGioDat.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtGioDatActionPerformed(evt);
-            }
-        });
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Giới tính: ");
@@ -311,7 +495,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -423,7 +607,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                                     .addComponent(jPanel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
-                                .addComponent(scrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)))
+                                .addComponent(scrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -448,8 +632,23 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+//Event
     private void btnDatPhongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDatPhongActionPerformed
-        
+        if (checkDataFile()) {
+            Room room = roomDAO.findRoomByNameRoom(nameRoom);
+            RoomStatusType roomStatusType = roomStatusTypeDAO.finRoomStatusTypeById("LTTP001");
+            room.setRoomStatusType(roomStatusType);
+            if (customerDAO.insertCustomer(createCustomer()) && roomDAO.updateBookRoom(room)) {
+                Staff staff = staffDAO.getEmployeeBYID(usename);
+                BookRoom bookRoom = new BookRoom(idBookRoom(), datePickerDat.getJFormattedTextField().getText(),
+                        txtGioDat.getText(), datePickerNhan.getJFormattedTextField().getText(), txtGioNhan.getText(),
+                        room, createCustomer(), staff);
+                if (bookRoomDAO.insertBookRoom(bookRoom)) {
+                    loadAllDSDatPhong();
+                    createRoom();
+                }
+            }
+        }
     }//GEN-LAST:event_btnDatPhongActionPerformed
 // forcus search
     private void txtSearchFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchFocusGained
@@ -468,139 +667,22 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txtSearchFocusLost
 
-    private void txtGioDatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGioDatActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtGioDatActionPerformed
-
     private void tblDsDatPhongMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDsDatPhongMouseClicked
-       int row = tblDsDatPhong.getSelectedRow();
-       if(row >= 0){
-           txtCMND.setText(tblDsDatPhong.getValueAt(row, 2).toString());
-           txtTenKH.setText(tblDsDatPhong.getValueAt(row, 1).toString());
-           txtSDT.setText(tblDsDatPhong.getValueAt(row, 3).toString());
-           txtDiaChi.setText(tblDsDatPhong.getValueAt(row, 5).toString());
-           cboGioiTinh.setSelectedIndex(tblDsDatPhong.getValueAt(row, 4).toString() == "Nam" ? 0:1);
-           datePickerDat.getJFormattedTextField().setText(tblDsDatPhong.getValueAt(row, 6).toString());
-           txtGioDat.setText(tblDsDatPhong.getValueAt(row, 7).toString());
-           datePickerNhan.getJFormattedTextField().setText(tblDsDatPhong.getValueAt(row, 8).toString());
-           txtGioNhan.setText(tblDsDatPhong.getValueAt(row, 9).toString());         
-       }
+        int row = tblDsDatPhong.getSelectedRow();
+        if (row >= 0) {
+            txtCMND.setText(tblDsDatPhong.getValueAt(row, 2).toString());
+            txtTenKH.setText(tblDsDatPhong.getValueAt(row, 1).toString());
+            txtSDT.setText(tblDsDatPhong.getValueAt(row, 3).toString());
+            txtDiaChi.setText(tblDsDatPhong.getValueAt(row, 5).toString());
+            cboGioiTinh.setSelectedIndex(tblDsDatPhong.getValueAt(row, 4).toString() == "Nam" ? 0 : 1);
+            datePickerDat.getJFormattedTextField().setText(tblDsDatPhong.getValueAt(row, 6).toString());
+            txtGioDat.setText(tblDsDatPhong.getValueAt(row, 7).toString());
+            datePickerNhan.getJFormattedTextField().setText(tblDsDatPhong.getValueAt(row, 8).toString());
+            txtGioNhan.setText(tblDsDatPhong.getValueAt(row, 9).toString());
+        }
     }//GEN-LAST:event_tblDsDatPhongMouseClicked
 
-// Create Room
-    private void createRoom() {
-        JPanel pnlRom;
 
-        JLabel lblListNormal;
-        // Titile Normal
-        lblListNormal = new JLabel("Danh sách phòng thường");
-        lblListNormal.setBounds(20, 20, 300, 30);
-        lblListNormal.setFont(new Font("Segoe UI", Font.BOLD, 14));
-
-        JPanel pnlListRoom = new JPanel();
-        pnlListRoom.setBackground(Color.white);
-        pnlListRoom.setLayout(null);
-        pnlListRoom.setPreferredSize(new Dimension(600, 830));
-        pnlListRoom.add(lblListNormal);
-
-        JLabel lblListVip;
-
-        int x = 20;
-        int y = 60;
-        int width = 100;
-        int height = 100;
-        int countHeight = 0;
-        int numberRoomNormal = 1;
-        int countNumberRoomNormalRemove = 0;
-        int numberRoomVip = 1;
-        String trangThaiPhong;
-        for(Room room : listRoomNormals){
-            trangThaiPhong = room.getRoomStatusType().getMaLoaiTTP().toUpperCase();
-            if(trangThaiPhong.equals("LTTP004")) {
-                countNumberRoomNormalRemove++;
-            }
-        }
-        for (Room room : listRoomNormals) {
-            trangThaiPhong = room.getRoomStatusType().getMaLoaiTTP().toUpperCase();           
-            if (!trangThaiPhong.equals("LTTP004")) {
-                //Room
-                pnlRom = new JPanel();
-                pnlRom.setLayout(new BorderLayout());
-                pnlRom.setBounds(x, y, width, height);
-
-                if (trangThaiPhong.equals("LTTP001")) {
-                    createStatusRoom(trangThaiPhong, new Color(241, 98, 86), pnlRom);
-                } else if (trangThaiPhong.equals("LTTP002")) {
-                    createStatusRoom(trangThaiPhong, new Color(7, 142, 227), pnlRom);
-                } else {
-                    createStatusRoom(trangThaiPhong, new Color(5, 154, 3), pnlRom);
-                }
-                //Name Room
-                createNameRoom(room.getMaPhong(), pnlRom);
-                pnlListRoom.add(pnlRom);
-                x += width + 20;
-
-                if (numberRoomNormal % 5 == 0 || numberRoomNormal == listRoomNormals.size() - countNumberRoomNormalRemove) {
-                    y += width + 20;
-                    x = 20;
-                    countHeight = y + 40;
-                }
-                if (numberRoomNormal == listRoomNormals.size() - countNumberRoomNormalRemove) {
-                    lblListVip = new JLabel("Danh sách phòng Vip");
-                    lblListVip.setBounds(20, y, 300, 30);
-                    lblListVip.setFont(new Font("Segoe UI", Font.BOLD, 14));
-                    pnlListRoom.add(lblListVip);
-                }
-                numberRoomNormal++;
-            } 
-        }
-
-        for (Room room : listRoomVip) {
-            trangThaiPhong = room.getRoomStatusType().getMaLoaiTTP().toUpperCase();
-            if (!trangThaiPhong.equals("LTTP004")) {
-                //Room
-                pnlRom = new JPanel();
-                pnlRom.setLayout(new BorderLayout());
-                pnlRom.setBounds(x, countHeight, width, height);
-
-                if (trangThaiPhong.equals("LTTP001")) {
-                    createStatusRoom(trangThaiPhong, new Color(241, 98, 86), pnlRom);
-                } else if (trangThaiPhong.equals("LTTP002")) {
-                    createStatusRoom(trangThaiPhong, new Color(7, 142, 227), pnlRom);
-                } else {
-                    createStatusRoom(trangThaiPhong, new Color(5, 154, 3), pnlRom);
-                }
-                //Name Room
-                createNameRoom(room.getMaPhong(), pnlRom);
-                pnlListRoom.add(pnlRom);
-                x += width + 20;
-
-                if (numberRoomVip % 5 == 0) {
-                    countHeight += width + 20;
-                    x = 20;
-                }
-                numberRoomVip++;
-            }
-        }
-
-        scrollPanel.setViewportView(pnlListRoom);
-    }
-// trạng thái phòng
-    private void createStatusRoom(String idTrangThai, Color color, JPanel pnlRom) {
-        TitledBorder titledBorder = BorderFactory.createTitledBorder(
-                roomStatusTypeDAO.finRoomStatusTypeById(idTrangThai).getTenLoai().toUpperCase());
-        titledBorder.setTitleColor(color);
-        titledBorder.setTitleFont(new Font("Segoe UI", Font.PLAIN, 10));
-        pnlRom.setBorder(titledBorder);
-    }
-// tên phòng
-    private void createNameRoom(String idPhong, JPanel pnlRom) {
-        JLabel lblRom;
-        lblRom = new JLabel(roomDAO.findRoomById(idPhong).getTenPhong());
-        lblRom.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblRom.setHorizontalAlignment((int) CENTER_ALIGNMENT);
-        pnlRom.add(lblRom, BorderLayout.CENTER);
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.k33ptoo.components.KButton btnDatPhong;
     private com.k33ptoo.components.KButton btnDoiPhong;
