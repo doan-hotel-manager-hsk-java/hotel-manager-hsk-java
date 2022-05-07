@@ -28,7 +28,6 @@ public class MainManager extends javax.swing.JFrame {
     public MainManager(String _userName) {
         username = _userName;
         this.setUndecorated(true);
-        this.setAlwaysOnTop(true);
         this.setResizable(true);
         this.setVisible(true);
 
