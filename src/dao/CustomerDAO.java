@@ -131,4 +131,19 @@ public class CustomerDAO {
         return false;
     }
 
+    public boolean updateCustomerById(Customer customer) {
+        try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(UPDATE_CUSTOMER_BY_ID)) {
+            pstmt.setString(1, customer.getTenKH());
+            pstmt.setString(2, customer.getSoDT());
+            pstmt.setInt(3, customer.isGioiTinh() == true ? 1 : 0);
+            pstmt.setString(4, customer.getDiaChi());
+            pstmt.setString(5, customer.getMaKH());
+
+            return pstmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.err.println("updateCustomerById(): get data fail");
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

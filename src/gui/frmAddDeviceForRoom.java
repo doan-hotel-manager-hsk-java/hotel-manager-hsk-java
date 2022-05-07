@@ -164,7 +164,6 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
         });
 
         cboNameRoom.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cboNameRoom.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cboNameRoom.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cboNameRoomItemStateChanged(evt);
@@ -172,7 +171,6 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
         });
 
         cboNameDevice.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cboNameDevice.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Số lượng");
@@ -278,26 +276,31 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
 
     private void btnAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddMouseClicked
         if (txtNumber.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
         } else {
             if (!txtNumber.getText().matches("(\\d)+")) {
-                JOptionPane.showMessageDialog(this, "Số lượng phải là số hoặc số lớn hơn 0!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Số lượng phải là số hoặc số lớn hơn 0!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
             } else {
                 Room room = roomDAO.findRoomByNameRoom(cboNameRoom.getSelectedItem().toString());
                 Device device = deviceDAO.findDeviceByName(cboNameDevice.getSelectedItem().toString());
 
                 if (roomDeviceDAO.findDeviceByIdRoomIdDevice(device.getMaTTB(), room.getMaPhong()) != null) {
-                    JOptionPane.showMessageDialog(this, "Thiết bị này đã tồn tại trong phòng vui lòng thực hiện cập nhật hoặc chọn thiết bị khác!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Thiết bị này đã tồn tại trong phòng vui lòng thực hiện cập nhật hoặc chọn thiết bị khác!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 } else {
                     int soLuong = Integer.parseInt(txtNumber.getText());
-                    int soLuongConLai = device.getSoLuongTon() - soLuong;
-                    device.setSoLuongTon(soLuongConLai);
+                    if (soLuong > device.getSoLuongTon()) {
+                        JOptionPane.showMessageDialog(this, "Số lượng nhập vào lớn lơn số lượng trong kho. Vui lòng nhập lại!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    } else {
+                        int soLuongConLai = device.getSoLuongTon() - soLuong;
+                        device.setSoLuongTon(soLuongConLai);
 
-                    Room_Device roomDevice = new Room_Device(soLuong, device, room);
-                    roomDeviceDAO.insertDeviceToRoom(roomDevice);
-                    deviceDAO.updateDeviceById(device);
-                    loadDataToTable(room.getMaPhong());
-                    clearInput();
+                        Room_Device roomDevice = new Room_Device(soLuong, device, room);
+                        roomDeviceDAO.insertDeviceToRoom(roomDevice);
+                        deviceDAO.updateDeviceById(device);
+                        loadDataToTable(room.getMaPhong());
+                        clearInput();
+                    }
                 }
             }
         }
@@ -315,23 +318,29 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
 
                 Room_Device deviceTemp = roomDeviceDAO.findDeviceByIdRoomIdDevice(device.getMaTTB(), room.getMaPhong());
                 int soLuong = Integer.parseInt(txtNumber.getText());
-                int soLuongConLai = 0;
-
-                if (soLuong > deviceTemp.getSoLuong()) {
-                    soLuongConLai = device.getSoLuongTon() - (soLuong - deviceTemp.getSoLuong());
-                } else if (soLuong < deviceTemp.getSoLuong()) {
-                    soLuongConLai = device.getSoLuongTon() + (deviceTemp.getSoLuong() - soLuong);
+                if (soLuong > device.getSoLuongTon()) {
+                    JOptionPane.showMessageDialog(this, "Số lượng nhập vào lớn lơn số lượng trong kho. Vui lòng nhập lại!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+                    return;
                 } else {
-                    soLuongConLai = deviceTemp.getSoLuong();
+                    int soLuongConLai = 0;
+
+                    if (soLuong > deviceTemp.getSoLuong()) {
+                        soLuongConLai = device.getSoLuongTon() - (soLuong - deviceTemp.getSoLuong());
+                    } else if (soLuong < deviceTemp.getSoLuong()) {
+                        soLuongConLai = device.getSoLuongTon() + (deviceTemp.getSoLuong() - soLuong);
+                    } else {
+                        soLuongConLai = deviceTemp.getSoLuong();
+                    }
+
+                    device.setSoLuongTon(soLuongConLai);
+
+                    Room_Device roomDevice = new Room_Device(soLuong, device, room);
+                    roomDeviceDAO.updateDeviceToRoom(roomDevice);
+                    deviceDAO.updateDeviceById(device);
+                    loadDataToTable(room.getMaPhong());
+                    clearInput();
                 }
 
-                device.setSoLuongTon(soLuongConLai);
-
-                Room_Device roomDevice = new Room_Device(soLuong, device, room);
-                roomDeviceDAO.updateDeviceToRoom(roomDevice);
-                deviceDAO.updateDeviceById(device);
-                loadDataToTable(room.getMaPhong());
-                clearInput();
             }
         }
     }//GEN-LAST:event_btnChangeMouseClicked
@@ -355,7 +364,7 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
             Room_Device deviceTemp = roomDeviceDAO.findDeviceByIdRoomIdDevice(device.getMaTTB(), room.getMaPhong());
             int soLuongConLai = device.getSoLuongTon() + deviceTemp.getSoLuong();
             device.setSoLuongTon(soLuongConLai);
-            
+
             roomDeviceDAO.deleteDeviceToRoom(deviceTemp);
             deviceDAO.updateDeviceById(device);
             loadDataToTable(room.getMaPhong());
