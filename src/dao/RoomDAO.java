@@ -1,6 +1,7 @@
 package dao;
 
 import connection.DatabaseConnection;
+import entity.BookRoom;
 import entity.Room;
 import entity.RoomStatusType;
 import entity.RoomType;
@@ -28,6 +29,8 @@ public class RoomDAO {
     private final String SELECT_ROOM_BY_ID = "SELECT * FROM PHONG WHERE MAPHONG = ?";
     private final String SELECT_ROOM_BY_ID_LOAI = "SELECT * FROM PHONG WHERE MALOAIPHONG = ?";
     private final String SELECT_ROOM_BY_ID_LOAI_TTP = "SELECT * FROM PHONG WHERE MALTTP = ?";
+    
+    private final String UPDATE_ROOM = "UPDATE PHONG SET TENPHONG =?,TANG=?,MALOAIPHONG=?,MALTTP=?,MANV=? WHERE MAPHONG = ?";
     private final String DELETE_ROOM_BYID = "UPDATE PHONG SET MALTTP = ?, MANV = ? where MAPHONG = ?";
     private final String UPDATE_ROOM_BYID = "UPDATE PHONG SET TENPHONG = ?, TANG = ?, MANV = ? where MAPHONG = ?";
     private final String ADD_ROOM_BYID = "INSERT into PHONG  values (?,?,?,?,?,?)";
@@ -178,7 +181,24 @@ public class RoomDAO {
         }
         return null;
     }
-
+    
+      public boolean updateBookRoom(Room room) {
+        try (Connection conn = DatabaseConnection.opConnection();
+                PreparedStatement pstmt = conn.prepareStatement(UPDATE_ROOM)) {
+            pstmt.setString(1, room.getTenPhong());
+            pstmt.setInt(2, room.getTang());
+            pstmt.setString(3, room.getRoomType().getMaLoaiPhong());
+            pstmt.setString(4, room.getRoomStatusType().getMaLoaiTTP());
+            pstmt.setString(5, room.getStaff().getMaNV());
+             pstmt.setString(6, room.getMaPhong());
+            return pstmt.executeUpdate() > 0;
+            
+        } catch (Exception e) {
+            System.err.println("connect db fail");
+        }
+        return false;
+      }
+      
     public boolean deleteRoom(Room room) {
         try (Connection conn = DatabaseConnection.opConnection();
                 PreparedStatement pstmt = conn.prepareStatement(DELETE_ROOM_BYID)) {

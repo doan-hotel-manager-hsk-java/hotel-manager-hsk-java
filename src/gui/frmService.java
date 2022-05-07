@@ -128,6 +128,11 @@ public class frmService extends javax.swing.JInternalFrame {
         btnThem.setkHoverStartColor(new java.awt.Color(0, 204, 255));
         btnThem.setkPressedColor(new java.awt.Color(0, 153, 153));
         btnThem.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
 
         btnDatPhong.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons-edit.png"))); // NOI18N
         btnDatPhong.setText("Sửa");
@@ -383,6 +388,10 @@ public class frmService extends javax.swing.JInternalFrame {
         frmBill frm = new frmBill();
         frm.setVisible(true);
     }//GEN-LAST:event_btnTaoHoaDonActionPerformed
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        
+    }//GEN-LAST:event_btnThemActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
