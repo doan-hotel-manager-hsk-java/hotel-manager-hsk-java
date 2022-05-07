@@ -4,11 +4,21 @@
  */
 package gui;
 
+import dao.RoomDAO;
+import dao.RoomStatusTypeDAO;
+import dao.RoomTypeDAO;
+import dao.StaffDAO;
+import entity.Room;
+import entity.RoomStatusType;
+import entity.RoomType;
+import entity.Staff;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.FocusEvent;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -19,17 +29,35 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
     /**
      * Creates new form NewJInternalFrame1
      */
-    public frmRoomManager() {
+    private DefaultTableModel modelListRoom;
+
+    private RoomDAO roomDao;
+    private RoomTypeDAO roomTypeDAO;
+    private RoomStatusTypeDAO roomStatusTypeDAO;
+    private StaffDAO staffDAO;
+    
+    private String username;
+    private String id;
+    public frmRoomManager(String _username) {
         this.setRootPaneCheckingEnabled(false);
         javax.swing.plaf.InternalFrameUI ui
                 = this.getUI();
         ((javax.swing.plaf.basic.BasicInternalFrameUI) ui).setNorthPane(null);
-       
+
         initComponents();
         this.setFocusable(true);
-       
+
+        username = _username;
+        modelListRoom = new DefaultTableModel();
+        roomDao = new RoomDAO();
+        roomTypeDAO = new RoomTypeDAO();
+        staffDAO = new StaffDAO();
+
+        initColRoomList();
+        loadDataToCombobox();
+        loadDataToRoomList();
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -40,7 +68,7 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         txtSearch = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cboStyleRoom2 = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtNumberRoom = new javax.swing.JTextField();
@@ -49,14 +77,14 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txtBasicPrice = new javax.swing.JTextField();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        cboStyleRoom = new javax.swing.JComboBox<>();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableRoom = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
-        kButton4 = new com.k33ptoo.components.KButton();
-        kButton5 = new com.k33ptoo.components.KButton();
-        kButton6 = new com.k33ptoo.components.KButton();
+        btnThemPhong = new com.k33ptoo.components.KButton();
+        btnSuaPhong = new com.k33ptoo.components.KButton();
+        btnXoaPhong = new com.k33ptoo.components.KButton();
         pnlAddSerice = new javax.swing.JPanel();
         pnlService = new javax.swing.JPanel();
         btnAddService = new com.k33ptoo.components.KButton();
@@ -89,9 +117,8 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
 
         jPanel2.setLayout(new java.awt.BorderLayout());
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel2.add(jComboBox1, java.awt.BorderLayout.CENTER);
+        cboStyleRoom2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jPanel2.add(cboStyleRoom2, java.awt.BorderLayout.CENTER);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Thông tin chi tiết"));
@@ -114,8 +141,7 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
 
         txtBasicPrice.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
-        jComboBox2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboStyleRoom.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -137,7 +163,7 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
                     .addComponent(txtNumberRoom)
                     .addComponent(txtFloor)
                     .addComponent(txtBasicPrice)
-                    .addComponent(jComboBox2, 0, 593, Short.MAX_VALUE))
+                    .addComponent(cboStyleRoom, 0, 593, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -153,7 +179,7 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
                     .addComponent(txtFloor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboStyleRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -165,7 +191,7 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách phòng"));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableRoom.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -176,7 +202,12 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
                 "Số phòng", "Tầng", "Loại phòng", "Trang thiết bị", "Giá cơ bản"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tableRoom.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableRoomMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableRoom);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -191,45 +222,60 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Xử lý"));
 
-        kButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icon-add.png"))); // NOI18N
-        kButton4.setText("Thêm phòng");
-        kButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        kButton4.setIconTextGap(25);
-        kButton4.setkEndColor(new java.awt.Color(51, 255, 255));
-        kButton4.setkHoverEndColor(new java.awt.Color(102, 255, 255));
-        kButton4.setkHoverForeGround(new java.awt.Color(0, 204, 0));
-        kButton4.setkHoverStartColor(new java.awt.Color(0, 204, 255));
-        kButton4.setkPressedColor(new java.awt.Color(0, 153, 153));
-        kButton4.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnThemPhong.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icon-add.png"))); // NOI18N
+        btnThemPhong.setText("Thêm phòng");
+        btnThemPhong.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnThemPhong.setIconTextGap(25);
+        btnThemPhong.setkEndColor(new java.awt.Color(51, 255, 255));
+        btnThemPhong.setkHoverEndColor(new java.awt.Color(102, 255, 255));
+        btnThemPhong.setkHoverForeGround(new java.awt.Color(0, 204, 0));
+        btnThemPhong.setkHoverStartColor(new java.awt.Color(0, 204, 255));
+        btnThemPhong.setkPressedColor(new java.awt.Color(0, 153, 153));
+        btnThemPhong.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnThemPhong.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnThemPhongMouseClicked(evt);
+            }
+        });
 
-        kButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons-edit.png"))); // NOI18N
-        kButton5.setText("Sửa phòng");
-        kButton5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        kButton5.setIconTextGap(25);
-        kButton5.setkEndColor(new java.awt.Color(51, 255, 255));
-        kButton5.setkHoverEndColor(new java.awt.Color(102, 255, 255));
-        kButton5.setkHoverForeGround(new java.awt.Color(0, 204, 0));
-        kButton5.setkHoverStartColor(new java.awt.Color(0, 204, 255));
-        kButton5.setkPressedColor(new java.awt.Color(0, 153, 153));
-        kButton5.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnSuaPhong.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons-edit.png"))); // NOI18N
+        btnSuaPhong.setText("Sửa phòng");
+        btnSuaPhong.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSuaPhong.setIconTextGap(25);
+        btnSuaPhong.setkEndColor(new java.awt.Color(51, 255, 255));
+        btnSuaPhong.setkHoverEndColor(new java.awt.Color(102, 255, 255));
+        btnSuaPhong.setkHoverForeGround(new java.awt.Color(0, 204, 0));
+        btnSuaPhong.setkHoverStartColor(new java.awt.Color(0, 204, 255));
+        btnSuaPhong.setkPressedColor(new java.awt.Color(0, 153, 153));
+        btnSuaPhong.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnSuaPhong.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSuaPhongMouseClicked(evt);
+            }
+        });
 
-        kButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Button-Close-icon-16.png"))); // NOI18N
-        kButton6.setText("Xóa phòng");
-        kButton6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        kButton6.setIconTextGap(25);
-        kButton6.setkEndColor(new java.awt.Color(51, 255, 255));
-        kButton6.setkHoverEndColor(new java.awt.Color(102, 255, 255));
-        kButton6.setkHoverForeGround(new java.awt.Color(0, 204, 0));
-        kButton6.setkHoverStartColor(new java.awt.Color(0, 204, 255));
-        kButton6.setkPressedColor(new java.awt.Color(0, 153, 153));
-        kButton6.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnXoaPhong.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Button-Close-icon-16.png"))); // NOI18N
+        btnXoaPhong.setText("Xóa phòng");
+        btnXoaPhong.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnXoaPhong.setIconTextGap(25);
+        btnXoaPhong.setkEndColor(new java.awt.Color(51, 255, 255));
+        btnXoaPhong.setkHoverEndColor(new java.awt.Color(102, 255, 255));
+        btnXoaPhong.setkHoverForeGround(new java.awt.Color(0, 204, 0));
+        btnXoaPhong.setkHoverStartColor(new java.awt.Color(0, 204, 255));
+        btnXoaPhong.setkPressedColor(new java.awt.Color(0, 153, 153));
+        btnXoaPhong.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnXoaPhong.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnXoaPhongMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -238,20 +284,20 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(kButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(kButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(kButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnThemPhong, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSuaPhong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnXoaPhong, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(kButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnThemPhong, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38)
-                .addComponent(kButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSuaPhong, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(kButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnXoaPhong, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -334,7 +380,7 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
 
     private void txtSearchFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchFocusGained
 
-        if(txtSearch.getText().equals("Tìm kiếm phòng")){
+        if (txtSearch.getText().equals("Tìm kiếm phòng")) {
             txtSearch.setText("");
             txtSearch.setFont(txtSearch.getFont());
             txtSearch.setForeground(Color.BLACK);
@@ -342,23 +388,137 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtSearchFocusGained
 
     private void txtSearchFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchFocusLost
-       if(txtSearch.getText() != null){
+        if (txtSearch.getText() != null) {
             txtSearch.setText("Tìm kiếm phòng");
             txtSearch.setFont(txtSearch.getFont());
-            txtSearch.setForeground(new Color(204,204,204));
+            txtSearch.setForeground(new Color(204, 204, 204));
         }
     }//GEN-LAST:event_txtSearchFocusLost
-
+    
     private void btnAddServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddServiceActionPerformed
         frmAddDeviceForRoom frame = new frmAddDeviceForRoom();
         frame.setVisible(true);
     }//GEN-LAST:event_btnAddServiceActionPerformed
+     public String idRoom() {
+        String id = "";
+        for (Room room : roomDao.getAllRooms()) {
+            id = room.getMaPhong().toString();
+        }
+        String[] parts = id.split("P");
+        if (Integer.parseInt(parts[1]) < 10) {
+            int i = Integer.parseInt(parts[1]) + 1;
+            id = "P00" + i;
+        }
+        if (Integer.parseInt(parts[1]) >= 10 && Integer.parseInt(parts[1]) < 100) {
+            int i = Integer.parseInt(parts[1]) + 1;
+            id = "P0" + i;
+        }
+        if (Integer.parseInt(parts[1]) >= 100 && Integer.parseInt(parts[1]) < 1000) {
+            int i = Integer.parseInt(parts[1]) + 1;
+            id = "P" + i;
+        }
+        return id;
+    }
+    private void btnThemPhongMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnThemPhongMouseClicked
+        String gia = txtBasicPrice.getText().trim();
+        String name = txtNumberRoom.getText().trim();
+        String tang = txtFloor.getText().trim();
+        String loaiPhong = cboStyleRoom.getSelectedItem().toString();
+        String idRoom = idRoom();
+        Room room1 = roomDao.findRoomByNameRoom(name);
+        for (Room room : roomDao.getAllRooms()) {
+            if (name.equals(room.getTenPhong())) {
+                JOptionPane.showConfirmDialog(this, "Tên phòng đã tồn tại", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
+        RoomType rt = roomTypeDAO.findRoomTypeByName(loaiPhong);
+        RoomStatusType roomStatusType = new RoomStatusType("LTTP003", "Trống");
+        Staff staff = staffDAO.getEmployeeBYID(username);
+        Room room = new Room(idRoom, name,Integer.parseInt(tang), rt,roomStatusType, staff);
+        if (roomDao.addRoom(room)) {
+            JOptionPane.showMessageDialog(this, "Thêm Phòng thành công!");
+            loadDataToRoomList();
+        }else{
+            JOptionPane.showMessageDialog(this, "Thêm Phòng thất bại!");
+        }
+    }//GEN-LAST:event_btnThemPhongMouseClicked
+
+    private void btnSuaPhongMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSuaPhongMouseClicked
+        String tang = txtFloor.getText().trim();
+        String name = txtNumberRoom.getText().trim();
+        Room room = roomDao.findRoomById(id);
+        Staff staff = staffDAO.getEmployeeBYID(username);
+        for (Room r : roomDao.getAllRooms()) {
+            if (name.equals(r.getTenPhong())) {
+                JOptionPane.showConfirmDialog(this, "Tên Phòng đã tồn tại", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
+        try {
+            int choise = JOptionPane.showConfirmDialog(this, "Bạn có muốn sửa Phòng này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
+            if (room != null) {
+                if (choise == JOptionPane.YES_OPTION) {
+                    room.setTang(Integer.parseInt(tang));
+                    room.setStaff(staff);
+                    room.setTenPhong(name);
+                    if (roomDao.updateRoom(room)) {
+                        JOptionPane.showMessageDialog(this, "Chỉnh sửa phòng thành công!");
+                        loadDataToRoomList();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Chỉnh sửa phòng thất bại!");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnSuaPhongMouseClicked
+
+    private void btnXoaPhongMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnXoaPhongMouseClicked
+        String name = txtNumberRoom.getText().trim();
+        Room room = roomDao.findRoomByNameRoom(name);
+        Staff staff = staffDAO.getEmployeeBYID(username);
+        RoomStatusType  roomStatusType = new RoomStatusType("LTTP004", "Xóa");
+        try {
+            int choise = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa phòng này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
+            if (room != null) {
+                if (choise == JOptionPane.YES_OPTION) {
+                    room.setRoomStatusType(roomStatusType);
+                    room.setStaff(staff);
+                    if (roomDao.deleteRoom(room)) {
+                        JOptionPane.showMessageDialog(this, " Xóa thành công!");
+                        loadDataToRoomList();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Phòng chưa được xóa!");
+                    }
+                }
+
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_btnXoaPhongMouseClicked
+
+    private void tableRoomMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableRoomMouseClicked
+        int selected = tableRoom.getSelectedRow();
+        if (selected >= 0) {
+            id = (String) tableRoom.getValueAt(selected, 0);
+            txtNumberRoom.setText((String) tableRoom.getValueAt(selected, 1));
+            txtFloor.setText((String) tableRoom.getValueAt(selected, 2).toString());
+            txtBasicPrice.setText((String) tableRoom.getValueAt(selected, 4).toString());
+            cboStyleRoom.setSelectedItem((String) tableRoom.getValueAt(selected, 3));
+        }
+    }//GEN-LAST:event_tableRoomMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.k33ptoo.components.KButton btnAddService;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private com.k33ptoo.components.KButton btnSuaPhong;
+    private com.k33ptoo.components.KButton btnThemPhong;
+    private com.k33ptoo.components.KButton btnXoaPhong;
+    private javax.swing.JComboBox<String> cboStyleRoom;
+    private javax.swing.JComboBox<String> cboStyleRoom2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -369,18 +529,43 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private com.k33ptoo.components.KButton kButton4;
-    private com.k33ptoo.components.KButton kButton5;
-    private com.k33ptoo.components.KButton kButton6;
     private javax.swing.JLabel lblTitile;
     private javax.swing.JPanel pnlAddSerice;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlService;
     private javax.swing.JPanel pnlTitle;
+    private javax.swing.JTable tableRoom;
     private javax.swing.JTextField txtBasicPrice;
     private javax.swing.JTextField txtFloor;
     private javax.swing.JTextField txtNumberRoom;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
+
+    private void initColRoomList() {
+        modelListRoom.setColumnIdentifiers(new String[]{
+            "Mã Phòng", "Tên Phòng", "Tầng", "Loại Phòng", "Giá Phòng"
+        });
+        tableRoom.setModel(modelListRoom);
+    }
+
+    private void loadDataToCombobox() {
+        for (RoomType room : roomTypeDAO.getAllRoomTypes()) {
+            cboStyleRoom.addItem(room.getTenLoaiPhong());
+            cboStyleRoom2.addItem(room.getTenLoaiPhong());
+        }
+    }
+
+    private void loadDataToRoomList() {
+        modelListRoom.setRowCount(0);
+        for (Room room : roomDao.getAllRooms()) {
+            if(room.getRoomStatusType().getTenLoai().equals("Trống"))
+            {
+            Object[] row = new Object[]{
+                room.getMaPhong(), room.getTenPhong(), room.getTang(), room.getRoomType().getTenLoaiPhong(), room.getRoomType().getDonGia()
+            };
+            modelListRoom.addRow(row);
+            }
+        }
+        modelListRoom.fireTableDataChanged();
+    }
 }
