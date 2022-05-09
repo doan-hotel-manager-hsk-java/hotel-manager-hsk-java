@@ -25,4 +25,14 @@ public class RegexHelper {
         return number.matches(regex);
     }
     
+    public static boolean regexCMND(String number) {
+        String regex = "[0-9]{9}";
+        return number.matches(regex);
+    }
+    
+    public static boolean regexEmail(String email) {
+        String regex = "\\w+.@\\w+.\\w{2,5}";
+        return email.matches(regex);
+    }
+    
 }
