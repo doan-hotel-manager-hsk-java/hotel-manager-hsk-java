@@ -4,22 +4,34 @@
  */
 package gui;
 
+import dao.DeviceDAO;
+import dao.StaffDAO;
+import entity.Device;
+import entity.Staff;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.FocusEvent;
+import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import regex.RegexHelper;
 
 /**
  *
  * @author vomin
  */
 public class frmDeviceManager extends javax.swing.JInternalFrame {
-
-    /**
-     * Creates new form NewJInternalFrame1
-     */
-    public frmDeviceManager() {
+    private DeviceDAO deviceDAO;
+    private DefaultTableModel dtm;
+    private StaffDAO staffDAO;
+    
+    private String id;
+    private String username;
+    public frmDeviceManager(String _username) {
         this.setRootPaneCheckingEnabled(false);
         javax.swing.plaf.InternalFrameUI ui
                 = this.getUI();
@@ -28,6 +40,11 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         initComponents();
        this.setFocusable(true);
        
+       username = _username;
+       dtm=(DefaultTableModel) jTable1.getModel();
+       deviceDAO=new DeviceDAO();
+       staffDAO=new StaffDAO();
+        loadDataToTable(deviceDAO.getAllDevices(), dtm);
     }
 
     @SuppressWarnings("unchecked")
@@ -40,7 +57,6 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         txtSearch = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtNumberRoom = new javax.swing.JTextField();
@@ -52,9 +68,9 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
-        kButton4 = new com.k33ptoo.components.KButton();
-        kButton5 = new com.k33ptoo.components.KButton();
-        kButton6 = new com.k33ptoo.components.KButton();
+        btnThem = new com.k33ptoo.components.KButton();
+        btnSua = new com.k33ptoo.components.KButton();
+        btnXoa = new com.k33ptoo.components.KButton();
 
         setBorder(null);
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -80,13 +96,14 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
                 txtSearchFocusLost(evt);
             }
         });
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchKeyReleased(evt);
+            }
+        });
         jPanel1.add(txtSearch, java.awt.BorderLayout.CENTER);
 
         jPanel2.setLayout(new java.awt.BorderLayout());
-
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel2.add(jComboBox1, java.awt.BorderLayout.CENTER);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Thông tin chi tiết"));
@@ -159,6 +176,11 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
                 "Tên thiết bị", "Số lượng", "Giá"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -181,38 +203,53 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Xử lý"));
 
-        kButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icon-add.png"))); // NOI18N
-        kButton4.setText("Thêm thiết bị");
-        kButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        kButton4.setIconTextGap(25);
-        kButton4.setkEndColor(new java.awt.Color(51, 255, 255));
-        kButton4.setkHoverEndColor(new java.awt.Color(102, 255, 255));
-        kButton4.setkHoverForeGround(new java.awt.Color(0, 204, 0));
-        kButton4.setkHoverStartColor(new java.awt.Color(0, 204, 255));
-        kButton4.setkPressedColor(new java.awt.Color(0, 153, 153));
-        kButton4.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnThem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icon-add.png"))); // NOI18N
+        btnThem.setText("Thêm thiết bị");
+        btnThem.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnThem.setIconTextGap(25);
+        btnThem.setkEndColor(new java.awt.Color(51, 255, 255));
+        btnThem.setkHoverEndColor(new java.awt.Color(102, 255, 255));
+        btnThem.setkHoverForeGround(new java.awt.Color(0, 204, 0));
+        btnThem.setkHoverStartColor(new java.awt.Color(0, 204, 255));
+        btnThem.setkPressedColor(new java.awt.Color(0, 153, 153));
+        btnThem.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
 
-        kButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons-edit.png"))); // NOI18N
-        kButton5.setText("Sửa thiết bị");
-        kButton5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        kButton5.setIconTextGap(25);
-        kButton5.setkEndColor(new java.awt.Color(51, 255, 255));
-        kButton5.setkHoverEndColor(new java.awt.Color(102, 255, 255));
-        kButton5.setkHoverForeGround(new java.awt.Color(0, 204, 0));
-        kButton5.setkHoverStartColor(new java.awt.Color(0, 204, 255));
-        kButton5.setkPressedColor(new java.awt.Color(0, 153, 153));
-        kButton5.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnSua.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons-edit.png"))); // NOI18N
+        btnSua.setText("Sửa thiết bị");
+        btnSua.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSua.setIconTextGap(25);
+        btnSua.setkEndColor(new java.awt.Color(51, 255, 255));
+        btnSua.setkHoverEndColor(new java.awt.Color(102, 255, 255));
+        btnSua.setkHoverForeGround(new java.awt.Color(0, 204, 0));
+        btnSua.setkHoverStartColor(new java.awt.Color(0, 204, 255));
+        btnSua.setkPressedColor(new java.awt.Color(0, 153, 153));
+        btnSua.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnSua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaActionPerformed(evt);
+            }
+        });
 
-        kButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Button-Close-icon-16.png"))); // NOI18N
-        kButton6.setText("Xóa thiết bị");
-        kButton6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        kButton6.setIconTextGap(25);
-        kButton6.setkEndColor(new java.awt.Color(51, 255, 255));
-        kButton6.setkHoverEndColor(new java.awt.Color(102, 255, 255));
-        kButton6.setkHoverForeGround(new java.awt.Color(0, 204, 0));
-        kButton6.setkHoverStartColor(new java.awt.Color(0, 204, 255));
-        kButton6.setkPressedColor(new java.awt.Color(0, 153, 153));
-        kButton6.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnXoa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Button-Close-icon-16.png"))); // NOI18N
+        btnXoa.setText("Xóa thiết bị");
+        btnXoa.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnXoa.setIconTextGap(25);
+        btnXoa.setkEndColor(new java.awt.Color(51, 255, 255));
+        btnXoa.setkHoverEndColor(new java.awt.Color(102, 255, 255));
+        btnXoa.setkHoverForeGround(new java.awt.Color(0, 204, 0));
+        btnXoa.setkHoverStartColor(new java.awt.Color(0, 204, 255));
+        btnXoa.setkPressedColor(new java.awt.Color(0, 153, 153));
+        btnXoa.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -221,20 +258,20 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(kButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(kButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(kButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnThem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnXoa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(kButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                .addComponent(kButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSua, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
-                .addComponent(kButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -304,10 +341,124 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txtSearchFocusLost
 
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        if (checkData()){
+            Device d= createDevice();
+            try{
+                deviceDAO.insertDevice(d);
+                loadDataToTable(deviceDAO.getAllDevices(), dtm);
+                clearInput();
+                JOptionPane.showMessageDialog(this, "Thêm thành công!");
+            }catch (Exception e1){
+                JOptionPane.showMessageDialog(this, e1.getMessage());
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Hãy nhập đầy đủ thông tin!");
 
+        }
+    }//GEN-LAST:event_btnThemActionPerformed
+
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+        int index = jTable1.getSelectedRow();
+        if (index==-1){
+            JOptionPane.showMessageDialog(this, "Hãy chọn dòng cần sửa!");
+        }else{
+        if (checkData()){
+            Device d=deviceDAO.findDeviceByName(dtm.getValueAt(index, 0)+"");
+            dtm.setValueAt(txtNumberRoom1.getText(), index, 1);
+            dtm.setValueAt(txtBasicPrice.getText(), index, 2);
+            d.setSoLuongTon(Integer.parseInt(txtNumberRoom1.getText()));
+            d.setGia(Double.parseDouble(txtBasicPrice.getText()));
+            if (d.getTenTTB().equals(dtm.getValueAt(index, 0)+""))
+            deviceDAO.updateDeviceById(d);
+            loadDataToTable(deviceDAO.getAllDevices(), dtm);
+            clearInput();
+            JOptionPane.showMessageDialog(this, "Sửa thành công!");
+        }else{
+            JOptionPane.showMessageDialog(this, "Hãy nhập đầy đủ thông tin!");
+        }
+        }
+    }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        int index= jTable1.getSelectedRow();
+        if (index==-1){
+            JOptionPane.showMessageDialog(this, "Hãy chọn dòng cần xóa!");
+        }else{
+            int choose = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa thiết bị này?", "Hỏi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (choose == JOptionPane.YES_OPTION) {
+                Device d=deviceDAO.findDeviceByName(dtm.getValueAt(index, 0)+"");
+                d.setTrangThai(0);
+                deviceDAO.updateDeviceById(d);
+                
+                loadDataToTable(deviceDAO.getAllDevices(), dtm);
+                clearInput();
+                JOptionPane.showMessageDialog(this, "Xóa thành công!");
+            }
+        }
+    }//GEN-LAST:event_btnXoaActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        int index = jTable1.getSelectedRow();
+        txtNumberRoom.setText(jTable1.getValueAt(index, 0).toString());
+        txtNumberRoom1.setText(jTable1.getValueAt(index, 1).toString());
+        txtBasicPrice.setText(jTable1.getValueAt(index, 2).toString());
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+        String s=txtSearch.getText();
+        filter(s);
+    }//GEN-LAST:event_txtSearchKeyReleased
+
+    private void filter(String s){
+        TableRowSorter<DefaultTableModel> tr=new TableRowSorter<DefaultTableModel>(dtm);
+        jTable1.setRowSorter(tr);
+        tr.setRowFilter(RowFilter.regexFilter("(?i)"+s));
+
+        
+    }
+    private void loadDataToTable(List<Device> list, DefaultTableModel dtm) {  
+        dtm.setRowCount(0);
+        for (Device device: list) {
+            dtm.addRow(new Object[] {device.getTenTTB(),String.valueOf(device.getSoLuongTon()),String.valueOf(device.getGia())});
+        }
+    }
+    
+    private Device createDevice() {
+        String tenTTB= txtNumberRoom.getText();
+        int soLuong= Integer.parseInt(txtNumberRoom1.getText());
+        double gia=Double.parseDouble(txtBasicPrice.getText());
+        
+        Staff staff = staffDAO.getEmployeeBYID(username);
+        Device d=new Device(setMaTTB(), tenTTB, soLuong, "Máy", gia, 1,staff);
+        return d;
+    }
+    private boolean checkData() {
+        if (txtNumberRoom.getText().trim().equals("") || txtNumberRoom1.getText().trim().equals("") || txtBasicPrice.getText().trim().equals(""))
+            return false;
+        return true;
+    }
+    
+    private String setMaTTB(){
+        String s="TTB";
+        int ma= deviceDAO.getDevicesByAllStatus().size();
+        if (ma<9)
+            s=s+ "00"+ (ma+1);
+        else
+            s=s+"0"+(ma+1);
+        return s;
+    }
+    private void clearInput(){
+        txtNumberRoom.setText("");
+        txtNumberRoom1.setText("");
+        txtBasicPrice.setText("");
+        txtNumberRoom.requestFocus();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> jComboBox1;
+    private com.k33ptoo.components.KButton btnSua;
+    private com.k33ptoo.components.KButton btnThem;
+    private com.k33ptoo.components.KButton btnXoa;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -318,9 +469,6 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private com.k33ptoo.components.KButton kButton4;
-    private com.k33ptoo.components.KButton kButton5;
-    private com.k33ptoo.components.KButton kButton6;
     private javax.swing.JLabel lblTitile;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlTitle;

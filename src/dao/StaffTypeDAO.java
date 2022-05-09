@@ -20,7 +20,8 @@ public class StaffTypeDAO {
     
     private final String SELECT_ALL_STAFF_TYPE = "SELECT * FROM LOAINHANVIEN";
     private final String SELECT_STAFF_TYPE_BY_ID = "SELECT * FROM LOAINHANVIEN WHERE MALOAINV = ?";
-    
+    private final String SELECT_STAFF_TYPE_BY_NAME ="SELECT * FROM LOAINHANVIEN WHERE TENLOAINV=?";
+
     public List<StaffType> getAllStaffTypes() {
         List<StaffType> staffTypes = new ArrayList<>();
         try(Connection conn = DatabaseConnection.opConnection();
@@ -36,6 +37,9 @@ public class StaffTypeDAO {
                 }
                 
                 return staffTypes;
+            }catch(Exception e) {
+                 System.err.println("getAllStaffTypes(): get data fail");
+                e.printStackTrace();
             }
         }catch(Exception e) {
              System.err.println("getAllStaffTypes(): connect db fail");
@@ -65,6 +69,29 @@ public class StaffTypeDAO {
             e.printStackTrace();
         }
         
+        return null;
+    }
+    
+    public StaffType findStaffByName(String name) {
+        try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(SELECT_STAFF_TYPE_BY_NAME)) {
+            pstmt.setString(1, name);
+            try ( ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()){
+                String maLNV = rs.getString(MA_LOAI_NV);
+                String tenLNV=rs.getString(TEN_LOAI_NV);
+                double luong= rs.getDouble(MUC_LUONG);
+                StaffType staffType=new StaffType(maLNV,tenLNV,luong);
+                return staffType;
+            }
+            
+        }catch (Exception e){
+                System.err.println("getAllStaff():get data fail");
+                e.printStackTrace();
+        }
+    }catch (Exception e){
+            System.err.println("getAllStaff(): connect db fail");
+            e.printStackTrace();
+    }
         return null;
     }
 }
