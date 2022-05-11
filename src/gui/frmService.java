@@ -4,13 +4,21 @@
  */
 package gui;
 
-import dao.OrderDetail_Room_DAO;
+import dao.OrderDAO;
+import dao.OrderDetailDAO;
 import dao.RoomDAO;
 import dao.ServiceDAO;
-import entity.OrderDetail_Room;
+import entity.Order;
+import entity.OrderDetail;
 import entity.Room;
 import entity.Service;
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -19,15 +27,21 @@ import javax.swing.table.DefaultTableModel;
  */
 public class frmService extends javax.swing.JInternalFrame {
 
-    // INIT
+    // INIT MODEL
     private DefaultTableModel modellListServices, modelListServicesAdded;
-    
+
+    // INIT DAO
     private RoomDAO roomDAO;
     private ServiceDAO serviceDAO;
-    private OrderDetail_Room_DAO orderDetailRoomDAO;
-    
+    private OrderDetailDAO orderDetailDAO;
+    private OrderDAO orderDAO;
+
+    private String idRoom;
+    private String idOrder;
+
     /**
      * Creates new form QuanLyPhong
+     *
      * @throws java.lang.ClassNotFoundException
      * @throws java.sql.SQLException
      */
@@ -37,22 +51,27 @@ public class frmService extends javax.swing.JInternalFrame {
                 = this.getUI();
         ((javax.swing.plaf.basic.BasicInternalFrameUI) ui).setNorthPane(null);
         initComponents();
-        
+
         // TABLE MODEL
         modellListServices = new DefaultTableModel();
         modelListServicesAdded = new DefaultTableModel();
-        
+
         // DAO
         roomDAO = new RoomDAO();
         serviceDAO = new ServiceDAO();
-        orderDetailRoomDAO = new OrderDetail_Room_DAO();
-        
+        orderDetailDAO = new OrderDetailDAO();
+        orderDAO = new OrderDAO();
+
+        // SET COMBOBOX (INDEX = 0)
+        cboTenPhong.addItem("Chọn phòng");
+        cboDichVu.addItem("Chọn dịch vụ");
+
         // CALLING
-        loadDataToCombobox();
+        loadDataToComboboxNameRoom();
+        loadDataToComboboxService();
         initColsListServices();
         loadDataToTblListServices();
         initColsListServicesAdded();
-        loadDataToTblListServicesAdded();
     }
 
     /**
@@ -69,15 +88,15 @@ public class frmService extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtSoLuong = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         cboTenPhong = new javax.swing.JComboBox<>();
         btnThem = new com.k33ptoo.components.KButton();
-        btnDatPhong = new com.k33ptoo.components.KButton();
+        btnSua = new com.k33ptoo.components.KButton();
         btnXoa = new com.k33ptoo.components.KButton();
         btnTaoHoaDon = new com.k33ptoo.components.KButton();
+        cboDichVu = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblListServicesAdded = new javax.swing.JTable();
@@ -97,22 +116,38 @@ public class frmService extends javax.swing.JInternalFrame {
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Thông tin dịch vụ"));
+        jPanel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel5MouseClicked(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Dịch Vụ :");
-
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Số lượng:");
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtSoLuong.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtSoLuong.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtSoLuongKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtSoLuongKeyTyped(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Chọn Phòng: ");
 
         cboTenPhong.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        cboTenPhong.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboTenPhongItemStateChanged(evt);
+            }
+        });
         cboTenPhong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboTenPhongActionPerformed(evt);
@@ -134,15 +169,20 @@ public class frmService extends javax.swing.JInternalFrame {
             }
         });
 
-        btnDatPhong.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons-edit.png"))); // NOI18N
-        btnDatPhong.setText("Sửa");
-        btnDatPhong.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnDatPhong.setkEndColor(new java.awt.Color(51, 255, 255));
-        btnDatPhong.setkHoverEndColor(new java.awt.Color(102, 255, 255));
-        btnDatPhong.setkHoverForeGround(new java.awt.Color(0, 204, 0));
-        btnDatPhong.setkHoverStartColor(new java.awt.Color(0, 204, 255));
-        btnDatPhong.setkPressedColor(new java.awt.Color(0, 153, 153));
-        btnDatPhong.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnSua.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons-edit.png"))); // NOI18N
+        btnSua.setText("Sửa");
+        btnSua.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSua.setkEndColor(new java.awt.Color(51, 255, 255));
+        btnSua.setkHoverEndColor(new java.awt.Color(102, 255, 255));
+        btnSua.setkHoverForeGround(new java.awt.Color(0, 204, 0));
+        btnSua.setkHoverStartColor(new java.awt.Color(0, 204, 255));
+        btnSua.setkPressedColor(new java.awt.Color(0, 153, 153));
+        btnSua.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnSua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaActionPerformed(evt);
+            }
+        });
 
         btnXoa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Button-Close-icon-16.png"))); // NOI18N
         btnXoa.setText("Xóa");
@@ -153,6 +193,11 @@ public class frmService extends javax.swing.JInternalFrame {
         btnXoa.setkHoverStartColor(new java.awt.Color(0, 204, 255));
         btnXoa.setkPressedColor(new java.awt.Color(0, 153, 153));
         btnXoa.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
         btnTaoHoaDon.setText("Tạo hóa đơn");
         btnTaoHoaDon.setToolTipText("");
@@ -169,6 +214,8 @@ public class frmService extends javax.swing.JInternalFrame {
             }
         });
 
+        cboDichVu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -184,13 +231,13 @@ public class frmService extends javax.swing.JInternalFrame {
                         .addGap(12, 12, 12)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cboTenPhong, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField1))
+                            .addComponent(txtSoLuong)
+                            .addComponent(cboDichVu, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnDatPhong, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSua, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(16, 16, 16)
                         .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -204,18 +251,18 @@ public class frmService extends javax.swing.JInternalFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel1)
                     .addComponent(cboTenPhong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cboDichVu, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtSoLuong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDatPhong, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSua, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnTaoHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 9, Short.MAX_VALUE))
@@ -235,6 +282,11 @@ public class frmService extends javax.swing.JInternalFrame {
                 "Số phòng", "Tên dịch vụ", "Số lượng", "Tổng tiền"
             }
         ));
+        tblListServicesAdded.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblListServicesAddedMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblListServicesAdded);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -250,7 +302,7 @@ public class frmService extends javax.swing.JInternalFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -331,74 +383,305 @@ public class frmService extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    // LOAD DATA TO COMBOBOX
-    private void loadDataToCombobox() {
+    // LOAD DATA TO COMBOBOX TO NAME ROOM
+    private void loadDataToComboboxNameRoom() {
         for (Room room : roomDAO.getAllRooms()) {
             cboTenPhong.addItem(room.getTenPhong());
         }
     }
-    
+
+    // LOAD DATA TO COMBOBOX
+    private void loadDataToComboboxService() throws ClassNotFoundException, SQLException {
+        for (Service service : serviceDAO.getServices()) {
+            cboDichVu.addItem(service.getTenDV());
+        }
+    }
+
     // CREATE TITLE COLUMNS OF LIST SERVICE
     private void initColsListServices() {
-        modellListServices.setColumnIdentifiers(new String[] {
-            "Tên dich vu", "Ðon giá", "Trang thái"
+        modellListServices.setColumnIdentifiers(new String[]{
+            "Tên dịch vụ", "Đơn giá"
         });
         tblListServices.setModel(modellListServices);
     }
-    
+
     // LOAD DATA TO TABLE LIST SERVICE
     private void loadDataToTblListServices() throws ClassNotFoundException, SQLException {
         modellListServices.setRowCount(0);
-        
+
         for (Service service : serviceDAO.getServices()) {
-            Object[] row = new Object[] {
-              service.getTenDV(), service.getDonGia(), service.getTrangThai()  
+            Object[] row = new Object[]{
+                service.getTenDV(), service.getDonGia()
             };
             modellListServices.addRow(row);
         }
         modellListServices.fireTableDataChanged();
     }
-    
+
     // CREATE TITLE COLUMNS OF LIST SERVICE ADDED
     private void initColsListServicesAdded() {
-        modelListServicesAdded.setColumnIdentifiers(new String[] {
-            "So phòng", "Tên dich vu", "So luong", "Tong Tien"
+        modelListServicesAdded.setColumnIdentifiers(new String[]{
+            "Tên dịch vụ", "Số lượng", "Thành tiền"
         });
         tblListServicesAdded.setModel(modelListServicesAdded);
     }
-    
+
     // LOAD DATA TO TABLE LIST SERVICE ADDED
-    private void loadDataToTblListServicesAdded() throws ClassNotFoundException, SQLException {
+    private void loadDataToTblListServicesAdded(String idRoom) {
         modelListServicesAdded.setRowCount(0);
-        
-        for (OrderDetail_Room or : orderDetailRoomDAO.getListServicesAdded()) {
-            Object[] row = new Object[] {
-              or.getTenPhong(), or.getService().getTenDV(), or.getSoLuong(), or.getTongTien()
+
+        for (OrderDetail od : orderDetailDAO.getListServicesByIdRoom(idRoom)) {
+            Object[] row = new Object[]{
+                od.getService().getTenDV(), od.getSoLuong(), od.getThanhTien()
             };
             modelListServicesAdded.addRow(row);
         }
         modelListServicesAdded.fireTableDataChanged();
     }
-    
+
     private void cboTenPhongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTenPhongActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_cboTenPhongActionPerformed
 
+    // HANDLE BUTTON CREATE ORDER
     private void btnTaoHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoHoaDonActionPerformed
-        frmBill frm = new frmBill();
-        frm.setVisible(true);
+        frmBill frm;
+        try {
+            // CHECK INPUTS
+            if (cboTenPhong.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(this, "Bạn cần chọn phòng!");
+                return;
+            }
+
+            // GET ORDER ID FROM ROOM
+            Order order = orderDAO.getOrderById(idOrder);
+
+            // SET TIME
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss"); //yyyy/MM/dd 
+            LocalDateTime now = LocalDateTime.now();
+            String tam = dtf.format(now);
+            // SET DATE
+            DateTimeFormatter dtfNgayRa = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDateTime nowNgayRa = LocalDateTime.now();
+            String tamNgayRa = dtfNgayRa.format(nowNgayRa);
+
+            order.setGioRa(tam);
+            order.setNgayRa(tamNgayRa);
+
+            // UPDATE ORDER (TIME OUT)
+            orderDAO.updateServiceInOrder(order);
+
+            frm = new frmBill(idOrder);
+            frm.setVisible(true);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(frmService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(frmService.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnTaoHoaDonActionPerformed
 
+    // HANDLE CLICK ON TABLE LIST SERVICE ADDED
+    private void tblListServicesAddedMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblListServicesAddedMouseClicked
+        // SET ENABLE IS TRUE
+        cboDichVu.setEnabled(true);
+        cboTenPhong.setEnabled(true);
+        int selected = tblListServicesAdded.getSelectedRow();
+
+        if (selected >= 0) {
+            String tam = (String) tblListServicesAdded.getValueAt(selected, 1);
+            // SET ENABLE is FALSE
+            cboDichVu.setEnabled(false);
+            cboTenPhong.setEnabled(false);
+            try {
+                OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(tam).getMaDV(), idOrder);
+
+                if (od != null) {
+                    cboTenPhong.setSelectedItem(roomDAO.findRoomById(orderDAO.getOrderById(od.getOrder().getMaHD()).getRoom().getMaPhong()).getTenPhong());
+                    cboDichVu.setSelectedItem(serviceDAO.getServiceById(od.getService().getMaDV()).getTenDV());
+                    txtSoLuong.setText("" + od.getSoLuong());
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                System.out.println("gui.frmService.tblListServicesAddedMouseClicked(): " + ex.getMessage());
+            }
+
+        }
+    }//GEN-LAST:event_tblListServicesAddedMouseClicked
+
+    // CLEAR INPUTS
+    private void clearInps() {
+        cboDichVu.setSelectedIndex(0);
+        txtSoLuong.setText("");
+        cboTenPhong.requestFocus();
+    }
+
+    // HANDLE BUTTON ADD SERVICE 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
-        
+        // SET ENABLE IS TRUE
+        cboDichVu.setEnabled(true);
+        cboTenPhong.setEnabled(true);
+        try {
+            Room room = roomDAO.findRoomByNameRoom(cboTenPhong.getSelectedItem().toString());
+            OrderDetail od = new OrderDetail();
+            Service service = new Service();
+
+            if (cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!");
+                return;
+            }
+
+            if (room.getTenPhong() != null) {
+                // CHECK NAME SERVICE EXISTS (MaHD, MaDV)
+                if (orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), idOrder) != null) {
+                    JOptionPane.showMessageDialog(this, "Tên dịch vụ đã có trong phòng. Vui lòng thực hiện chức năng sửa!");
+                    return;
+                }
+
+                // CHECK SO LUONG
+                if (Integer.parseInt(txtSoLuong.getText()) <= 0) {
+                    JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!");
+                    return;
+                }
+
+                od.setSoLuong(Integer.parseInt(txtSoLuong.getText()));
+                od.setOrder(orderDAO.getOrderById(idOrder)); // GET ID HOADON FROM ROOM TO IT
+                service.setMaDV(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV());
+                od.setService(service);
+
+                // ADD
+                orderDetailDAO.addServiceToOrderDetail(od);
+                JOptionPane.showMessageDialog(this, "Thêm thành công dịch vụ.");
+                clearInps();
+                loadDataToTblListServicesAdded(idRoom);
+                txtSoLuong.setText("");
+                cboDichVu.setSelectedIndex(0);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("gui.frmService.btnThemActionPerformed(): " + ex.getMessage());
+        }
     }//GEN-LAST:event_btnThemActionPerformed
+
+    // HANDLE BUTTON DELETE SERVICE
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        // SET ENABLE IS TRUE
+        cboDichVu.setEnabled(true);
+        cboTenPhong.setEnabled(true);
+        try {
+            // CHECK INPUTS
+            if (cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy dịch vụ để xóa!");
+                return;
+            }
+            // DELETE
+            int choose = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa dịch vụ này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
+            if (choose == JOptionPane.YES_OPTION) {
+                OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), idOrder);
+                orderDetailDAO.deleteServiceOutOrderDetail(od);
+                JOptionPane.showMessageDialog(this, "Xóa dịch vụ thành công.");
+                clearInps();
+                loadDataToTblListServicesAdded(idRoom);
+                txtSoLuong.setText("");
+                cboDichVu.setSelectedIndex(0);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("gui.frmService.btnXoaActionPerformed(): " + ex.getMessage());
+        }
+    }//GEN-LAST:event_btnXoaActionPerformed
+
+    // HANDLE BUTTON UPDATE SERVICE
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+        // SET ENABLE IS TRUE
+        cboDichVu.setEnabled(true);
+        cboTenPhong.setEnabled(true);
+
+        Room room = roomDAO.findRoomByNameRoom(cboTenPhong.getSelectedItem().toString());
+
+        try {
+            // CHECK INPUTS
+            if (cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy dịch vụ để cập nhật!");
+                return;
+            }
+            if (Integer.parseInt(txtSoLuong.getText()) <= 0) {
+                JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!");
+                return;
+            }
+
+            if (room.getMaPhong() != null) {
+                // CHECK NAME SERVICE EXISTS (MaHD, MaDV)
+                if (orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), idOrder) == null) {
+                    JOptionPane.showMessageDialog(this, "Tên dịch vụ không có trong phòng. Vui lòng thực hiện chức năng thêm!");
+                    return;
+                }
+
+                int choose = JOptionPane.showConfirmDialog(this, "Bạn có muốn sửa dịch vụ này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
+
+                if (choose == JOptionPane.YES_OPTION) {
+                    // UPDATE
+                    OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), idOrder);
+
+                    od.setSoLuong(Integer.parseInt(txtSoLuong.getText()));
+
+                    orderDetailDAO.updateServiceInOrderDetail(od);
+                    JOptionPane.showMessageDialog(this, "Cập nhật thành công số lượng.");
+                    clearInps();
+                    loadDataToTblListServicesAdded(idRoom);
+                    txtSoLuong.setText("");
+                    cboDichVu.setSelectedIndex(0);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("gui.frmService.btnSuaActionPerformed(): " + ex.getMessage());
+        }
+    }//GEN-LAST:event_btnSuaActionPerformed
+
+    private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
+        // SET ENABLE IS TRUE
+        cboDichVu.setEnabled(true);
+        cboTenPhong.setEnabled(true);
+    }//GEN-LAST:event_jPanel5MouseClicked
+
+    private void cboTenPhongItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboTenPhongItemStateChanged
+        String name = cboTenPhong.getSelectedItem().toString();
+
+        if (name.equals("Chọn phòng")) {
+            modelListServicesAdded.setRowCount(0);
+            return;
+        }
+        // GET ID ROOM
+        Room room = roomDAO.findRoomByNameRoom(name);
+        idRoom = room.getMaPhong();
+        idOrder = orderDAO.getOrderIdByRoomId(idRoom);
+
+        loadDataToTblListServicesAdded(idRoom);
+    }//GEN-LAST:event_cboTenPhongItemStateChanged
+
+    private void txtSoLuongKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSoLuongKeyPressed
+        
+    }//GEN-LAST:event_txtSoLuongKeyPressed
+
+    // CHECK DON'T INPUT CHAR
+    private void txtSoLuongKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSoLuongKeyTyped
+        char c = evt.getKeyChar();
+        if(!(Character.isDigit(c)) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE)||(c == KeyEvent.VK_PERIOD)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtSoLuongKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.k33ptoo.components.KButton btnDatPhong;
+    private com.k33ptoo.components.KButton btnSua;
     private com.k33ptoo.components.KButton btnTaoHoaDon;
     private com.k33ptoo.components.KButton btnThem;
     private com.k33ptoo.components.KButton btnXoa;
+    private javax.swing.JComboBox<String> cboDichVu;
     private javax.swing.JComboBox<String> cboTenPhong;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -410,10 +693,9 @@ public class frmService extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JPanel pnlTitle;
     private javax.swing.JTable tblListServices;
     private javax.swing.JTable tblListServicesAdded;
+    private javax.swing.JTextField txtSoLuong;
     // End of variables declaration//GEN-END:variables
 }

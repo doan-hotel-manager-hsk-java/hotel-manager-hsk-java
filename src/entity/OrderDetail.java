@@ -12,6 +12,7 @@ public class OrderDetail {
     private int soLuong;
     private Order order;
     private Service service;
+    private double thanhTien;
 
     public OrderDetail() {
     }
@@ -20,6 +21,13 @@ public class OrderDetail {
         this.soLuong = soLuong;
         this.order = order;
         this.service = service;
+    }
+    
+    public OrderDetail(int soLuong, Order order, Service service, double thanhTien) {
+        this.soLuong = soLuong;
+        this.order = order;
+        this.service = service;
+        this.thanhTien = thanhTien;
     }
 
     public int getSoLuong() {
@@ -45,6 +53,16 @@ public class OrderDetail {
     public void setService(Service service) {
         this.service = service;
     }
-    
-    
+
+    public double getThanhTien() {
+        return thanhTien;
+    }
+
+    public void setThanhTien(double thanhTien) {
+        this.thanhTien = thanhTien;
+    }
+    // HANDLE GET TONG TIEN
+    public double getMoney() {
+        return thanhTien = service.getDonGia() * getSoLuong();
+    }
 }

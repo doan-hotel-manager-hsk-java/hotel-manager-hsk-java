@@ -71,4 +71,5 @@ public class RoomStatusTypeDAO {
         
         return null;
     }
+    
 }
