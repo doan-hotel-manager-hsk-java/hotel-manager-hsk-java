@@ -499,7 +499,7 @@ public class frmInforCustomer extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, "Tên khách hàng sai định dạng!\n VD: Lê Tuấn", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             } else if (!RegexHelper.regexPhoneNumber(sdt)) {
-                JOptionPane.showMessageDialog(this, "Số điện thoại không chứa ký tự chữ, phải đủ 10 số và bắt đầu bằng các đầu số hợp lệ!\n VD: 0343229978", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Số điện thoại không chứa ký tự chữ, phải đủ 10 số và bắt đầu bằng các đầu số hợp lệ ( 09, 08, 03, 07, 05 )!\n VD: 0343229978", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             } else {
                 Customer customer = new Customer(maKH, tenKH, sdt, gioiTinh, diaChi);

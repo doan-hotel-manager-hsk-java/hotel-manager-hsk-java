@@ -602,7 +602,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
             if(!RegexHelper.regexCustomerName(txtTen.getText()))
                 thongBao+="*Tên khách hàng sai định dạng! VD: Lê Tuấn\n";
             if(!RegexHelper.regexPhoneNumber(txtSDT.getText()))
-                thongBao+="*Số điện thoại không chứa ký tự chữ, phải đủ 10 số và bắt đầu bằng các đầu số hợp lệ! VD: 0343229978\n";
+                thongBao+="*Số điện thoại không chứa ký tự chữ, phải đủ 10 số và bắt đầu bằng các đầu số hợp lệ ( 09, 08, 03, 07, 05 )! VD: 0343229978\n";
             if (!RegexHelper.regexEmail(txtEmail.getText()))
                 thongBao+="*Email sai định dạng! VD: thu123@gmail.com";
             if (thongBao.isEmpty())

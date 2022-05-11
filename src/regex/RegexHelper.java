@@ -20,13 +20,12 @@ public class RegexHelper {
         return name.matches(regexString);
     }
     public static boolean regexDeviceName(String name) {
-        String firstLetter="[A-EGHIK-VXYÂĐỔÔÚỨ]";
+        String firstLetter="[A-ZÂĂĐÔỔÔÚỨ]";
         String firstLetter1="[a-zâđổôúứ]";
       	String otherLetters="[a-zàáâãèéêìíòóôõùúýỳỹỷỵựửữừứưụủũợởỡờớơộổỗồốọỏịỉĩệểễềếẹẻẽặẳẵằắăậẩẫầấạảđ₫]";
-      	String regexString="^"
-                 +firstLetter+otherLetters+"+\\s?"
-                 +"("+firstLetter1+otherLetters+"+\\s)*"
-                 +firstLetter1+otherLetters+"*$";        
+      	String regexString="^("
+                 +firstLetter+otherLetters+"+)(\\s"
+                +"("+firstLetter1+otherLetters+"+))*";        
         return name.matches(regexString);
     }
     
@@ -66,7 +65,7 @@ public class RegexHelper {
     }
     public static boolean regexGia(String so)
     {
-        String regex = "([1-9][0-9]{3,7})";
+        String regex = "([1-9][0-9]{3,7})(.0)?";
         return  so.matches(regex);
     }
 }
