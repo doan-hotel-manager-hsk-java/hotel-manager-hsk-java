@@ -48,7 +48,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         initComponents();
         this.setFocusable(true);
         
-        dtm=(DefaultTableModel) jTable1.getModel();
+        dtm=(DefaultTableModel) tblEmployee.getModel();
         staffDAO=new StaffDAO();
         staffTypeDAO=new StaffTypeDAO();
         loadDataToTable(staffDAO.getAllStaffByStatus(), dtm);
@@ -80,7 +80,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         cmbChucVu = new javax.swing.JComboBox<>();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblEmployee = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
         btnThem = new com.k33ptoo.components.KButton();
         btnSua = new com.k33ptoo.components.KButton();
@@ -226,7 +226,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách nhân viên"));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblEmployee.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -237,14 +237,14 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
                 "CMND/CCCD", "Tên nhân viên", "Giới tính", "SDT", "Chức vụ", "Email", "Tài khoản"
             }
         ));
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblEmployee.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                tblEmployeeMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(30);
+        jScrollPane1.setViewportView(tblEmployee);
+        if (tblEmployee.getColumnModel().getColumnCount() > 0) {
+            tblEmployee.getColumnModel().getColumn(2).setPreferredWidth(30);
         }
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -426,7 +426,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtSearchFocusLost
 
     private void btnTaoAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoAccountActionPerformed
-        int index= jTable1.getSelectedRow();
+        int index= tblEmployee.getSelectedRow();
         
         
         if (index==-1){
@@ -469,20 +469,20 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnThemActionPerformed
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        int index=jTable1.getSelectedRow();
-        txtCMND.setText(jTable1.getValueAt(index, 0).toString());
-        txtTen.setText(jTable1.getValueAt(index, 1).toString());
-        cmbGioiTinh.setSelectedItem(jTable1.getValueAt(index, 2).toString());
-        txtSDT.setText(jTable1.getValueAt(index, 3).toString());
-        cmbChucVu.setSelectedItem(jTable1.getValueAt(index, 4));
-        txtEmail.setText(jTable1.getValueAt(index, 5).toString());
+    private void tblEmployeeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEmployeeMouseClicked
+        int index=tblEmployee.getSelectedRow();
+        txtCMND.setText(tblEmployee.getValueAt(index, 0).toString());
+        txtTen.setText(tblEmployee.getValueAt(index, 1).toString());
+        cmbGioiTinh.setSelectedItem(tblEmployee.getValueAt(index, 2).toString());
+        txtSDT.setText(tblEmployee.getValueAt(index, 3).toString());
+        cmbChucVu.setSelectedItem(tblEmployee.getValueAt(index, 4));
+        txtEmail.setText(tblEmployee.getValueAt(index, 5).toString());
         
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_tblEmployeeMouseClicked
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         
-        int index = jTable1.getSelectedRow();
+        int index = tblEmployee.getSelectedRow();
         if (index==-1){
             JOptionPane.showMessageDialog(this, "Hãy chọn dòng cần sửa!");
         }else{
@@ -490,7 +490,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
             staffTypeDAO=new StaffTypeDAO();
             Staff s=staffDAO.findStaffByCMND(dtm.getValueAt(index, 0)+"");            
             if(!txtCMND.getText().equals(dtm.getValueAt(index, 0)+"")){
-                txtCMND.setText(jTable1.getValueAt(index, 0)+"");
+                txtCMND.setText(tblEmployee.getValueAt(index, 0)+"");
                 JOptionPane.showMessageDialog(this, "Không được sửa CMND!");
             }else{
             s.setTenNV(txtTen.getText());
@@ -511,7 +511,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-         int index= jTable1.getSelectedRow();
+         int index= tblEmployee.getSelectedRow();
         if (index==-1){
             JOptionPane.showMessageDialog(this, "Hãy chọn dòng cần xóa!");
         }else{
@@ -543,7 +543,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_cmbChucVu1ActionPerformed
     private void filter(String s){
         TableRowSorter<DefaultTableModel> tr=new TableRowSorter<DefaultTableModel>(dtm);
-        jTable1.setRowSorter(tr);
+        tblEmployee.setRowSorter(tr);
         tr.setRowFilter(RowFilter.regexFilter("(?i)"+s));
 
         
@@ -636,10 +636,10 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblTitile;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlTitle;
+    private javax.swing.JTable tblEmployee;
     private javax.swing.JTextField txtCMND;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtSDT;

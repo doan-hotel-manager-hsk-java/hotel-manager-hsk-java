@@ -42,7 +42,7 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
        this.setFocusable(true);
        
        username = _username;
-       dtm=(DefaultTableModel) jTable1.getModel();
+       dtm=(DefaultTableModel) txtDevice.getModel();
        deviceDAO=new DeviceDAO();
        staffDAO=new StaffDAO();
         loadDataToTable(deviceDAO.getAllDevices(), dtm);
@@ -67,7 +67,7 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         txtGia = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        txtDevice = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
         btnThem = new com.k33ptoo.components.KButton();
         btnSua = new com.k33ptoo.components.KButton();
@@ -166,7 +166,7 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách thiết bị"));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        txtDevice.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -177,12 +177,12 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
                 "Tên thiết bị", "Số lượng", "Giá"
             }
         ));
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        txtDevice.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                txtDeviceMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(txtDevice);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -360,14 +360,14 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        int index = jTable1.getSelectedRow();
+        int index = txtDevice.getSelectedRow();
         if (index==-1){
             JOptionPane.showMessageDialog(this, "Hãy chọn dòng cần sửa!");
         }else{
         if (checkData()){
             Device d=deviceDAO.findDeviceByName(dtm.getValueAt(index, 0)+"");
              if(!txtTenThietBi.getText().equals(dtm.getValueAt(index, 0)+"")){
-                txtTenThietBi.setText(jTable1.getValueAt(index, 0)+"");
+                txtTenThietBi.setText(txtDevice.getValueAt(index, 0)+"");
                 JOptionPane.showMessageDialog(this, "Không được sửa tên thiết bị!");
             }else{
             d.setSoLuongTon(Integer.parseInt(txtSoLuongTon.getText()));
@@ -383,7 +383,7 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-        int index= jTable1.getSelectedRow();
+        int index= txtDevice.getSelectedRow();
         if (index==-1){
             JOptionPane.showMessageDialog(this, "Hãy chọn dòng cần xóa!");
         }else{
@@ -400,12 +400,12 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnXoaActionPerformed
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        int index = jTable1.getSelectedRow();
-        txtTenThietBi.setText(jTable1.getValueAt(index, 0).toString());
-        txtSoLuongTon.setText(jTable1.getValueAt(index, 1).toString());
-        txtGia.setText(jTable1.getValueAt(index, 2).toString());
-    }//GEN-LAST:event_jTable1MouseClicked
+    private void txtDeviceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDeviceMouseClicked
+        int index = txtDevice.getSelectedRow();
+        txtTenThietBi.setText(txtDevice.getValueAt(index, 0).toString());
+        txtSoLuongTon.setText(txtDevice.getValueAt(index, 1).toString());
+        txtGia.setText(txtDevice.getValueAt(index, 2).toString());
+    }//GEN-LAST:event_txtDeviceMouseClicked
 
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
         String s=txtSearch.getText();
@@ -414,7 +414,7 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
 
     private void filter(String s){
         TableRowSorter<DefaultTableModel> tr=new TableRowSorter<DefaultTableModel>(dtm);
-        jTable1.setRowSorter(tr);
+        txtDevice.setRowSorter(tr);
         tr.setRowFilter(RowFilter.regexFilter("(?i)"+s));
 
         
@@ -487,10 +487,10 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblTitile;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlTitle;
+    private javax.swing.JTable txtDevice;
     private javax.swing.JTextField txtGia;
     private javax.swing.JTextField txtSearch;
     private javax.swing.JTextField txtSoLuongTon;
