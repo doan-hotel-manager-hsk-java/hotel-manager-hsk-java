@@ -27,8 +27,8 @@ public class StaffDAO {
     private final String UPDATE_STAFF="UPDATE NHANVIEN SET TENNV=?, GIOITINH=?, EMAIL=?, CMND=?, SDT=?,MALOAINV=?, TRANGTHAI=? WHERE MANV=?" ;
     private final String SELECT_ALL_STAFF = "SELECT * FROM NHANVIEN" ;
     private final String SELECT_ALL_STAFF_BY_STATUS="SELECT * FROM NHANVIEN WHERE TRANGTHAI is not null";
-    private final String SELECT_ALL_STAFF_BY_TYPE = "SELECT * FROM NHANVIEN WHERE MALOAINV = ?";
-    private final String SELECT_STAFF_BY_NAME= "SELECT * FROM NHANVIEN WHERE TENNV=?";
+    private final String SELECT_ALL_STAFF_BY_TYPE = "SELECT * FROM NHANVIEN WHERE (MALOAINV = ? AND TRANGTHAI IS NOT NULL)";
+    private final String SELECT_STAFF_BY_NAME= "SELECT * FROM NHANVIEN WHERE CMND=?";
     private final String SELECT_STAFF_BYID = "select * from NhanVien where maNV = ?";
    
     
@@ -86,9 +86,9 @@ public class StaffDAO {
         return null;
     }
     
-     public Staff findStaffByName(String name) {
+     public Staff findStaffByCMND(String maCMND) {
         try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(SELECT_STAFF_BY_NAME)) {
-            pstmt.setString(1, name);
+            pstmt.setString(1, maCMND);
             try ( ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()){
                 String maNV = rs.getString(Ma_NV);

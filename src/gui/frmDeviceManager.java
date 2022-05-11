@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.FocusEvent;
+import java.text.NumberFormat;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -352,9 +353,6 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
             }catch (Exception e1){
                 JOptionPane.showMessageDialog(this, e1.getMessage());
             }
-        }else{
-            JOptionPane.showMessageDialog(this, "Hãy nhập đầy đủ thông tin!");
-
         }
     }//GEN-LAST:event_btnThemActionPerformed
 
@@ -374,8 +372,6 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
             loadDataToTable(deviceDAO.getAllDevices(), dtm);
             clearInput();
             JOptionPane.showMessageDialog(this, "Sửa thành công!");
-        }else{
-            JOptionPane.showMessageDialog(this, "Hãy nhập đầy đủ thông tin!");
         }
         }
     }//GEN-LAST:event_btnSuaActionPerformed
@@ -420,7 +416,8 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
     private void loadDataToTable(List<Device> list, DefaultTableModel dtm) {  
         dtm.setRowCount(0);
         for (Device device: list) {
-            dtm.addRow(new Object[] {device.getTenTTB(),String.valueOf(device.getSoLuongTon()),String.valueOf(device.getGia())});
+            String gia = NumberFormat.getInstance().format(device.getGia());
+            dtm.addRow(new Object[] {device.getTenTTB(),String.valueOf(device.getSoLuongTon()),gia});
         }
     }
     
@@ -434,9 +431,25 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         return d;
     }
     private boolean checkData() {
-        if (txtNumberRoom.getText().trim().equals("") || txtNumberRoom1.getText().trim().equals("") || txtBasicPrice.getText().trim().equals(""))
+        if (txtNumberRoom.getText().trim().equals("") || txtNumberRoom1.getText().trim().equals("") || txtBasicPrice.getText().trim().equals("")){
+            JOptionPane.showMessageDialog(this, "Hãy nhập đầy đủ thông tin!");
             return false;
-        return true;
+        }else{
+            String thongBao="";
+            if (!RegexHelper.regexDeviceName(txtNumberRoom.getText()))
+                thongBao+="Tên thiết bị sai dịnh dạng!VD: Điều hòa\n";
+            if (Integer.parseInt(txtNumberRoom1.getText())<1 || Integer.parseInt(txtNumberRoom1.getText())>200)
+                thongBao+="Số lượng phải lớn hơn 0 và nhỏ hơn 200";
+            if (Double.parseDouble(txtBasicPrice.getText())<0 || Double.parseDouble(txtBasicPrice.getText())>10000000)
+                thongBao+="Giá của thiết bị phải lớn hơn 0 và bé hơn 10,000,000";
+            if (thongBao.isEmpty())
+                return true;
+            else{
+                JOptionPane.showMessageDialog(this, thongBao);
+                return false;
+            }
+        }
+        
     }
     
     private String setMaTTB(){

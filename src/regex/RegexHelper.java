@@ -19,6 +19,16 @@ public class RegexHelper {
         
         return name.matches(regexString);
     }
+    public static boolean regexDeviceName(String name) {
+        String firstLetter="[A-EGHIK-VXYÂĐỔÔÚỨ]";
+        String firstLetter1="[a-eghik-vxyâđổôúứ]";
+      	String otherLetters="[a-eghik-vxyàáâãèéêìíòóôõùúýỳỹỷỵựửữừứưụủũợởỡờớơộổỗồốọỏịỉĩệểễềếẹẻẽặẳẵằắăậẩẫầấạảđ₫]";
+      	String regexString="^"
+                 +firstLetter+otherLetters+"+\\s"
+                 +"("+firstLetter1+otherLetters+"+\\s)*"
+                 +firstLetter1+otherLetters+"+$";        
+        return name.matches(regexString);
+    }
     
     public static boolean regexPhoneNumber(String number) {
         String regex = "^((09(\\d){8})|(08(\\d){8})|(03(\\d){8})|(07(\\d){8})|(05(\\d){8}))$";

@@ -437,7 +437,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
             }else{
                 int choose = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn tạo tài khoản cho nhân viên này?", "Hỏi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (choose == JOptionPane.YES_OPTION) {
-                    Staff s= staffDAO.findStaffByName(dtm.getValueAt(index, 1)+"");
+                    Staff s= staffDAO.findStaffByCMND(dtm.getValueAt(index, 0)+"");
                     String taiKhoan=s.getMaNV();
                     Account a=new Account(taiKhoan,"123456");
                     accountDAO.insertAccount(a);
@@ -451,11 +451,14 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         if (checkData()){
             Staff s= createStaff();
             try{
-                staffDAO.insertStaff(s);
-                cmbChucVu1.setSelectedIndex(0);
-                loadDataToTable(staffDAO.getAllStaffByStatus(), dtm);
-                clearInput();
-                JOptionPane.showMessageDialog(this, "Thêm thành công!");
+                if(staffDAO.findStaffByCMND(txtCMND.getText()) ==null){
+                    staffDAO.insertStaff(s);
+                    cmbChucVu1.setSelectedIndex(0);
+                    loadDataToTable(staffDAO.getAllStaffByStatus(), dtm);
+                    clearInput();
+                    JOptionPane.showMessageDialog(this, "Thêm thành công!");
+                }else
+                    JOptionPane.showMessageDialog(this, "Mã CMND này đã có, hãy kiểm tra lại!");                        
             }catch (Exception e1){
                 JOptionPane.showMessageDialog(this, e1.getMessage());
             } 
@@ -481,19 +484,24 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         }else{
         if (checkData()){
             staffTypeDAO=new StaffTypeDAO();
-            Staff s=staffDAO.findStaffByName(dtm.getValueAt(index, 1)+"");
+            Staff s=staffDAO.findStaffByCMND(dtm.getValueAt(index, 0)+"");            
+            if(!txtCMND.getText().equals(dtm.getValueAt(index, 0)+"")){
+                txtCMND.setText(jTable1.getValueAt(index, 0)+"");
+                JOptionPane.showMessageDialog(this, "Không được sửa CMND!");
+            }else{
             s.setTenNV(txtTen.getText());
-            s.setCmnd(txtCMND.getText());
             s.setSdt(txtSDT.getText());
             s.setEmail(txtEmail.getText());
             s.setGioiTinh(cmbGioiTinh.getSelectedItem().toString().equals("Nam"));
             s.setStaffType(staffTypeDAO.findStaffByName(cmbChucVu.getSelectedItem().toString()));
-            if (s.getTenNV().equals(dtm.getValueAt(index, 1)+""))
+            if (s.getCmnd().equals(dtm.getValueAt(index, 0)+""))
                 staffDAO.updateStaff(s);
             cmbChucVu1.setSelectedIndex(0);
+            
             loadDataToTable(staffDAO.getAllStaffByStatus(), dtm);
             clearInput();
             JOptionPane.showMessageDialog(this, "Sửa thành công!");
+            }
             }
         }
     }//GEN-LAST:event_btnSuaActionPerformed
@@ -505,7 +513,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         }else{
             int choose = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa nhân viên này?", "Hỏi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (choose == JOptionPane.YES_OPTION) {
-                Staff s=staffDAO.findStaffByName(dtm.getValueAt(index, 1)+"");
+                Staff s=staffDAO.findStaffByCMND(dtm.getValueAt(index, 0)+"");
                 s.setTrangThai(null);
                 staffDAO.updateStaff(s);
                 cmbChucVu1.setSelectedIndex(0);
@@ -527,7 +535,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         String maChucVu = staffTypeDAO.findStaffByName(chucVu).getIdLoaiNV();
         loadDataToTable(staffDAO.getAllStaffByType(maChucVu), dtm);
         }else
-            loadDataToTable(staffDAO.getAllStaff(), dtm);
+            loadDataToTable(staffDAO.getAllStaffByStatus(), dtm);
     }//GEN-LAST:event_cmbChucVu1ActionPerformed
     private void filter(String s){
         TableRowSorter<DefaultTableModel> tr=new TableRowSorter<DefaultTableModel>(dtm);
@@ -543,7 +551,11 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         for (Staff s: list) {
             String taiKhoan = "Chưa có";
             if (accountDAO.findUserName(s.getMaNV()) != null )
-                taiKhoan=s.getMaNV();
+                if (s.getStaffType().getIdLoaiNV().equals("LNV003") || s.getStaffType().getIdLoaiNV().equals("LNV004"))
+                    taiKhoan="Đã khóa";
+                else
+                    taiKhoan=s.getMaNV();
+            
             dtm.addRow(new String[] {s.getCmnd(),s.getTenNV(),s.getGioiTinh()== true ? "Nam" : "Nữ",s.getSdt(),s.getStaffType().getTenLoaiNV(),s.getEmail(), taiKhoan});
         }
     }
