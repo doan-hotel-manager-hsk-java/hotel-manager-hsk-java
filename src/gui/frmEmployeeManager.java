@@ -453,7 +453,6 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
             try{
                 if(staffDAO.findStaffByCMND(txtCMND.getText()) ==null){
                     staffDAO.insertStaff(s);
-                    cmbChucVu1.setSelectedIndex(0);
                     loadDataToTable(staffDAO.getAllStaffByStatus(), dtm);
                     clearInput();
                     JOptionPane.showMessageDialog(this, "Thêm thành công!");

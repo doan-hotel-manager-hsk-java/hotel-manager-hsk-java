@@ -21,12 +21,12 @@ public class RegexHelper {
     }
     public static boolean regexDeviceName(String name) {
         String firstLetter="[A-EGHIK-VXYÂĐỔÔÚỨ]";
-        String firstLetter1="[a-eghik-vxyâđổôúứ]";
-      	String otherLetters="[a-eghik-vxyàáâãèéêìíòóôõùúýỳỹỷỵựửữừứưụủũợởỡờớơộổỗồốọỏịỉĩệểễềếẹẻẽặẳẵằắăậẩẫầấạảđ₫]";
+        String firstLetter1="[a-zâđổôúứ]";
+      	String otherLetters="[a-zàáâãèéêìíòóôõùúýỳỹỷỵựửữừứưụủũợởỡờớơộổỗồốọỏịỉĩệểễềếẹẻẽặẳẵằắăậẩẫầấạảđ₫]";
       	String regexString="^"
-                 +firstLetter+otherLetters+"+\\s"
+                 +firstLetter+otherLetters+"+\\s?"
                  +"("+firstLetter1+otherLetters+"+\\s)*"
-                 +firstLetter1+otherLetters+"+$";        
+                 +firstLetter1+otherLetters+"*$";        
         return name.matches(regexString);
     }
     

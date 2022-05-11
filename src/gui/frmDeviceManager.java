@@ -346,10 +346,13 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         if (checkData()){
             Device d= createDevice();
             try{
+                if(deviceDAO.findDeviceByName(txtNumberRoom.getText()) ==null){
                 deviceDAO.insertDevice(d);
                 loadDataToTable(deviceDAO.getAllDevices(), dtm);
                 clearInput();
                 JOptionPane.showMessageDialog(this, "Thêm thành công!");
+                }else
+                    JOptionPane.showMessageDialog(this, "Thiết bị này đã có, hãy kiểm tra lại tên thiết bị!");        
             }catch (Exception e1){
                 JOptionPane.showMessageDialog(this, e1.getMessage());
             }
@@ -363,8 +366,10 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         }else{
         if (checkData()){
             Device d=deviceDAO.findDeviceByName(dtm.getValueAt(index, 0)+"");
-            dtm.setValueAt(txtNumberRoom1.getText(), index, 1);
-            dtm.setValueAt(txtBasicPrice.getText(), index, 2);
+             if(!txtNumberRoom.getText().equals(dtm.getValueAt(index, 0)+"")){
+                txtNumberRoom.setText(jTable1.getValueAt(index, 0)+"");
+                JOptionPane.showMessageDialog(this, "Không được sửa tên thiết bị!");
+            }else{
             d.setSoLuongTon(Integer.parseInt(txtNumberRoom1.getText()));
             d.setGia(Double.parseDouble(txtBasicPrice.getText()));
             if (d.getTenTTB().equals(dtm.getValueAt(index, 0)+""))
@@ -372,6 +377,7 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
             loadDataToTable(deviceDAO.getAllDevices(), dtm);
             clearInput();
             JOptionPane.showMessageDialog(this, "Sửa thành công!");
+            }
         }
         }
     }//GEN-LAST:event_btnSuaActionPerformed
@@ -417,7 +423,7 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         dtm.setRowCount(0);
         for (Device device: list) {
             String gia = NumberFormat.getInstance().format(device.getGia());
-            dtm.addRow(new Object[] {device.getTenTTB(),String.valueOf(device.getSoLuongTon()),gia});
+            dtm.addRow(new Object[] {device.getTenTTB(),String.valueOf(device.getSoLuongTon()),device.getGia()});
         }
     }
     
@@ -437,11 +443,11 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         }else{
             String thongBao="";
             if (!RegexHelper.regexDeviceName(txtNumberRoom.getText()))
-                thongBao+="Tên thiết bị sai dịnh dạng!VD: Điều hòa\n";
+                thongBao+="* Tên thiết bị sai dịnh dạng!VD: Điều hòa\n";
             if (Integer.parseInt(txtNumberRoom1.getText())<1 || Integer.parseInt(txtNumberRoom1.getText())>200)
-                thongBao+="Số lượng phải lớn hơn 0 và nhỏ hơn 200";
+                thongBao+="* Số lượng phải lớn hơn 0 và nhỏ hơn 200\n";
             if (Double.parseDouble(txtBasicPrice.getText())<0 || Double.parseDouble(txtBasicPrice.getText())>10000000)
-                thongBao+="Giá của thiết bị phải lớn hơn 0 và bé hơn 10,000,000";
+                thongBao+="* Giá của thiết bị phải lớn hơn 0 và bé hơn 10,000,000";
             if (thongBao.isEmpty())
                 return true;
             else{
