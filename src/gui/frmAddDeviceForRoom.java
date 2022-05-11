@@ -10,6 +10,7 @@ import dao.RoomDeviceDAO;
 import entity.Device;
 import entity.Room;
 import entity.Room_Device;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -377,9 +378,15 @@ public class frmAddDeviceForRoom extends javax.swing.JFrame {
     }
 
     private void loadNameRoomToComboBox() {
-        List<Room> rooms = roomDAO.getAllRooms();
+        List<Room> rooms = new ArrayList();       
+        for(Room r :roomDAO.getAllRooms())
+        {
+            if(r.getRoomStatusType().getMaLoaiTTP().equals("LTTP003"))
+            {
+                rooms.add(r);
+            }
+        }
         loadDataRoomToModel(rooms, nameRoomBoxModel);
-
         List<Device> devices = deviceDAO.getAllDevices();
         loadDataDeviceToModel(devices, nameDeviceBoxModel);
     }
