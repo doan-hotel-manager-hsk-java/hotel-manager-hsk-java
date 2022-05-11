@@ -72,29 +72,4 @@ public class RoomStatusTypeDAO {
         return null;
     }
     
-    // FIND BY ID ROOM STATUS TYPE TO UPDATE AFFTER PAYMENT
-    public RoomStatusType getRoomStatusTypeByIdToUpdateAffterPay(String idLTTP) {
-        String sql = "SELECT * FROM LoaiTrangThaiPhong AS lttp "
-                   + "INNER JOIN Phong as p ON lttp.maLTTP=p.maLTTP "
-                   + "WHERE p.maLTTP = ?";
-        try (
-                Connection con = DatabaseConnection.opConnection();
-                PreparedStatement pres = con.prepareStatement(sql);) {
-
-            pres.setString(1, idLTTP);
-            ResultSet res = pres.executeQuery();
-
-            if (res.next()) {
-                String maLTTP = res.getString("maLTTP");
-                String tenLTTP = res.getString("tenLTTP");
-                
-                RoomStatusType roomStatusType = new RoomStatusType(maLTTP, tenLTTP);
-                return roomStatusType;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-    
 }

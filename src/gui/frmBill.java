@@ -76,6 +76,7 @@ public class frmBill extends javax.swing.JFrame {
         staffDAO = new StaffDAO();
         customerDAO = new CustomerDAO();
         roomTypeDAO = new RoomTypeDAO();
+        roomStatusTypeDAO = new RoomStatusTypeDAO();
         
         Order order = orderDAO.getOrderById(idOrder);
         idRoom = roomDAO.findRoomById(order.getRoom().getMaPhong()).getMaPhong();
@@ -681,7 +682,7 @@ public class frmBill extends javax.swing.JFrame {
     // CREATE TITLE COLUMNS OF SERVICE IN ORDER
     private void initColsListServices() {
         modelServiceOrder.setColumnIdentifiers(new String[] {
-            "STT", "Tên dich vu", "So luong", "Thành tien"
+            "STT", "Tên dịch vụ", "Số lượng", "Thành tiền"
         });
         tblServiceOrder.setModel(modelServiceOrder);
     }
@@ -723,12 +724,13 @@ public class frmBill extends javax.swing.JFrame {
             System.out.println("TT: " + order.getTongTien());
 
             // UPDATE STATUS ROOM
-//            Room room = roomDAO.findRoomById(order.getRoom().getMaPhong());
-//            RoomStatusType roomStatusType = roomStatusTypeDAO.getRoomStatusTypeByIdToUpdateAffterPay(room.getRoomStatusType().getMaLoaiTTP());
-//            roomStatusType.setMaLoaiTTP("LTTP003");
-//            room.setRoomStatusType(roomStatusType);
-//            roomDAO.updateBookRoom(room);
-//            System.out.println("LTTP: " + room.getRoomStatusType().getMaLoaiTTP());
+            Room room = roomDAO.findRoomById(order.getRoom().getMaPhong());
+            System.out.println("Room: " + room.getRoomStatusType().getMaLoaiTTP());
+            RoomStatusType roomStatusType = roomStatusTypeDAO.finRoomStatusTypeById(room.getRoomStatusType().getMaLoaiTTP());
+
+            roomStatusType.setMaLoaiTTP("LTTP003");
+            room.setRoomStatusType(roomStatusType);
+            roomDAO.updateBookRoom(room);
 
             JOptionPane.showMessageDialog(this, "Thanh toán thành công.");
             this.setVisible(false);

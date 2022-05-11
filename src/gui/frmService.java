@@ -12,6 +12,7 @@ import entity.Order;
 import entity.OrderDetail;
 import entity.Room;
 import entity.Service;
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -62,8 +63,8 @@ public class frmService extends javax.swing.JInternalFrame {
         orderDAO = new OrderDAO();
 
         // SET COMBOBOX (INDEX = 0)
-        cboTenPhong.addItem("Chon phong");
-        cboDichVu.addItem("Chon dich vu");
+        cboTenPhong.addItem("Chọn phòng");
+        cboDichVu.addItem("Chọn dịch vụ");
 
         // CALLING
         loadDataToComboboxNameRoom();
@@ -129,6 +130,14 @@ public class frmService extends javax.swing.JInternalFrame {
         jLabel3.setText("Số lượng:");
 
         txtSoLuong.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtSoLuong.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtSoLuongKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtSoLuongKeyTyped(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Chọn Phòng: ");
@@ -391,7 +400,7 @@ public class frmService extends javax.swing.JInternalFrame {
     // CREATE TITLE COLUMNS OF LIST SERVICE
     private void initColsListServices() {
         modellListServices.setColumnIdentifiers(new String[]{
-            "Tên dich vu", "Ðon giá"
+            "Tên dịch vụ", "Đơn giá"
         });
         tblListServices.setModel(modellListServices);
     }
@@ -412,7 +421,7 @@ public class frmService extends javax.swing.JInternalFrame {
     // CREATE TITLE COLUMNS OF LIST SERVICE ADDED
     private void initColsListServicesAdded() {
         modelListServicesAdded.setColumnIdentifiers(new String[]{
-            "So phòng", "Tên dich vu", "So luong", "Thanh Tien"
+            "Tên dịch vụ", "Số lượng", "Thành tiền"
         });
         tblListServicesAdded.setModel(modelListServicesAdded);
     }
@@ -423,7 +432,7 @@ public class frmService extends javax.swing.JInternalFrame {
 
         for (OrderDetail od : orderDetailDAO.getListServicesByIdRoom(idRoom)) {
             Object[] row = new Object[]{
-                od.getOrder().getRoom().getTenPhong(), od.getService().getTenDV(), od.getSoLuong(), od.getThanhTien()
+                od.getService().getTenDV(), od.getSoLuong(), od.getThanhTien()
             };
             modelListServicesAdded.addRow(row);
         }
@@ -440,7 +449,7 @@ public class frmService extends javax.swing.JInternalFrame {
         try {
             // CHECK INPUTS
             if (cboTenPhong.getSelectedIndex() == 0) {
-                JOptionPane.showMessageDialog(this, "Ban can chon phong de tao hoa don!");
+                JOptionPane.showMessageDialog(this, "Bạn cần chọn phòng!");
                 return;
             }
 
@@ -519,33 +528,35 @@ public class frmService extends javax.swing.JInternalFrame {
             Service service = new Service();
 
             if (cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
-                JOptionPane.showMessageDialog(this, "Can phai nhap day du cac thong tin!");
+                JOptionPane.showMessageDialog(this, "Bạn cần phải nhập đầy đủ thông tin!");
                 return;
             }
 
             if (room.getTenPhong() != null) {
                 // CHECK NAME SERVICE EXISTS (MaHD, MaDV)
                 if (orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), idOrder) != null) {
-                    JOptionPane.showMessageDialog(this, "Ten dich vu da co trong phong. Vui long thuc hien chuc nang sua!");
+                    JOptionPane.showMessageDialog(this, "Tên dịch vụ đã có trong phòng. Vui lòng thực hiện chức năng sửa!");
                     return;
                 }
 
                 // CHECK SO LUONG
                 if (Integer.parseInt(txtSoLuong.getText()) <= 0) {
-                    JOptionPane.showMessageDialog(this, "So luong phai lon hon 0!");
+                    JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!");
                     return;
                 }
 
                 od.setSoLuong(Integer.parseInt(txtSoLuong.getText()));
-                od.setOrder(orderDAO.getOrderById("HD006")); // GET ID HOADON FROM ROOM TO IT
+                od.setOrder(orderDAO.getOrderById(idOrder)); // GET ID HOADON FROM ROOM TO IT
                 service.setMaDV(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV());
                 od.setService(service);
 
                 // ADD
                 orderDetailDAO.addServiceToOrderDetail(od);
-                JOptionPane.showMessageDialog(this, "Them thanh cong dich vu.");
+                JOptionPane.showMessageDialog(this, "Thêm thành công dịch vụ.");
                 clearInps();
                 loadDataToTblListServicesAdded(idRoom);
+                txtSoLuong.setText("");
+                cboDichVu.setSelectedIndex(0);
             }
 
         } catch (Exception ex) {
@@ -562,17 +573,19 @@ public class frmService extends javax.swing.JInternalFrame {
         try {
             // CHECK INPUTS
             if (cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
-                JOptionPane.showMessageDialog(this, "Khong tim thay dich vu de xoa!");
+                JOptionPane.showMessageDialog(this, "Không tìm thấy dịch vụ để xóa!");
                 return;
             }
             // DELETE
-            int choose = JOptionPane.showConfirmDialog(this, "Ban co muon xoa dich vu nay khong?", "Thong bao", JOptionPane.YES_NO_OPTION);
+            int choose = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa dịch vụ này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
             if (choose == JOptionPane.YES_OPTION) {
                 OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), idOrder);
                 orderDetailDAO.deleteServiceOutOrderDetail(od);
-                JOptionPane.showMessageDialog(this, "Xoa thanh cong dich vu.");
+                JOptionPane.showMessageDialog(this, "Xóa dịch vụ thành công.");
                 clearInps();
                 loadDataToTblListServicesAdded(idRoom);
+                txtSoLuong.setText("");
+                cboDichVu.setSelectedIndex(0);
             }
 
         } catch (Exception ex) {
@@ -592,22 +605,22 @@ public class frmService extends javax.swing.JInternalFrame {
         try {
             // CHECK INPUTS
             if (cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
-                JOptionPane.showMessageDialog(this, "Khong tim thay dich vu de cap nhat!");
+                JOptionPane.showMessageDialog(this, "Không tìm thấy dịch vụ để cập nhật!");
                 return;
             }
             if (Integer.parseInt(txtSoLuong.getText()) <= 0) {
-                JOptionPane.showMessageDialog(this, "So luong phai lon hon 0!");
+                JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0!");
                 return;
             }
 
             if (room.getMaPhong() != null) {
                 // CHECK NAME SERVICE EXISTS (MaHD, MaDV)
                 if (orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), idOrder) == null) {
-                    JOptionPane.showMessageDialog(this, "Ten dich vu khong co trong phong. Vui long thuc hien chuc nang them!");
+                    JOptionPane.showMessageDialog(this, "Tên dịch vụ không có trong phòng. Vui lòng thực hiện chức năng thêm!");
                     return;
                 }
 
-                int choose = JOptionPane.showConfirmDialog(this, "Ban co muon sua dich vu nay khong?", "Thong bao", JOptionPane.YES_NO_OPTION);
+                int choose = JOptionPane.showConfirmDialog(this, "Bạn có muốn sửa dịch vụ này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
 
                 if (choose == JOptionPane.YES_OPTION) {
                     // UPDATE
@@ -616,9 +629,11 @@ public class frmService extends javax.swing.JInternalFrame {
                     od.setSoLuong(Integer.parseInt(txtSoLuong.getText()));
 
                     orderDetailDAO.updateServiceInOrderDetail(od);
-                    JOptionPane.showMessageDialog(this, "Cap nhat so luong thanh cong.");
+                    JOptionPane.showMessageDialog(this, "Cập nhật thành công số lượng.");
                     clearInps();
                     loadDataToTblListServicesAdded(idRoom);
+                    txtSoLuong.setText("");
+                    cboDichVu.setSelectedIndex(0);
                 }
             }
         } catch (Exception ex) {
@@ -636,7 +651,7 @@ public class frmService extends javax.swing.JInternalFrame {
     private void cboTenPhongItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboTenPhongItemStateChanged
         String name = cboTenPhong.getSelectedItem().toString();
 
-        if (name.equals("Chon phong")) {
+        if (name.equals("Chọn phòng")) {
             modelListServicesAdded.setRowCount(0);
             return;
         }
@@ -647,6 +662,18 @@ public class frmService extends javax.swing.JInternalFrame {
 
         loadDataToTblListServicesAdded(idRoom);
     }//GEN-LAST:event_cboTenPhongItemStateChanged
+
+    private void txtSoLuongKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSoLuongKeyPressed
+        
+    }//GEN-LAST:event_txtSoLuongKeyPressed
+
+    // CHECK DON'T INPUT CHAR
+    private void txtSoLuongKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSoLuongKeyTyped
+        char c = evt.getKeyChar();
+        if(!(Character.isDigit(c)) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE)||(c == KeyEvent.VK_PERIOD)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtSoLuongKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
