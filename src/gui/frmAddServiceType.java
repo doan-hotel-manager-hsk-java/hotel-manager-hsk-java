@@ -4,6 +4,10 @@
  */
 package gui;
 
+import dao.ServiceTypeDAO;
+import entity.ServiceType;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author vomin
@@ -13,9 +17,11 @@ public class frmAddServiceType extends javax.swing.JFrame {
     /**
      * Creates new form frame1
      */
+    private ServiceTypeDAO serviceTypeDAO;
     public frmAddServiceType() {
         this.setAlwaysOnTop(true);
         initComponents();
+        serviceTypeDAO = new ServiceTypeDAO();
     }
 
     @SuppressWarnings("unchecked")
@@ -24,7 +30,7 @@ public class frmAddServiceType extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtTenLoaiDichVu = new javax.swing.JTextField();
         kButton1 = new com.k33ptoo.components.KButton();
         kButton2 = new com.k33ptoo.components.KButton();
         jPanel2 = new javax.swing.JPanel();
@@ -35,10 +41,10 @@ public class frmAddServiceType extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Tên dịch vụ: ");
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtTenLoaiDichVu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtTenLoaiDichVu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtTenLoaiDichVuActionPerformed(evt);
             }
         });
 
@@ -51,6 +57,11 @@ public class frmAddServiceType extends javax.swing.JFrame {
         kButton1.setkHoverStartColor(new java.awt.Color(0, 204, 255));
         kButton1.setkPressedColor(new java.awt.Color(0, 153, 153));
         kButton1.setkStartColor(new java.awt.Color(51, 51, 255));
+        kButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                kButton1MouseClicked(evt);
+            }
+        });
 
         kButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/Button-Close-icon-16.png"))); // NOI18N
         kButton2.setText("Thoát");
@@ -89,7 +100,7 @@ public class frmAddServiceType extends javax.swing.JFrame {
                                 .addComponent(kButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(kButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtTenLoaiDichVu, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -100,7 +111,7 @@ public class frmAddServiceType extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTenLoaiDichVu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(kButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -114,14 +125,58 @@ public class frmAddServiceType extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtTenLoaiDichVuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTenLoaiDichVuActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtTenLoaiDichVuActionPerformed
 
     private void kButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kButton2ActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_kButton2ActionPerformed
 
+    private void kButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_kButton1MouseClicked
+        String id = idTypeService();
+        String name = txtTenLoaiDichVu.getText().trim();
+       if(name.equals(""))
+       {
+           JOptionPane.showConfirmDialog(this,"Vui lòng nhập dữ liệu đầy đủ!","Thông báo",JOptionPane.CLOSED_OPTION);
+           return;
+       }
+       ServiceType  serviceType = new ServiceType(id, name);
+       if(serviceTypeDAO.addTypeService(serviceType))
+       {
+            JOptionPane.showMessageDialog(this, "Thêm loại dịch vụ thành công!");    
+            clearText();
+       }
+       else
+       {
+           JOptionPane.showMessageDialog(this, "Thêm loại dịch vụ thất bại!");    
+           clearText();
+       }
+    }//GEN-LAST:event_kButton1MouseClicked
+    public String idTypeService() {
+        String id = "";
+        for (ServiceType typeService : serviceTypeDAO.getAllServiceType()) {
+            id = typeService.getMaLoaiDV().toString();
+        }
+        String[] parts = id.split("V");
+        if (Integer.parseInt(parts[1]) < 10) {
+            int i = Integer.parseInt(parts[1]) + 1;
+            id = "LDV00" + i;
+        }
+        if (Integer.parseInt(parts[1]) >= 10 && Integer.parseInt(parts[1]) < 100) {
+            int i = Integer.parseInt(parts[1]) + 1;
+            id = "LDV0" + i;
+        }
+        if (Integer.parseInt(parts[1]) >= 100 && Integer.parseInt(parts[1]) < 1000) {
+            int i = Integer.parseInt(parts[1]) + 1;
+            id = "LDV" + i;
+        }
+        return id;
+    }
+    public void clearText()
+    {
+        txtTenLoaiDichVu.setText("");
+    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -160,14 +215,14 @@ public class frmAddServiceType extends javax.swing.JFrame {
             }
         });
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField1;
     private com.k33ptoo.components.KButton kButton1;
     private com.k33ptoo.components.KButton kButton2;
+    private javax.swing.JTextField txtTenLoaiDichVu;
     // End of variables declaration//GEN-END:variables
 }

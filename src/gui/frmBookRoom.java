@@ -270,12 +270,11 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         for (Order order : orderDAO.getAllOrders()) {
             if (order.getMaHD().equals(id)) {
                 id++;
-            } else {
-                return String.valueOf(id);
             }
         }
         return String.valueOf(id);
     }
+
     // create customer
     private Customer createCustomer() {
         Customer customer = new Customer(txtCMND.getText(), txtTenKH.getText(), txtSDT.getText(),
@@ -313,7 +312,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         } else if (roomDAO.findRoomByNameRoom(nameRoom).getRoomStatusType().getMaLoaiTTP().equals("LTTP001")) {
             JOptionPane.showMessageDialog(null, "Phòng này đã có người đặt");
             return false;
-        }else if (roomDAO.findRoomByNameRoom(nameRoom).getRoomStatusType().getMaLoaiTTP().equals("LTTP002")) {
+        } else if (roomDAO.findRoomByNameRoom(nameRoom).getRoomStatusType().getMaLoaiTTP().equals("LTTP002")) {
             JOptionPane.showMessageDialog(null, "Phòng này đang có người sử dụng");
             return false;
         } else if (customerDAO.findCustomerById(txtCMND.getText()) != null) {
@@ -322,7 +321,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         }
         return true;
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -727,14 +726,26 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
 
     private void btnMoPhongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoPhongActionPerformed
         int row = tblDsDatPhong.getSelectedRow();
-        if(row > 0){
-            BookRoom bookRoom = bookRoomDAO.findBookRoomByIDRoom(tblDsDatPhong.getValueAt(row, 0).toString());
-            Customer customer = customerDAO.findCustomerById(bookRoom.getCustomer().getMaKH());
-            Room room = roomDAO.findRoomByNameRoom(tblDsDatPhong.getValueAt(row, 0).toString());
-            RoomStatusType roomStatusType = roomStatusTypeDAO.finRoomStatusTypeById(room.getRoomStatusType().getMaLoaiTTP());
-            if(roomStatusType.getTenLoai().endsWith("Đã đặt")){
-                roomStatusType.setMaLoaiTTP("LTTP002");
-                room.setRoomStatusType(roomStatusType);
+        if (row >= 0) {
+            if (tblDsDatPhong.getValueAt(row, 10).toString().equals("Đã đặt")) {
+                BookRoom bookRoom = bookRoomDAO.findBookRoomByIDRoom(tblDsDatPhong.getValueAt(row, 0).toString());
+                Customer customer = customerDAO.findCustomerById(bookRoom.getCustomer().getMaKH());
+                Room room = roomDAO.findRoomByNameRoom(tblDsDatPhong.getValueAt(row, 0).toString());
+                RoomStatusType roomStatusType = roomStatusTypeDAO.finRoomStatusTypeById(room.getRoomStatusType().getMaLoaiTTP());
+                if (roomStatusType.getTenLoai().equals("Đã đặt")) {
+                    roomStatusType.setMaLoaiTTP("LTTP002");
+                    room.setRoomStatusType(roomStatusType);
+                }
+                Staff staff = staffDAO.findStaffById(usename);
+                Order order = new Order(idOrder(), bookRoom.getNgayNhan(), bookRoom.getGioNhan(), null, null,
+                        java.time.LocalDate.now().toString(), 10, customer, room, staff, 0);
+                if (orderDAO.insertOrder(order)) {
+                    JOptionPane.showMessageDialog(null, "Mở phòng thành công");
+                    loadAllDSDatPhong();
+                    createRoom();
+                }
+            } else{
+                JOptionPane.showMessageDialog(null, "Phòng này đã mở");
             }
         }
     }//GEN-LAST:event_btnMoPhongActionPerformed

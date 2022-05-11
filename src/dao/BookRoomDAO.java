@@ -36,6 +36,7 @@ public class BookRoomDAO {
     private final String SELECT_BOOKROM_BY_ID = "SELECT * FROM DONDATPHONG WHERE MADDP = ?";
     private final String SELECT_BOOKROM_BY_IDPHONG = "SELECT * FROM DONDATPHONG WHERE MAPHONG = ?";
     private final String SELECT_BOOKROM_BY_IDKH = "SELECT * FROM DONDATPHONG WHERE MAKH = ?";
+    private final String SELECT_BOOKROM_BY_IDROOM = "SELECT * FROM DONDATPHONG WHERE MAPHONG = ?";
     private final String SELECT_BOOKROM_BY_IDNV = "SELECT * FROM DONDATPHONG WHERE MANV = ?";
     private final String INSERT_BOOKROM = "INSERT INTO DONDATPHONG(maDDP,ngayDat,gioDat,ngayNhan,gioNhan,maPhong,maKH,maNV)"
             + " VALUES(?,?,?,?,?,?,?,?)";
@@ -94,6 +95,36 @@ public class BookRoomDAO {
                     Staff staff = staffDAO.findStaffById(rs.getString(MA_NV));
 
                     BookRoom bookRoom = new BookRoom(idRoom, ngayDat, gioDat, ngayNhan, gioNhan, room, customer, staff);
+                    return bookRoom;
+                }
+            } catch (Exception e) {
+                System.err.println("findCustomerById(): get data fail");
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.err.println("findCustomerById(): connect db fail");
+            e.printStackTrace();
+        }
+        return null;
+    }
+     
+     public BookRoom findBookRoomByNameRoom(String nameRoom) {
+        try (Connection conn = DatabaseConnection.opConnection();
+                PreparedStatement pstmt = conn.prepareStatement(SELECT_BOOKROM_BY_IDROOM)) {
+            pstmt.setString(1, nameRoom);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String maDDP = rs.getString(MA_DDP);
+                    String ngayDat = rs.getString(NGAY_DAT);
+                    String gioDat = rs.getString(GIO_DAT);
+                    String ngayNhan = rs.getString(NGAY_NHAN);
+                    String gioNhan = rs.getString(GIO_NHAN);
+                    Room room = roomDAO.findRoomById(rs.getString(MA_PHONG));
+                    Customer customer = customerDAO.findCustomerById(MA_KH);
+                    Staff staff = staffDAO.findStaffById(rs.getString(MA_NV));
+
+                    BookRoom bookRoom = new BookRoom(maDDP, ngayDat, gioDat, ngayNhan, gioNhan, room, customer, staff);
                     return bookRoom;
                 }
             } catch (Exception e) {

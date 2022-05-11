@@ -602,7 +602,7 @@ public class MainManager extends javax.swing.JFrame {
         resetColor(pnlStatistics, lblStatistics);
         resetColor(pnlContacInfo, lblContactInfo);
         resetColor(pnlChangePass, lblChangePass);
-        frmDeviceManager frame = new frmDeviceManager();
+        frmDeviceManager frame = new frmDeviceManager(username);
         openComponent(frame);
     }//GEN-LAST:event_pnlDeviceMousePressed
 

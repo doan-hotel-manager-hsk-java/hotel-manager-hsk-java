@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Staff {
     private String maNV;
     private String tenNV;
-    private String gioiTinh;
+    private boolean gioiTinh;
     private String email;
     private String cmnd;
     private String sdt;
@@ -15,18 +15,8 @@ public class Staff {
     public Staff() {
     }
 
-    public Staff(String maNV, String tenNV, String gioiTinh, String email, String cmnd, String sdt, String trangThai, StaffType staffType) {
+    public Staff(String maNV, String tenNV, boolean gioiTinh, String email, String cmnd, String sdt, String trangThai, StaffType staffType) {
         this.maNV = maNV;
-        this.tenNV = tenNV;
-        this.gioiTinh = gioiTinh;
-        this.email = email;
-        this.cmnd = cmnd;
-        this.sdt = sdt;
-        this.trangThai = trangThai;
-        this.staffType = staffType;
-    }
-
-    public Staff(String tenNV, String gioiTinh, String email, String cmnd, String sdt, String trangThai, StaffType staffType) {
         this.tenNV = tenNV;
         this.gioiTinh = gioiTinh;
         this.email = email;
@@ -60,11 +50,11 @@ public class Staff {
         this.tenNV = tenNV;
     }
 
-    public String getGioiTinh() {
+    public boolean getGioiTinh() {
         return gioiTinh;
     }
 
-    public void setGioiTinh(String gioiTinh) {
+    public void setGioiTinh(boolean gioiTinh) {
         this.gioiTinh = gioiTinh;
     }
 

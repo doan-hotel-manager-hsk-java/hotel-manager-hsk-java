@@ -16,12 +16,13 @@ public class Order {
     private int chietKhau;
     private Customer customer;
     private Room room;
+    private double tongTien;
     private Staff staff;
 
     public Order() {
     }
 
-    public Order(String maHD, String ngayVao, String gioVao, String ngayRa, String gioRa, String ngayLapHD, int chietKhau, Customer customer, Room room, Staff staff) {
+    public Order(String maHD, String ngayVao, String gioVao, String ngayRa, String gioRa, String ngayLapHD, int chietKhau, Customer customer, Room room, Staff staff, double tongTien) {
         this.maHD = maHD;
         this.ngayVao = ngayVao;
         this.gioVao = gioVao;
@@ -31,9 +32,18 @@ public class Order {
         this.chietKhau = chietKhau;
         this.customer = customer;
         this.room = room;
+        this.tongTien = tongTien;
         this.staff = staff;
     }
 
+    public double getTongTien() {
+        return tongTien;
+    }
+
+    public void setTongTien(double tongTien) {
+        this.tongTien = tongTien;
+    }
+    
     public String getMaHD() {
         return maHD;
     }

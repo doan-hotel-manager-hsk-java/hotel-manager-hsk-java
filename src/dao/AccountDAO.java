@@ -1,11 +1,15 @@
 package dao;
 
 import connection.DatabaseConnection;
+import entity.Account;
 import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class AccountDAO {
+     private final String USERNAME = "userName";
+    private final String PASSWORD = "password";
+    private static final String INSERT_ACCOUNT ="INSERT INTO TAIKHOAN VALUES (?,?)";
     private static final String SELECT_USERNAME = "Select userName from TaiKhoan where userName = ?";
     private static final String SELECT_PASSWORD = "Select password from TaiKhoan where userName = ?";
     private static final String UPDATE_PASSWORD = "update TaiKhoan set password = ? where userName = ?";
@@ -54,5 +58,18 @@ public class AccountDAO {
        } catch (Exception e) {
        }
        return false;
+   }
+   public boolean insertAccount(Account a){
+       try (Connection con = DatabaseConnection.opConnection();
+               PreparedStatement ptm = con.prepareStatement(INSERT_ACCOUNT)){
+           ptm.setString(1, a.getUserName());
+           ptm.setString(2, a.getPassWord());
+           
+           return  ptm.executeUpdate() > 0;
+       } catch (Exception e) {
+            System.err.println("insertAccount(): connect db fail");
+            e.printStackTrace();
+        }
+        return false;
    }
 }
