@@ -59,4 +59,14 @@ public class RegexHelper {
         String regex = "^[VT][0-9]{3}$";
         return  name.matches(regex);
     }
+    public static boolean regexSoLuongTon(String so)
+    {
+        String regex = "([1-9][0-9]*)|(100)";
+        return  so.matches(regex);
+    }
+    public static boolean regexGia(String so)
+    {
+        String regex = "([1-9][0-9]{3,7})";
+        return  so.matches(regex);
+    }
 }

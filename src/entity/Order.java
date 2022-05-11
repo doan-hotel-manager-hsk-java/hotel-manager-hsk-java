@@ -18,7 +18,6 @@ public class Order {
     private Room room;
     private double tongTien;
     private Staff staff;
-    private double tongTien;
 
     public Order() {
     }
@@ -125,13 +124,7 @@ public class Order {
         this.staff = staff;
     }
 
-    public double getTongTien() {
-        return tongTien;
-    }
 
-    public void setTongTien(double tongTien) {
-        this.tongTien = tongTien;
-    }
 
     @Override
     public int hashCode() {
