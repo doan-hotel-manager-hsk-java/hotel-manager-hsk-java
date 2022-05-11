@@ -15,9 +15,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.FocusEvent;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import regex.RegexHelper;
 
 /**
  *
@@ -35,6 +37,7 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
     private ServiceTypeDAO serviceTypeDAO;
     private StaffDAO staffDAO;
 
+    private RegexHelper helper;
     //
     private String id;
     private String username;
@@ -54,6 +57,7 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
         serviceDAO = new ServiceDAO();
         serviceTypeDAO = new ServiceTypeDAO();
         staffDAO = new StaffDAO();
+        helper = new RegexHelper();
 
         LoadDataToCombobox();
         initColTableService();
@@ -76,7 +80,7 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
         cboTypeService2 = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        txtNumberRoom = new javax.swing.JTextField();
+        txtServiceName = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txtBasicPrice = new javax.swing.JTextField();
@@ -132,9 +136,20 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
                 txtSearchFocusLost(evt);
             }
         });
+        txtSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchActionPerformed(evt);
+            }
+        });
         jPanel1.add(txtSearch, java.awt.BorderLayout.CENTER);
 
         jPanel2.setLayout(new java.awt.BorderLayout());
+
+        cboTypeService2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboTypeService2ItemStateChanged(evt);
+            }
+        });
         jPanel2.add(cboTypeService2, java.awt.BorderLayout.CENTER);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -143,7 +158,7 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Tên dịch vụ: ");
 
-        txtNumberRoom.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtServiceName.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Loại dịch vụ: ");
@@ -168,7 +183,7 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNumberRoom, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
+                            .addComponent(txtServiceName, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
                             .addComponent(txtBasicPrice)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -182,7 +197,7 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNumberRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtServiceName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -396,6 +411,10 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
         }
         return id;
     }
+    private void clearText(){
+        txtServiceName.setText("");
+        txtSearch.setText("");
+    }
     private void btnAddServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddServiceActionPerformed
         frmAddServiceType frame = new frmAddServiceType();
         frame.setVisible(true);
@@ -404,12 +423,21 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
     private void btnThemDichVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnThemDichVuMouseClicked
 
         String gia = txtBasicPrice.getText().trim();
-        String name = txtNumberRoom.getText().trim();
+        String name = txtServiceName.getText().trim();
         String loaiDV = cboTypeService.getSelectedItem().toString();
+        if (gia.equals("") || name.equals("") || loaiDV.equals("")) {
+            JOptionPane.showConfirmDialog(this, "Vui lòng nhập thông tin để thực hiện chức năng thêm", "Thông báo", JOptionPane.CLOSED_OPTION);
+            return;
+        }
+        if(!helper.regexPriceService(gia))
+        {
+            JOptionPane.showConfirmDialog(this, "Vui lòng kiểm tra lại giá dịch vụ", "Thông báo", JOptionPane.CLOSED_OPTION);
+            return;
+        }
         String idService = idService();
         for (Service service : serviceDAO.getAllService()) {
             if (name.equals(service.getTenDV())) {
-                JOptionPane.showConfirmDialog(this, "Dịch vụ đã tồn tại", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showConfirmDialog(this, "Dịch vụ đã tồn tại", "Thông báo", JOptionPane.CLOSED_OPTION);
                 return;
             }
         }
@@ -418,6 +446,7 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
         Service service = new Service(idService, name, Double.parseDouble(gia), "1", serviceType, staff);
         if (serviceDAO.addService(service)) {
             JOptionPane.showMessageDialog(this, "Thêm dịch vụ thành công!");
+            clearText();
             loadDataToTableService();
         } else {
             JOptionPane.showMessageDialog(this, "Thêm dịch vụ thất bại!");
@@ -425,15 +454,18 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnThemDichVuMouseClicked
 
     private void btnSuaDichVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSuaDichVuMouseClicked
+        if (id == null) {
+            JOptionPane.showConfirmDialog(this, "Vui lòng chọn dịch vụ cần sửa!", "Thông báo", JOptionPane.CLOSED_OPTION);
+            return;
+        }
         String gia = txtBasicPrice.getText().trim();
-        String name = txtNumberRoom.getText().trim();
+        String name = txtServiceName.getText().trim();
         Staff staff = staffDAO.getEmployeeBYID(username);
         Service service = serviceDAO.findServiceByID(id);
-        for (Service service1 : serviceDAO.getAllService()) {
-            if (name.equals(service1.getTenDV())) {
-                JOptionPane.showConfirmDialog(this, "Dịch vụ đã tồn tại", "Thông báo", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+        if(!helper.regexPriceService(gia))
+        {
+            JOptionPane.showConfirmDialog(this, "Vui lòng kiểm tra lại giá dịch vụ", "Thông báo", JOptionPane.CLOSED_OPTION);
+            return;
         }
         try {
             int choise = JOptionPane.showConfirmDialog(this, "Bạn có muốn sửa dịch vụ này không?", "Thông báo", JOptionPane.YES_NO_OPTION);
@@ -444,6 +476,7 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
                     service.setStaff(staff);
                     if (serviceDAO.updateService(service)) {
                         JOptionPane.showMessageDialog(this, "Chỉnh sửa dịch vụ thành công!");
+                        clearText();
                         loadDataToTableService();
                     } else {
                         JOptionPane.showMessageDialog(this, "Chỉnh sửa dịch vụ thất bại!");
@@ -456,7 +489,10 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSuaDichVuMouseClicked
 
     private void btnXoaDichVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnXoaDichVuMouseClicked
-        //String name = txtNumberRoom.getText().trim();
+        if (id == null) {
+            JOptionPane.showConfirmDialog(this, "Vui lòng chọn dịch vụ cần xóa!", "Thông báo", JOptionPane.CLOSED_OPTION);
+            return;
+        }
         Service service = serviceDAO.findServiceByID(id);
         Staff staff = staffDAO.getEmployeeBYID(username);
         service.setTrangThai("0");
@@ -467,6 +503,7 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
                 if (choise == JOptionPane.YES_OPTION) {
                     if (serviceDAO.deleteService(service)) {
                         JOptionPane.showMessageDialog(this, " Xóa thành công!");
+                        clearText();
                         loadDataToTableService();
                     } else {
                         JOptionPane.showMessageDialog(this, "Dịch vụ chưa được xóa!");
@@ -480,15 +517,42 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnXoaDichVuMouseClicked
 
     private void tableServiceManagerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableServiceManagerMouseClicked
+         cboTypeService.setEnabled(false);
         int selected = tableServiceManager.getSelectedRow();
         if (selected >= 0) {
             id = (String) tableServiceManager.getValueAt(selected, 0);
             System.err.println(id);
-            txtNumberRoom.setText((String) tableServiceManager.getValueAt(selected, 1));
+            txtServiceName.setText((String) tableServiceManager.getValueAt(selected, 1));
             txtBasicPrice.setText((String) tableServiceManager.getValueAt(selected, 2).toString());
             cboTypeService.setSelectedItem((String) tableServiceManager.getValueAt(selected, 3));
         }
     }//GEN-LAST:event_tableServiceManagerMouseClicked
+
+    private void cboTypeService2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboTypeService2ItemStateChanged
+         modelTableService.setRowCount(0);
+            String txt = cboTypeService2.getSelectedItem().toString();
+            loadDataToTableServiceLDV(txt);
+    }//GEN-LAST:event_cboTypeService2ItemStateChanged
+
+    private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
+        String textFind = txtSearch.getText().trim();
+        if (textFind.equals("")) {
+            loadDataToTableService();
+            return;
+        }
+        List<Service> services = serviceDAO.findServiceByFirstName(textFind);
+
+        if (services.isEmpty()) {
+            services = serviceDAO.findServiceByLastName(textFind);
+        }
+
+        if (services.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Không tồn tại dịch vụ này", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        } else {
+            loadDataToTableByFind(services);
+        }
+    }//GEN-LAST:event_txtSearchActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -513,8 +577,8 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
     private javax.swing.JPanel pnlTitle;
     private javax.swing.JTable tableServiceManager;
     private javax.swing.JTextField txtBasicPrice;
-    private javax.swing.JTextField txtNumberRoom;
     private javax.swing.JTextField txtSearch;
+    private javax.swing.JTextField txtServiceName;
     // End of variables declaration//GEN-END:variables
 
     private void LoadDataToCombobox() {
@@ -523,18 +587,40 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
             cboTypeService2.addItem(serviceType.getTenLoaiDV());
         }
     }
+public void loadDataToTableByFind(List<Service> list) {
+        modelTableService.setRowCount(0);
 
+        for (Service service : list) {
+
+            Object[] row = new Object[]{
+                service.getMaDV(), service.getTenDV(), service.getDonGia(), service.getServiceType().getTenLoaiDV()
+            };
+            modelTableService.addRow(row);
+        }
+    }
     private void initColTableService() {
         modelTableService.setColumnIdentifiers(new String[]{
             "Mã Dịch Vụ", "Tên Dịch Vụ", "Giá Dịch Vụ", "Loại Dịch Vụ"
         });
         tableServiceManager.setModel(modelTableService);
     }
+    private void loadDataToTableServiceLDV(String ldv) {
+        modelTableService.setRowCount(0);
+        for (Service service : serviceDAO.getAllService()) {
+            if (service.getTrangThai().equals("1") && service.getServiceType().getTenLoaiDV().equals(ldv)) {
+                Object[] row = new Object[]{
+                    service.getMaDV(), service.getTenDV(), service.getDonGia(), service.getServiceType().getTenLoaiDV()
+                };
+                modelTableService.addRow(row);
+            }
 
+        }
+        modelTableService.fireTableDataChanged();
+    }
     private void loadDataToTableService() {
         modelTableService.setRowCount(0);
         for (Service service : serviceDAO.getAllService()) {
-            if (service.getTrangThai().equals("1")) {
+            if (service.getTrangThai().equals("1")&&service.getServiceType().getTenLoaiDV().equals("Thức ăn")) {
                 Object[] row = new Object[]{
                     service.getMaDV(), service.getTenDV(), service.getDonGia(), service.getServiceType().getTenLoaiDV()
                 };

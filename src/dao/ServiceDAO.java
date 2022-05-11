@@ -101,6 +101,7 @@ public class ServiceDAO {
     private final String DELETE_SERVICE_BYID = "UPDATE DICHVU SET TRANGTHAI = ?, MANV = ? WHERE MADV = ? ";
     private final String SELECT_SERVICE_BY_NAME = "SELECT * FROM DICHVU WHERE tenDV = ?";
     private final String SELECT_SERVICE_BY_ID = "SELECT * FROM DICHVU WHERE MADV = ?";
+    private final String SELECT_SERVICE_BY_LAST_FIRST_NAME = "SELECT * FROM DICHVU WHERE TENDV LIKE ?";
 
     private final String MALDV = "MALDV";
     private final String MANV = "maNV";
@@ -217,6 +218,55 @@ public class ServiceDAO {
                             rs.getDouble(DONGIA), rs.getString(TRANGTHAI), serviceType, staff);
 
                     return service;
+                }
+            } catch (Exception e) {
+                System.err.println("findServiceByName(): get data fail");
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.err.println("findServiceByName(): connect db fail");
+        }
+        return null;
+    }
+    public List<Service> findServiceByLastName(String lastName) {
+        List<Service> services = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.opConnection();
+                PreparedStatement pstmt = conn.prepareStatement(SELECT_SERVICE_BY_LAST_FIRST_NAME)) {
+            pstmt.setString(1, "%" + lastName);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    ServiceType serviceType = serviceTypeDAO.findServiceTypeById(rs.getString(MALDV));
+                    Staff staff = staffDAO.getEmployeeBYID(rs.getString(MANV));
+
+                    Service service = new Service(rs.getString(MADV), rs.getString(TENDV),
+                            rs.getDouble(DONGIA), rs.getString(TRANGTHAI), serviceType, staff);
+
+                    services.add(service);
+                    return services;
+                }
+            } catch (Exception e) {
+                System.err.println("findServiceByName(): get data fail");
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.err.println("findServiceByName(): connect db fail");
+        }
+        return null;
+    }
+    public List<Service> findServiceByFirstName(String firstName) {
+        List<Service> services = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.opConnection();
+                PreparedStatement pstmt = conn.prepareStatement(SELECT_SERVICE_BY_LAST_FIRST_NAME)) {
+            pstmt.setString(1, firstName + "%");
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    ServiceType serviceType = serviceTypeDAO.findServiceTypeById(rs.getString(MALDV));
+                    Staff staff = staffDAO.getEmployeeBYID(rs.getString(MANV));
+
+                    Service service = new Service(rs.getString(MADV), rs.getString(TENDV),
+                            rs.getDouble(DONGIA), rs.getString(TRANGTHAI), serviceType, staff);
+                    services.add(service);
+                    return services;
                 }
             } catch (Exception e) {
                 System.err.println("findServiceByName(): get data fail");

@@ -84,4 +84,18 @@ public class ServiceTypeDAO {
         }
         return null;
     }
+
+    public boolean addTypeService(ServiceType serviceType) {
+        String ADD_SERVICETYPE_BYID = "INSERT into LOAIDICHVU values (?,?)";
+       try (Connection conn = DatabaseConnection.opConnection();
+                PreparedStatement pstmt = conn.prepareStatement(ADD_SERVICETYPE_BYID)) {
+            pstmt.setString(1, serviceType.getMaLoaiDV());
+            pstmt.setString(2, serviceType.getTenLoaiDV());
+
+            return pstmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

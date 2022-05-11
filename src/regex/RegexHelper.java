@@ -44,5 +44,19 @@ public class RegexHelper {
         String regex = "\\w+.@\\w+.\\w{2,5}";
         return email.matches(regex);
     }
-    
+    public static boolean regexPriceService(String price)
+    {
+        String regex = "^\\d$";
+        return  price.matches(regex);
+    }
+    public static boolean regexTangPhong(String tang)
+    {
+        String regex = "^[0-9]+";
+        return  tang.matches(regex);
+    }
+    public static boolean regexNameRoom(String name)
+    {
+        String regex = "^[VT][0-9]{3}$";
+        return  name.matches(regex);
+    }
 }

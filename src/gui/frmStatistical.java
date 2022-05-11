@@ -4,8 +4,12 @@
  */
 package gui;
 
+import dao.OrderDAO;
+import entity.Order;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -19,20 +23,25 @@ import org.jfree.data.category.DefaultCategoryDataset;
  */
 public class frmStatistical extends javax.swing.JInternalFrame {
 
+    private DefaultTableModel modelTableStatistical;
+    private OrderDAO orderDAO;
     public frmStatistical() {
         this.setRootPaneCheckingEnabled(false);
         javax.swing.plaf.InternalFrameUI ui
                 = this.getUI();
         ((javax.swing.plaf.basic.BasicInternalFrameUI) ui).setNorthPane(null);
-
+        
+        modelTableStatistical = new DefaultTableModel();
+        orderDAO = new OrderDAO();
         initComponents();
-        showChart();
+        initColTable();
+        loadDataToTableService();
     }
     
-    public void showChart(){
+    public void showChart(List<Order> orders, String month, String year){
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        for(int i = 1; i < 31; i++){
-            dataset.setValue(i,"abc", "B"+i);
+         for (Order o : orderDAO.getAllOrderByMonthYear(Integer.parseInt(month),Integer.parseInt(year))) {
+            dataset.setValue(o.getTongTien(),"abc", o.getNgayLapHD());
         }
         
         JFreeChart chart = ChartFactory.createBarChart("JFreeChart Histogram", "Ngày" , "Số hóa đơn", dataset, 
@@ -65,17 +74,13 @@ public class frmStatistical extends javax.swing.JInternalFrame {
         kButton1 = new com.k33ptoo.components.KButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableStatistical = new javax.swing.JTable();
         pnlChart = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        txtTongHoaDon = new javax.swing.JTextField();
+        txtTongDoanhThu = new javax.swing.JTextField();
 
         setBorder(null);
         setFrameIcon(null);
@@ -96,10 +101,10 @@ public class frmStatistical extends javax.swing.JInternalFrame {
         jLabel2.setText("Năm: ");
 
         cboMonth.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cboMonth.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboMonth.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
 
         cboYear.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cboYear.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboYear.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2020", "2021", "2022" }));
 
         kButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/statistics.png"))); // NOI18N
         kButton1.setText("Thống kê");
@@ -110,6 +115,11 @@ public class frmStatistical extends javax.swing.JInternalFrame {
         kButton1.setkHoverStartColor(new java.awt.Color(0, 204, 255));
         kButton1.setkPressedColor(new java.awt.Color(0, 153, 153));
         kButton1.setkStartColor(new java.awt.Color(51, 51, 255));
+        kButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                kButton1MouseClicked(evt);
+            }
+        });
         kButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 kButton1ActionPerformed(evt);
@@ -153,7 +163,7 @@ public class frmStatistical extends javax.swing.JInternalFrame {
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách hóa đơn"));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableStatistical.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -164,7 +174,7 @@ public class frmStatistical extends javax.swing.JInternalFrame {
                 "Mã hóa đơn", "Ngày lập", "Khách hàng", ""
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableStatistical);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -193,26 +203,14 @@ public class frmStatistical extends javax.swing.JInternalFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Tổng số hóa đơn: ");
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setText("Từ ngày: ");
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel5.setText("Đến ngày");
-
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Tổng doanh thu: ");
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jTextField1.setEnabled(false);
+        txtTongHoaDon.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtTongHoaDon.setEnabled(false);
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jTextField2.setEnabled(false);
-
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jTextField3.setEnabled(false);
-
-        jTextField4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jTextField4.setEnabled(false);
+        txtTongDoanhThu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtTongDoanhThu.setEnabled(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -222,23 +220,13 @@ public class frmStatistical extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(23, 23, 23))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField3)))
+                        .addComponent(jLabel3)
+                        .addGap(23, 23, 23)
+                        .addComponent(txtTongHoaDon))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(28, 28, 28)
-                        .addComponent(jTextField4)))
+                        .addComponent(txtTongDoanhThu, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -246,18 +234,10 @@ public class frmStatistical extends javax.swing.JInternalFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(txtTongHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(106, 106, 106)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTongDoanhThu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -306,6 +286,38 @@ public class frmStatistical extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_kButton1ActionPerformed
 
+    private void kButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_kButton1MouseClicked
+       String year = cboYear.getSelectedItem().toString();
+        String month = cboMonth.getSelectedItem().toString();
+        double tongTien = 0;
+        List<Order> orders = orderDAO.getAllOrderByMonthYear(Integer.parseInt(month),Integer.parseInt(year));      
+        for (Order o : orderDAO.getAllOrderByMonthYear(Integer.parseInt(month),Integer.parseInt(year))) {
+            tongTien += o.getTongTien();
+        }
+        txtTongDoanhThu.setText(String.valueOf(tongTien));
+        txtTongHoaDon.setText(String.valueOf(orders.size()));
+        showChart(orders,month,year);
+        loadDataToTableService();
+    }
+    private void loadDataToTableService() {
+        modelTableStatistical.setRowCount(0);
+        String year = cboYear.getSelectedItem().toString();
+        String month = cboMonth.getSelectedItem().toString();
+        for (Order o : orderDAO.getAllOrderByMonthYear(Integer.parseInt(month),Integer.parseInt(year))) {
+                Object[] row = new Object[]{
+                    o.getMaHD(),o.getNgayVao(),o.getGioVao(),o.getNgayRa(),o.getGioRa(),o.getCustomer().getTenKH(),o.getStaff().getTenNV()
+                };
+                modelTableStatistical.addRow(row);
+        }
+        modelTableStatistical.fireTableDataChanged();
+    }
+    private void initColTable() {
+        modelTableStatistical.setColumnIdentifiers(new String[]{
+            "Mã HD", "Ngày Vào", "Giờ Vào", "Ngày ra","Giờ ra", "Tên Khách Hàng", "Tên Nhân Viên"
+        });
+        tableStatistical.setModel(modelTableStatistical);
+    }//GEN-LAST:event_kButton1MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> cboMonth;
@@ -313,22 +325,18 @@ public class frmStatistical extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private com.k33ptoo.components.KButton kButton1;
     private javax.swing.JLabel lblTitile;
     private javax.swing.JPanel pnlChart;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlTitle;
+    private javax.swing.JTable tableStatistical;
+    private javax.swing.JTextField txtTongDoanhThu;
+    private javax.swing.JTextField txtTongHoaDon;
     // End of variables declaration//GEN-END:variables
 }
