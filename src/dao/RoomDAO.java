@@ -24,6 +24,7 @@ public class RoomDAO {
     private final String MA_NV = "MANV";
 
     //sql sever
+    private final String SELECT_ROOM_BY_FIRSTNAME = "SELECT * FROM PHONG WHERE TENPHONG like ?";
     private final String SELECT_ALL_ROOM = "SELECT * FROM PHONG";
     private final String SELECT_ROOM_BY_NAME = "SELECT * FROM PHONG WHERE TENPHONG = ?";
     private final String SELECT_ROOM_BY_ID = "SELECT * FROM PHONG WHERE MAPHONG = ?";
@@ -158,6 +159,35 @@ public class RoomDAO {
         try (Connection conn = DatabaseConnection.opConnection();
                 PreparedStatement pstmt = conn.prepareStatement(SELECT_ROOM_BY_ID_LOAI_TTP)) {
             pstmt.setString(1, IDTTP);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    RoomType roomType = roomTypeDAO.findRoomTypeById(rs.getString(MA_LOAI_PHONG));
+                    RoomStatusType romStatusType = roomStatusTypeDAO.finRoomStatusTypeById(rs.getString(MA_LOAT_TRANG_THAI_PHONG));
+                    Staff staff = staffDAO.getEmployeeBYID(rs.getString(MA_NV));
+
+                    Room room = new Room(rs.getString(Ma_PHONG), rs.getString(TEN_PHONG),
+                            rs.getInt(TANG), roomType, romStatusType, staff);
+
+                    rooms.add(room);
+                }
+
+                return rooms;
+            } catch (Exception e) {
+                System.err.println("get data fail");
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.err.println("getAllRooms(): connect db fail");
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public List<Room> findRoomByIDFirstName(String firstName) {
+        List<Room> rooms = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.opConnection();
+                PreparedStatement pstmt = conn.prepareStatement(SELECT_ROOM_BY_FIRSTNAME)) {
+            pstmt.setString(1, firstName + "%");
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     RoomType roomType = roomTypeDAO.findRoomTypeById(rs.getString(MA_LOAI_PHONG));
