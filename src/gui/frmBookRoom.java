@@ -14,6 +14,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -38,6 +40,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
     String nameRoom;
 
     //dao
+    OrderDAO orderDAO = new OrderDAO();
     RoomDAO roomDAO = new RoomDAO();
     StaffDAO staffDAO = new StaffDAO();
     BookRoomDAO bookRoomDAO = new BookRoomDAO();
@@ -250,18 +253,29 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
 
 // create ID book room
     public String idBookRoom() {
-        String id = "DDP0";
-        int i = 1;
+        int id = 1;
         for (BookRoom bookRoom : bookRoomDAO.getAlLBookRooms()) {
-            id += i;
             if (bookRoom.getMaDDP().equals(id)) {
-                return id + i;
+                id++;
+            } else {
+                return String.valueOf(id);
             }
-            i++;
         }
-        return id;
+        return String.valueOf(id);
     }
 
+    // create ID order
+    public String idOrder() {
+        int id = 1;
+        for (Order order : orderDAO.getAllOrders()) {
+            if (order.getMaHD().equals(id)) {
+                id++;
+            } else {
+                return String.valueOf(id);
+            }
+        }
+        return String.valueOf(id);
+    }
     // create customer
     private Customer createCustomer() {
         Customer customer = new Customer(txtCMND.getText(), txtTenKH.getText(), txtSDT.getText(),
@@ -271,6 +285,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
 
     // Check Data File
     private boolean checkDataFile() {
+        String messege = "";
         if (txtCMND.getText().isEmpty() || txtDiaChi.getText().isEmpty()
                 || txtSDT.getText().isEmpty() || txtGioDat.getText().isEmpty() || txtGioNhan.getText().isEmpty()
                 || datePickerNhan.getJFormattedTextField().getText().isEmpty()
@@ -280,12 +295,34 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         } else if (nameRoom == null) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn phòng");
             return false;
-        } else {
-            return true;
+//        } else {
+//            String regexCMND = "^[0-9]{9}|[0-9]{12}";
+//            Pattern patternCMND = Pattern.compile(regexCMND);
+//            Matcher matcherCMND = patternCMND.matcher(txtCMND.getText());
+//            Boolean checkCMND = matcherCMND.matches();
+//
+//            if (!checkCMND) {
+//                messege += "CMND phải là số và bao gồm 9 hoặc 12 số";
+//            }
+//            if (!messege.isEmpty()) {
+//                JOptionPane.showMessageDialog(null, messege);
+//                return false;
+//            } else {
+//                
+//            }
+        } else if (roomDAO.findRoomByNameRoom(nameRoom).getRoomStatusType().getMaLoaiTTP().equals("LTTP001")) {
+            JOptionPane.showMessageDialog(null, "Phòng này đã có người đặt");
+            return false;
+        }else if (roomDAO.findRoomByNameRoom(nameRoom).getRoomStatusType().getMaLoaiTTP().equals("LTTP002")) {
+            JOptionPane.showMessageDialog(null, "Phòng này đang có người sử dụng");
+            return false;
+        } else if (customerDAO.findCustomerById(txtCMND.getText()) != null) {
+            JOptionPane.showMessageDialog(null, "Khách hàng này đã đặt phòng");
+            return false;
         }
+        return true;
     }
-//cretate book room
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -495,7 +532,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -511,6 +548,11 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
         btnMoPhong.setkHoverStartColor(new java.awt.Color(0, 204, 255));
         btnMoPhong.setkPressedColor(new java.awt.Color(0, 153, 153));
         btnMoPhong.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnMoPhong.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMoPhongActionPerformed(evt);
+            }
+        });
 
         btnDoiPhong.setBackground(new java.awt.Color(255, 255, 255));
         btnDoiPhong.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exchange.png"))); // NOI18N
@@ -607,7 +649,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                                     .addComponent(jPanel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
-                                .addComponent(scrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)))
+                                .addComponent(scrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -644,6 +686,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                         txtGioDat.getText(), datePickerNhan.getJFormattedTextField().getText(), txtGioNhan.getText(),
                         room, createCustomer(), staff);
                 if (bookRoomDAO.insertBookRoom(bookRoom)) {
+                    JOptionPane.showMessageDialog(null, "Đặt phòng thành công");
                     loadAllDSDatPhong();
                     createRoom();
                 }
@@ -681,6 +724,20 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
             txtGioNhan.setText(tblDsDatPhong.getValueAt(row, 9).toString());
         }
     }//GEN-LAST:event_tblDsDatPhongMouseClicked
+
+    private void btnMoPhongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoPhongActionPerformed
+        int row = tblDsDatPhong.getSelectedRow();
+        if(row > 0){
+            BookRoom bookRoom = bookRoomDAO.findBookRoomByIDRoom(tblDsDatPhong.getValueAt(row, 0).toString());
+            Customer customer = customerDAO.findCustomerById(bookRoom.getCustomer().getMaKH());
+            Room room = roomDAO.findRoomByNameRoom(tblDsDatPhong.getValueAt(row, 0).toString());
+            RoomStatusType roomStatusType = roomStatusTypeDAO.finRoomStatusTypeById(room.getRoomStatusType().getMaLoaiTTP());
+            if(roomStatusType.getTenLoai().endsWith("Đã đặt")){
+                roomStatusType.setMaLoaiTTP("LTTP002");
+                room.setRoomStatusType(roomStatusType);
+            }
+        }
+    }//GEN-LAST:event_btnMoPhongActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

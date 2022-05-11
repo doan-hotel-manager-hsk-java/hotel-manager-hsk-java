@@ -32,18 +32,57 @@ public class OrderDAO {
     private final String MAKHACHHANG = "MAKH";
     private final String MAPHONG = "MAPHONG";
     private final String MANHANVIEN = "MANV";
-
+    
+    private final String SELECT_ALL_ORDER = "SELECT * FROM ORDER";
     private final String SELECT_ALL_ORDER_TODAY = "SELECT * FROM HOADON WHERE NGAYLAPHD LIKE CAST(GETDATE() AS DATE)";
     private final String SELECT_ALL_ORDER_MONTH = "SELECT * FROM HOADON WHERE MONTH(NGAYLAPHD) LIKE MONTH(GETDATE())";
     private final String SELECT_ALL_ORDER_YEAR = "SELECT * FROM HOADON WHERE YEAR(NGAYLAPHD) LIKE YEAR(GETDATE())";
-
+    private final String INSERT_ODER = "INSERT INTO HOADON VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+    
     private final CustomerDAO customerDAO = new CustomerDAO();
     private final RoomDAO roomDAO = new RoomDAO();
     private final StaffDAO staffDAO = new StaffDAO();
+    
+    public List<Order> getAllOrders() {
 
+        List<Order> orders = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.opConnection();
+                PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_ORDER)) {
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                   String maHD = rs.getString(MAHD);
+                    String ngayVao = rs.getString(NGAYVAO);
+                    String gioVao = rs.getString(GIOVAO);
+                    String ngayRa = rs.getString(NGAYRA);
+                    String gioRa = rs.getString(GIORA);
+                    String ngayLap = rs.getString(NGAYLAPHOADON);
+                    int chietKhau = rs.getInt(CHIETKHAU);
+
+                    Customer customer = customerDAO.findCustomerById(rs.getString(MAKHACHHANG));
+                    Room room = roomDAO.findRoomById(MAPHONG);
+                    Staff staff = staffDAO.getEmployeeBYID(MANHANVIEN);
+
+                    Order order = new Order(maHD, ngayVao, gioVao, ngayRa, gioRa, ngayLap, chietKhau, customer, room, staff);
+                    orders.add(order);
+                }
+
+                return orders;
+            } catch (Exception e) {
+                System.err.println("get data fail");
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.err.println("connect db fail");
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    
     public List<Order> getAllOrderToDay() {
         List<Order> orders = new ArrayList<>();
-        try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_ORDER_TODAY)) {
+        try ( Connection conn = DatabaseConnection.opConnection();  
+                PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_ORDER_TODAY)) {
             try ( ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     String maHD = rs.getString(MAHD);
@@ -142,5 +181,27 @@ public class OrderDAO {
         }
         
         return null;
+    }
+    
+    public boolean insertOrder(Order order) {
+        try (Connection conn = DatabaseConnection.opConnection();
+                PreparedStatement pstmt = conn.prepareStatement(INSERT_ODER)) {
+            pstmt.setString(1, order.getMaHD());
+            pstmt.setString(2, order.getNgayVao());
+            pstmt.setString(3, order.getGioVao());
+            pstmt.setString(4, order.getNgayRa());
+            pstmt.setString(5, order.getGioRa());
+            pstmt.setString(6, order.getNgayLapHD());
+            pstmt.setInt(7, order.getChietKhau());
+            pstmt.setString(8, order.getCustomer().getMaKH());
+            pstmt.setString(9, order.getRoom().getMaPhong());
+            pstmt.setString(10, order.getStaff().getMaNV());
+
+            return pstmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.err.println("connect db fail");
+            e.printStackTrace();
+        }
+        return false;
     }
 }

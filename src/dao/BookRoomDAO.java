@@ -77,7 +77,37 @@ public class BookRoomDAO {
 
         return null;
     }
+    
+     public BookRoom findBookRoomByIDRoom(String idRoom) {
+        try (Connection conn = DatabaseConnection.opConnection();
+                PreparedStatement pstmt = conn.prepareStatement(SELECT_BOOKROM_BY_IDPHONG)) {
+            pstmt.setString(1, idRoom);
 
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String ngayDat = rs.getString(NGAY_DAT);
+                    String gioDat = rs.getString(GIO_DAT);
+                    String ngayNhan = rs.getString(NGAY_NHAN);
+                    String gioNhan = rs.getString(GIO_NHAN);
+                    Room room = roomDAO.findRoomById(rs.getString(MA_PHONG));
+                    Customer customer = customerDAO.findCustomerById(MA_KH);
+                    Staff staff = staffDAO.findStaffById(rs.getString(MA_NV));
+
+                    BookRoom bookRoom = new BookRoom(idRoom, ngayDat, gioDat, ngayNhan, gioNhan, room, customer, staff);
+                    return bookRoom;
+                }
+            } catch (Exception e) {
+                System.err.println("findCustomerById(): get data fail");
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.err.println("findCustomerById(): connect db fail");
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+     
     public boolean insertBookRoom(BookRoom bookRoom) {
         try (Connection conn = DatabaseConnection.opConnection();
                 PreparedStatement pstmt = conn.prepareStatement(INSERT_BOOKROM)) {
