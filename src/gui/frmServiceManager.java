@@ -128,6 +128,7 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
         txtSearch.setForeground(new java.awt.Color(204, 204, 204));
         txtSearch.setText("Tìm dịch vụ");
         txtSearch.setBorder(null);
+        txtSearch.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtSearch.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtSearchFocusGained(evt);

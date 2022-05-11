@@ -21,7 +21,7 @@ public class RegexHelper {
     }
     public static boolean regexDeviceName(String name) {
         String firstLetter="[A-EGHIK-VXYÂĐỔÔÚỨ]";
-        String firstLetter1="[a-zâđổôúứ]";
+        String firstLetter1="[a-zâđổôúứA-ZÂĐỔÔÚỨ]";
       	String otherLetters="[a-zàáâãèéêìíòóôõùúýỳỹỷỵựửữừứưụủũợởỡờớơộổỗồốọỏịỉĩệểễềếẹẻẽặẳẵằắăậẩẫầấạảđ₫]";
       	String regexString="^"
                  +firstLetter+otherLetters+"+\\s?"
@@ -53,6 +53,16 @@ public class RegexHelper {
     {
         String regex = "^[0-9]+";
         return  tang.matches(regex);
+    }
+    public static boolean regexSoLuongTon(String so)
+    {
+        String regex = "([1-9][0-9]*)|(100)";
+        return  so.matches(regex);
+    }
+    public static boolean regexGia(String so)
+    {
+        String regex = "([1-9][0-9]{3,7})";
+        return  so.matches(regex);
     }
     public static boolean regexNameRoom(String name)
     {

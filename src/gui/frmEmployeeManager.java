@@ -121,7 +121,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         cmbChucVu1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cmbChucVu1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Quản lý", "Lễ tân", "Vệ sinh", "Bảo vệ" }));
+        cmbChucVu1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Lễ tân", "Vệ sinh", "Bảo vệ" }));
         cmbChucVu1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbChucVu1ActionPerformed(evt);
@@ -162,7 +162,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         cmbGioiTinh.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ" }));
 
         cmbChucVu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cmbChucVu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Quản lý", "Lễ tân", "Vệ sinh", "Bảo vệ" }));
+        cmbChucVu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Lễ tân", "Vệ sinh", "Bảo vệ" }));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -427,11 +427,14 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
 
     private void btnTaoAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoAccountActionPerformed
         int index= jTable1.getSelectedRow();
-        String chucVu= dtm.getValueAt(index, 4)+"";
+        
+        
         if (index==-1){
             JOptionPane.showMessageDialog(this, "Hãy chọn nhân viên cần tạo tài khoản!");
-        }else if ("Bảo vệ".equals(chucVu)  || "Vệ sinh".equals(chucVu)){
-                JOptionPane.showMessageDialog(this, "Chỉ có thể tạo tài khoản cho quản lý hoặc lễ tân!");
+        }else {
+            String chucVu= dtm.getValueAt(index, 4)+"";
+            if ("Bảo vệ".equals(chucVu)  || "Vệ sinh".equals(chucVu)){
+                JOptionPane.showMessageDialog(this, "Chỉ có thể tạo tài khoản cho lễ tân!");
             } else if(dtm.getValueAt(index, 6) != "Chưa có"){
                 JOptionPane.showMessageDialog(this, "Nhân viên này đã có tài khoản !!");
             }else{
@@ -444,7 +447,9 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
                     loadDataToTable(staffDAO.getAllStaffByStatus(), dtm);
                     JOptionPane.showMessageDialog(this, "Tạo thành công! \n Username: " + taiKhoan+"\n Pass mặc định: 123456");
                 }
-            }    
+            }
+            }
+        
     }//GEN-LAST:event_btnTaoAccountActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
@@ -583,7 +588,6 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
     private void clearInput(){
         txtCMND.setText("");
         txtEmail.setText("");
-        txtSearch.setText("");
         txtSDT.setText("");
         txtTen.setText("");
         txtCMND.requestFocus();
@@ -600,7 +604,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
             if(!RegexHelper.regexCustomerName(txtTen.getText()))
                 thongBao+="*Tên khách hàng sai định dạng! VD: Lê Tuấn\n";
             if(!RegexHelper.regexPhoneNumber(txtSDT.getText()))
-                thongBao+="*Số điện thoại không chứa ký tự chữ, phải đủ 10 số và bắt đầu bằng các đầu số hợp lệ! VD: 0343229978\n";
+                thongBao+="*Số điện thoại không chứa ký tự chữ, phải đủ 10 số và bắt đầu bằng các đầu số hợp lệ (09, 08, 07, 03, 05 )! VD: 0343229978\n";
             if (!RegexHelper.regexEmail(txtEmail.getText()))
                 thongBao+="*Email sai định dạng! VD: thu123@gmail.com";
             if (thongBao.isEmpty())
