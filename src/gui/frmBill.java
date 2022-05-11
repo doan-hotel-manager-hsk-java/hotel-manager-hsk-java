@@ -687,7 +687,7 @@ public class frmBill extends javax.swing.JFrame {
         tblServiceOrder.setModel(modelServiceOrder);
     }
     
-    // LOAD DATA TO TABLE SERVICE IN ORDER
+    // LOAD DATA TO TABLE SERVICE IN ORDER .
     private void loadDataToTblServicesInOrder() throws ClassNotFoundException, SQLException {
         int i = 1;
         modelServiceOrder.setRowCount(0);
