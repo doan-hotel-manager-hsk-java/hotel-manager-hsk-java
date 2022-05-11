@@ -153,18 +153,10 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JComboBox" name="jComboBox1">
+            <Component class="javax.swing.JComboBox" name="cboStyleRoom2">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="1"/>
-                </Property>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
-                    <StringItem index="0" value="Item 1"/>
-                    <StringItem index="1" value="Item 2"/>
-                    <StringItem index="2" value="Item 3"/>
-                    <StringItem index="3" value="Item 4"/>
-                  </StringArray>
                 </Property>
               </Properties>
               <AuxValues>
@@ -213,7 +205,7 @@
                           <Component id="txtNumberRoom" alignment="0" max="32767" attributes="0"/>
                           <Component id="txtFloor" alignment="0" max="32767" attributes="0"/>
                           <Component id="txtBasicPrice" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jComboBox2" alignment="0" pref="593" max="32767" attributes="0"/>
+                          <Component id="cboStyleRoom" alignment="0" pref="593" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -234,7 +226,7 @@
                       </Group>
                       <EmptySpace pref="18" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
-                          <Component id="jComboBox2" alignment="2" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboStyleRoom" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel3" alignment="2" min="-2" pref="27" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
@@ -301,18 +293,10 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="jComboBox2">
+            <Component class="javax.swing.JComboBox" name="cboStyleRoom">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="1"/>
-                </Property>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
-                    <StringItem index="0" value="Item 1"/>
-                    <StringItem index="1" value="Item 2"/>
-                    <StringItem index="2" value="Item 3"/>
-                    <StringItem index="3" value="Item 4"/>
-                  </StringArray>
                 </Property>
               </Properties>
               <AuxValues>
@@ -347,7 +331,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="132" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="131" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -361,7 +345,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="jTable1">
+                <Component class="javax.swing.JTable" name="tableRoom">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                       <Table columnCount="5" rowCount="4">
@@ -405,6 +389,9 @@
                       <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tableRoomMouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -428,9 +415,9 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="kButton4" alignment="0" max="32767" attributes="0"/>
-                          <Component id="kButton5" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="kButton6" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnThemPhong" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnSuaPhong" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnXoaPhong" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -440,18 +427,18 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="kButton4" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="btnThemPhong" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
-                      <Component id="kButton5" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="btnSuaPhong" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="kButton6" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="btnXoaPhong" min="-2" pref="35" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="com.k33ptoo.components.KButton" name="kButton4">
+            <Component class="com.k33ptoo.components.KButton" name="btnThemPhong">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/icons/icon-add.png"/>
@@ -480,8 +467,11 @@
                   <Color blue="ff" green="33" red="33" type="rgb"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnThemPhongMouseClicked"/>
+              </Events>
             </Component>
-            <Component class="com.k33ptoo.components.KButton" name="kButton5">
+            <Component class="com.k33ptoo.components.KButton" name="btnSuaPhong">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/icons/icons-edit.png"/>
@@ -510,8 +500,11 @@
                   <Color blue="ff" green="33" red="33" type="rgb"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnSuaPhongMouseClicked"/>
+              </Events>
             </Component>
-            <Component class="com.k33ptoo.components.KButton" name="kButton6">
+            <Component class="com.k33ptoo.components.KButton" name="btnXoaPhong">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/icons/Button-Close-icon-16.png"/>
@@ -540,6 +533,9 @@
                   <Color blue="ff" green="33" red="33" type="rgb"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnXoaPhongMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -45,7 +45,7 @@ public class BookRoomDAO {
         customerDAO = new CustomerDAO();
         roomDAO = new RoomDAO();
         staffDAO = new StaffDAO();
-        
+
         List<BookRoom> bookRooms = new ArrayList<>();
         try (Connection conn = DatabaseConnection.opConnection();
                 PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_BOOKROOM)) {
@@ -78,4 +78,35 @@ public class BookRoomDAO {
         return null;
     }
 
+    public boolean insertBookRoom(BookRoom bookRoom) {
+        try (Connection conn = DatabaseConnection.opConnection();
+                PreparedStatement pstmt = conn.prepareStatement(INSERT_BOOKROM)) {
+            pstmt.setString(1, bookRoom.getMaDDP());
+            pstmt.setString(2, bookRoom.getNgayDat());
+            pstmt.setString(3, bookRoom.getGioDat());
+            pstmt.setString(4, bookRoom.getNgayNhan());
+            pstmt.setString(5, bookRoom.getGioNhan());
+            pstmt.setString(6, bookRoom.getRoom().getMaPhong());
+            pstmt.setString(7, bookRoom.getCustomer().getMaKH());
+            pstmt.setString(8, bookRoom.getStaff().getMaNV());
+
+            return pstmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.err.println("connect db fail");
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+     public boolean updateBookRoom(BookRoom bookRoom) {
+        try (Connection conn = DatabaseConnection.opConnection();
+                PreparedStatement pstmt = conn.prepareStatement(UPDATE_BOOKROOM)) {
+            pstmt.setString(1, bookRoom.getRoom().getMaPhong());
+            return pstmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.err.println("connect db fail");
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

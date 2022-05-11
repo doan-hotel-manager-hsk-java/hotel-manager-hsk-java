@@ -5,9 +5,10 @@
 package gui;
 
 import dao.CustomerDAO;
-import dao.OrdeerDetailDAO;
+import dao.OrderDetailDAO;
 import dao.OrderDAO;
 import dao.RoomDAO;
+import dao.RoomStatusTypeDAO;
 import dao.RoomTypeDAO;
 import dao.ServiceDAO;
 import dao.StaffDAO;
@@ -15,13 +16,15 @@ import entity.Customer;
 import entity.Order;
 import entity.OrderDetail;
 import entity.Room;
+import entity.RoomStatusType;
 import entity.RoomType;
-import entity.Service;
 import entity.Staff;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
@@ -35,21 +38,32 @@ public class frmBill extends javax.swing.JFrame {
     // INIT DAO
     private RoomDAO roomDAO;
     private ServiceDAO serviceDAO;
-    private OrdeerDetailDAO orderDetailDAO;
+    private OrderDetailDAO orderDetailDAO;
     private OrderDAO orderDAO;
     private StaffDAO staffDAO;
     private CustomerDAO customerDAO;
     private RoomTypeDAO roomTypeDAO;
+    private RoomStatusTypeDAO roomStatusTypeDAO;
     
+    private String idRoom;
+    private static String idOrder;
+    private double moneyService;
+    private double moneyRoom;
+    
+    // SUM PAY
+    private long totalMoney;
     
     /**
      * Creates new form frmBill
      * @throws java.sql.SQLException
      * @throws java.lang.ClassNotFoundException
      */
-    public frmBill() throws SQLException, ClassNotFoundException {
+    public frmBill(String _idOrder) throws SQLException, ClassNotFoundException {
         setAlwaysOnTop(true);
         initComponents();
+        
+        // CONSTRUCTOR
+        idOrder = _idOrder;
         
         // MODEL
         modelServiceOrder = new DefaultTableModel();
@@ -57,16 +71,20 @@ public class frmBill extends javax.swing.JFrame {
         // DAO
         roomDAO = new RoomDAO();
         serviceDAO = new ServiceDAO();
-        orderDetailDAO = new OrdeerDetailDAO();
+        orderDetailDAO = new OrderDetailDAO();
         orderDAO = new OrderDAO();
         staffDAO = new StaffDAO();
         customerDAO = new CustomerDAO();
         roomTypeDAO = new RoomTypeDAO();
         
+        Order order = orderDAO.getOrderById(idOrder);
+        idRoom = roomDAO.findRoomById(order.getRoom().getMaPhong()).getMaPhong();
+        
         // CALLING
-        loadDataFromFormService();
         initColsListServices();
         loadDataToTblServicesInOrder();
+        loadDataFromFormService();
+        
     }
 
     /**
@@ -114,7 +132,7 @@ public class frmBill extends javax.swing.JFrame {
         lblGioRa = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         lblGiaPhong = new javax.swing.JLabel();
-        btnPrint = new com.k33ptoo.components.KButton();
+        btnInHoaDon = new com.k33ptoo.components.KButton();
         btnClose = new com.k33ptoo.components.KButton();
         jSeparator3 = new javax.swing.JSeparator();
         jLabel13 = new javax.swing.JLabel();
@@ -129,7 +147,7 @@ public class frmBill extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JSeparator();
         jLabel19 = new javax.swing.JLabel();
         lblTongTien = new javax.swing.JLabel();
-        btnPay = new com.k33ptoo.components.KButton();
+        btnThanhToan = new com.k33ptoo.components.KButton();
         label3 = new java.awt.Label();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -330,17 +348,17 @@ public class frmBill extends javax.swing.JFrame {
         lblGiaPhong.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblGiaPhong.setText("ABC");
 
-        btnPrint.setText("In hóa đơn");
-        btnPrint.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        btnPrint.setkEndColor(new java.awt.Color(51, 255, 255));
-        btnPrint.setkHoverEndColor(new java.awt.Color(102, 255, 255));
-        btnPrint.setkHoverForeGround(new java.awt.Color(0, 204, 0));
-        btnPrint.setkHoverStartColor(new java.awt.Color(0, 204, 255));
-        btnPrint.setkPressedColor(new java.awt.Color(0, 153, 153));
-        btnPrint.setkStartColor(new java.awt.Color(51, 51, 255));
-        btnPrint.addActionListener(new java.awt.event.ActionListener() {
+        btnInHoaDon.setText("In hóa đơn");
+        btnInHoaDon.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        btnInHoaDon.setkEndColor(new java.awt.Color(51, 255, 255));
+        btnInHoaDon.setkHoverEndColor(new java.awt.Color(102, 255, 255));
+        btnInHoaDon.setkHoverForeGround(new java.awt.Color(0, 204, 0));
+        btnInHoaDon.setkHoverStartColor(new java.awt.Color(0, 204, 255));
+        btnInHoaDon.setkPressedColor(new java.awt.Color(0, 153, 153));
+        btnInHoaDon.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnInHoaDon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPrintActionPerformed(evt);
+                btnInHoaDonActionPerformed(evt);
             }
         });
 
@@ -392,14 +410,19 @@ public class frmBill extends javax.swing.JFrame {
         lblTongTien.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         lblTongTien.setText("100.000 đ");
 
-        btnPay.setText("Thanh Toán");
-        btnPay.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        btnPay.setkEndColor(new java.awt.Color(51, 255, 255));
-        btnPay.setkHoverEndColor(new java.awt.Color(102, 255, 255));
-        btnPay.setkHoverForeGround(new java.awt.Color(0, 204, 0));
-        btnPay.setkHoverStartColor(new java.awt.Color(0, 204, 255));
-        btnPay.setkPressedColor(new java.awt.Color(0, 153, 153));
-        btnPay.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnThanhToan.setText("Thanh Toán");
+        btnThanhToan.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        btnThanhToan.setkEndColor(new java.awt.Color(51, 255, 255));
+        btnThanhToan.setkHoverEndColor(new java.awt.Color(102, 255, 255));
+        btnThanhToan.setkHoverForeGround(new java.awt.Color(0, 204, 0));
+        btnThanhToan.setkHoverStartColor(new java.awt.Color(0, 204, 255));
+        btnThanhToan.setkPressedColor(new java.awt.Color(0, 153, 153));
+        btnThanhToan.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnThanhToan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThanhToanActionPerformed(evt);
+            }
+        });
 
         label3.setAlignment(java.awt.Label.CENTER);
         label3.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
@@ -508,9 +531,9 @@ public class frmBill extends javax.swing.JFrame {
                             .addComponent(jLabel13)
                             .addComponent(jLabel5)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnThanhToan, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(139, 139, 139)
-                                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnInHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -590,8 +613,8 @@ public class frmBill extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnThanhToan, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnInHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addComponent(jLabel16)
@@ -622,7 +645,7 @@ public class frmBill extends javax.swing.JFrame {
     // HANDLE GET DATA FROM FORM SERVICE
     private void loadDataFromFormService() throws SQLException, ClassNotFoundException {
         // FIND
-        Order order = orderDAO.getOrderById("HD006");
+        Order order = orderDAO.getOrderById(idOrder);
         Staff staff = staffDAO.getEmployeeBYID("NV002");
         Room room = roomDAO.findRoomById(order.getRoom().getMaPhong());
         Customer customer = customerDAO.findCustomerById(order.getCustomer().getMaKH());
@@ -643,6 +666,16 @@ public class frmBill extends javax.swing.JFrame {
         lblGioRa.setText(order.getGioRa());
         lblGiaPhong.setText(""+roomtype.getDonGia());
         
+        int moneyHour = orderDAO.getHourUseFromOrder(order.getMaHD());
+        int moneyDay = orderDAO.getDayUseFromOrder(order.getMaHD());
+        
+        long moneyRoom = (long) ((long) (moneyDay * roomtype.getDonGia()) + (moneyHour * (roomtype.getDonGia()*0.1)));
+        totalMoney = (long) (moneyRoom + moneyService);
+        
+        lblTienDichVu.setText(String.valueOf(moneyService));
+        lblTienPhong.setText(String.valueOf(moneyRoom));
+        lblTongTien.setText(String.valueOf(totalMoney));
+
     }
     
     // CREATE TITLE COLUMNS OF SERVICE IN ORDER
@@ -658,24 +691,49 @@ public class frmBill extends javax.swing.JFrame {
         int i = 1;
         modelServiceOrder.setRowCount(0);
         
-        for (OrderDetail od : orderDetailDAO.getListServicesAdded()) {
-            //if(orderDetailDAO.getOrderDetailById() != null) {
-                Object[] row = new Object[] {
-                  i++, od.getService().getTenDV(), od.getSoLuong(), od.getThanhTien()
-                };
-                modelServiceOrder.addRow(row);
-            //}
+        for (OrderDetail od : orderDetailDAO.getListServicesByIdRoom(idRoom)) {
+            Object[] row = new Object[]{
+                i++, od.getService().getTenDV(), od.getSoLuong(), od.getThanhTien()
+            };
+            moneyService += od.getThanhTien();
+            modelServiceOrder.addRow(row);
         }
+        System.out.println("id" + idRoom);
         modelServiceOrder.fireTableDataChanged();
     }
     
-    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
-          
-    }//GEN-LAST:event_btnPrintActionPerformed
-
+    // button print order
+    private void btnInHoaDonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInHoaDonActionPerformed
+       
+    }//GEN-LAST:event_btnInHoaDonActionPerformed
+    
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_btnCloseActionPerformed
+
+    // HANDLE BUTTON PAY
+    private void btnThanhToanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThanhToanActionPerformed
+        int choise = JOptionPane.showConfirmDialog(this, "Bạn có muốn thanh toán hóa đơn không?", "Thông báo", JOptionPane.YES_NO_OPTION);
+        
+        if(choise == JOptionPane.YES_OPTION) {
+            Order order = orderDAO.getOrderById(idOrder);
+            order.setTongTien(totalMoney);
+            // UPDATE ORDER
+            orderDAO.updateSumTotalPayInOrder(order);
+            System.out.println("TT: " + order.getTongTien());
+
+            // UPDATE STATUS ROOM
+//            Room room = roomDAO.findRoomById(order.getRoom().getMaPhong());
+//            RoomStatusType roomStatusType = roomStatusTypeDAO.getRoomStatusTypeByIdToUpdateAffterPay(room.getRoomStatusType().getMaLoaiTTP());
+//            roomStatusType.setMaLoaiTTP("LTTP003");
+//            room.setRoomStatusType(roomStatusType);
+//            roomDAO.updateBookRoom(room);
+//            System.out.println("LTTP: " + room.getRoomStatusType().getMaLoaiTTP());
+
+            JOptionPane.showMessageDialog(this, "Thanh toán thành công.");
+            this.setVisible(false);
+        }
+    }//GEN-LAST:event_btnThanhToanActionPerformed
 
     /**
      * @param args the command line arguments
@@ -708,7 +766,7 @@ public class frmBill extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new frmBill().setVisible(true);
+                    new frmBill(idOrder).setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(frmBill.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
@@ -720,8 +778,8 @@ public class frmBill extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.k33ptoo.components.KButton btnClose;
-    private com.k33ptoo.components.KButton btnPay;
-    private com.k33ptoo.components.KButton btnPrint;
+    private com.k33ptoo.components.KButton btnInHoaDon;
+    private com.k33ptoo.components.KButton btnThanhToan;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

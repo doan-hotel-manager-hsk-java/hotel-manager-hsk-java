@@ -121,5 +121,10 @@ public class Staff {
         final Staff other = (Staff) obj;
         return Objects.equals(this.maNV, other.maNV);
     }
+
+    @Override
+    public String toString() {
+        return "Staff{" + "maNV=" + maNV + ", tenNV=" + tenNV + ", gioiTinh=" + gioiTinh + ", email=" + email + ", cmnd=" + cmnd + ", sdt=" + sdt + ", trangThai=" + trangThai + ", staffType=" + staffType + '}';
+    }
     
 }

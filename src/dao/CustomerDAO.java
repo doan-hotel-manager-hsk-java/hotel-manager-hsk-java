@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package dao;
 
 import connection.DatabaseConnection;
@@ -29,18 +26,19 @@ public class CustomerDAO {
     private final String SELECT_CUSTOMER_BY_LASTNAME = "SELECT * FROM KHACHHANG WHERE TENKH LIKE ?";
     private final String SELECT_CUSTOMER_BY_FIRSTNAME = "SELECT * FROM KHACHHANG WHERE TENKH LIKE ?";
     private final String UPDATE_CUSTOMER_BY_ID = "UPDATE KHACHHANG SET TENKH = ?, SDT = ?, GIOITINH = ?, DIACHI = ? WHERE MAKH = ?";
+    private final String INSERT_CUSTOMER = "INSERT INTO KHACHHANG(MAKH,TENKH,SDT,GiOITINH,DIACHI) values(?,?,?,?,?)";
 
     public Customer findCustomerById(String id) {
-        try ( Connection conn = DatabaseConnection.opConnection();  
+        try (Connection conn = DatabaseConnection.opConnection();
                 PreparedStatement pstmt = conn.prepareStatement(SELECT_CUSTOMER_BY_ID)) {
             pstmt.setString(1, id);
 
-            try ( ResultSet rs = pstmt.executeQuery()) {
+            try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     String ma = rs.getString(MA_KH);
                     String ten = rs.getString(TEN_KH);
                     String sdt = rs.getString(SDT);
-                    boolean gioiTinh = rs.getInt(GIOI_TINH) == 1;
+                    boolean gioiTinh = rs.getBoolean(GIOI_TINH);
                     String diaChi = rs.getString(DIA_CHI);
 
                     Customer cus = new Customer(ma, ten, sdt, gioiTinh, diaChi);
@@ -60,15 +58,15 @@ public class CustomerDAO {
 
     public List<Customer> findCustomerByLastName(String name) {
         List<Customer> customers = new ArrayList<>();
-        try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(SELECT_CUSTOMER_BY_LASTNAME)) {
+        try (Connection conn = DatabaseConnection.opConnection(); PreparedStatement pstmt = conn.prepareStatement(SELECT_CUSTOMER_BY_LASTNAME)) {
             pstmt.setString(1, "%" + name);
 
-            try ( ResultSet rs = pstmt.executeQuery()) {
+            try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     String ma = rs.getString(MA_KH);
                     String ten = rs.getString(TEN_KH);
                     String sdt = rs.getString(SDT);
-                    boolean gioiTinh = rs.getInt(GIOI_TINH) == 1;
+                    boolean gioiTinh = rs.getBoolean(GIOI_TINH);
                     String diaChi = rs.getString(DIA_CHI);
 
                     Customer cus = new Customer(ma, ten, sdt, gioiTinh, diaChi);
@@ -89,10 +87,10 @@ public class CustomerDAO {
 
     public List<Customer> findCustomerByFirstName(String name) {
         List<Customer> customers = new ArrayList<>();
-        try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(SELECT_CUSTOMER_BY_FIRSTNAME)) {
+        try (Connection conn = DatabaseConnection.opConnection(); PreparedStatement pstmt = conn.prepareStatement(SELECT_CUSTOMER_BY_FIRSTNAME)) {
             pstmt.setString(1, name + "%");
 
-            try ( ResultSet rs = pstmt.executeQuery()) {
+            try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     String ma = rs.getString(MA_KH);
                     String ten = rs.getString(TEN_KH);
@@ -116,6 +114,23 @@ public class CustomerDAO {
         return null;
     }
 
+    public boolean insertCustomer(Customer customer) {
+        try (Connection conn = DatabaseConnection.opConnection();
+                PreparedStatement pstmt = conn.prepareStatement(INSERT_CUSTOMER)) {
+            pstmt.setString(1, customer.getMaKH());
+            pstmt.setString(2, customer.getTenKH());
+            pstmt.setString(3, customer.getSoDT());
+            pstmt.setBoolean(4, customer.isGioiTinh());
+            pstmt.setString(5, customer.getDiaChi());
+
+            return pstmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.err.println("connect db fail");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean updateCustomerById(Customer customer) {
         try ( Connection conn = DatabaseConnection.opConnection();  PreparedStatement pstmt = conn.prepareStatement(UPDATE_CUSTOMER_BY_ID)) {
             pstmt.setString(1, customer.getTenKH());
@@ -131,5 +146,4 @@ public class CustomerDAO {
         }
         return false;
     }
-    
 }

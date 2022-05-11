@@ -4,8 +4,8 @@
  */
 package gui;
 
-import dao.OrdeerDetailDAO;
 import dao.OrderDAO;
+import dao.OrderDetailDAO;
 import dao.RoomDAO;
 import dao.ServiceDAO;
 import entity.Order;
@@ -28,15 +28,19 @@ public class frmService extends javax.swing.JInternalFrame {
 
     // INIT MODEL
     private DefaultTableModel modellListServices, modelListServicesAdded;
-    
+
     // INIT DAO
     private RoomDAO roomDAO;
     private ServiceDAO serviceDAO;
-    private OrdeerDetailDAO orderDetailDAO;
+    private OrderDetailDAO orderDetailDAO;
     private OrderDAO orderDAO;
-    
+
+    private String idRoom;
+    private String idOrder;
+
     /**
      * Creates new form QuanLyPhong
+     *
      * @throws java.lang.ClassNotFoundException
      * @throws java.sql.SQLException
      */
@@ -46,28 +50,27 @@ public class frmService extends javax.swing.JInternalFrame {
                 = this.getUI();
         ((javax.swing.plaf.basic.BasicInternalFrameUI) ui).setNorthPane(null);
         initComponents();
-        
+
         // TABLE MODEL
         modellListServices = new DefaultTableModel();
         modelListServicesAdded = new DefaultTableModel();
-        
+
         // DAO
         roomDAO = new RoomDAO();
         serviceDAO = new ServiceDAO();
-        orderDetailDAO = new OrdeerDetailDAO();
+        orderDetailDAO = new OrderDetailDAO();
         orderDAO = new OrderDAO();
-        
+
         // SET COMBOBOX (INDEX = 0)
         cboTenPhong.addItem("Chon phong");
         cboDichVu.addItem("Chon dich vu");
-        
+
         // CALLING
         loadDataToComboboxNameRoom();
         loadDataToComboboxService();
         initColsListServices();
         loadDataToTblListServices();
         initColsListServicesAdded();
-        loadDataToTblListServicesAdded();
     }
 
     /**
@@ -131,6 +134,11 @@ public class frmService extends javax.swing.JInternalFrame {
         jLabel1.setText("Chọn Phòng: ");
 
         cboTenPhong.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        cboTenPhong.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboTenPhongItemStateChanged(evt);
+            }
+        });
         cboTenPhong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboTenPhongActionPerformed(evt);
@@ -372,59 +380,58 @@ public class frmService extends javax.swing.JInternalFrame {
             cboTenPhong.addItem(room.getTenPhong());
         }
     }
-    
+
     // LOAD DATA TO COMBOBOX
     private void loadDataToComboboxService() throws ClassNotFoundException, SQLException {
         for (Service service : serviceDAO.getServices()) {
             cboDichVu.addItem(service.getTenDV());
-            System.out.println(service.getTenDV());
         }
     }
-    
+
     // CREATE TITLE COLUMNS OF LIST SERVICE
     private void initColsListServices() {
-        modellListServices.setColumnIdentifiers(new String[] {
+        modellListServices.setColumnIdentifiers(new String[]{
             "Tên dich vu", "Ðon giá"
         });
         tblListServices.setModel(modellListServices);
     }
-    
+
     // LOAD DATA TO TABLE LIST SERVICE
     private void loadDataToTblListServices() throws ClassNotFoundException, SQLException {
         modellListServices.setRowCount(0);
-        
+
         for (Service service : serviceDAO.getServices()) {
-            Object[] row = new Object[] {
-              service.getTenDV(), service.getDonGia()  
+            Object[] row = new Object[]{
+                service.getTenDV(), service.getDonGia()
             };
             modellListServices.addRow(row);
         }
         modellListServices.fireTableDataChanged();
     }
-    
+
     // CREATE TITLE COLUMNS OF LIST SERVICE ADDED
     private void initColsListServicesAdded() {
-        modelListServicesAdded.setColumnIdentifiers(new String[] {
+        modelListServicesAdded.setColumnIdentifiers(new String[]{
             "So phòng", "Tên dich vu", "So luong", "Thanh Tien"
         });
         tblListServicesAdded.setModel(modelListServicesAdded);
     }
-    
+
     // LOAD DATA TO TABLE LIST SERVICE ADDED
-    private void loadDataToTblListServicesAdded() throws ClassNotFoundException, SQLException {
+    private void loadDataToTblListServicesAdded(String idRoom) {
         modelListServicesAdded.setRowCount(0);
-        
-          for (OrderDetail od : orderDetailDAO.getListServicesAdded()) {
-            Object[] row = new Object[] {
-              od.getOrder().getRoom().getTenPhong() , od.getService().getTenDV(), od.getSoLuong(), od.getThanhTien()
+
+        for (OrderDetail od : orderDetailDAO.getListServicesByIdRoom(idRoom)) {
+            Object[] row = new Object[]{
+                od.getOrder().getRoom().getTenPhong(), od.getService().getTenDV(), od.getSoLuong(), od.getThanhTien()
             };
             modelListServicesAdded.addRow(row);
         }
         modelListServicesAdded.fireTableDataChanged();
     }
-    
+
     private void cboTenPhongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTenPhongActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_cboTenPhongActionPerformed
 
     // HANDLE BUTTON CREATE ORDER
@@ -432,35 +439,32 @@ public class frmService extends javax.swing.JInternalFrame {
         frmBill frm;
         try {
             // CHECK INPUTS
-            if(cboTenPhong.getSelectedIndex() == 0) {
+            if (cboTenPhong.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(this, "Ban can chon phong de tao hoa don!");
                 return;
             }
-            
-            if(roomDAO.findRoomByNameRoom(cboTenPhong.getSelectedItem().toString()).getTenPhong() != null) { 
-                Order order = orderDAO.getOrderById("HD006");
-                
-                // TIME
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss"); //yyyy/MM/dd 
-                LocalDateTime now = LocalDateTime.now();
-                String tam = dtf.format(now);
-                // DATE
-                DateTimeFormatter dtfNgayRa = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-                LocalDateTime nowNgayRa = LocalDateTime.now();
-                String tamNgayRa = dtfNgayRa.format(nowNgayRa);
-                
-                order.setGioRa(tam);
-                order.setNgayRa(tamNgayRa);
-                
-                // UPDATE ORDER (TIME OUT)
-                orderDAO.updateServiceInOrder(order);
-                
-                frm = new frmBill();
-                frm.setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(this, "Ban can chon phong de tao hoa don!");
-            }
-            
+
+            // GET ORDER ID FROM ROOM
+            Order order = orderDAO.getOrderById(idOrder);
+
+            // SET TIME
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss"); //yyyy/MM/dd 
+            LocalDateTime now = LocalDateTime.now();
+            String tam = dtf.format(now);
+            // SET DATE
+            DateTimeFormatter dtfNgayRa = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDateTime nowNgayRa = LocalDateTime.now();
+            String tamNgayRa = dtfNgayRa.format(nowNgayRa);
+
+            order.setGioRa(tam);
+            order.setNgayRa(tamNgayRa);
+
+            // UPDATE ORDER (TIME OUT)
+            orderDAO.updateServiceInOrder(order);
+
+            frm = new frmBill(idOrder);
+            frm.setVisible(true);
+
         } catch (SQLException ex) {
             Logger.getLogger(frmService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -474,37 +478,36 @@ public class frmService extends javax.swing.JInternalFrame {
         cboDichVu.setEnabled(true);
         cboTenPhong.setEnabled(true);
         int selected = tblListServicesAdded.getSelectedRow();
-        
-        if(selected >= 0) {
+
+        if (selected >= 0) {
             String tam = (String) tblListServicesAdded.getValueAt(selected, 1);
             // SET ENABLE is FALSE
             cboDichVu.setEnabled(false);
             cboTenPhong.setEnabled(false);
             try {
-                OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(tam).getMaDV(), "HD006");
-                
-                if(od != null) {
+                OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(tam).getMaDV(), idOrder);
+
+                if (od != null) {
                     cboTenPhong.setSelectedItem(roomDAO.findRoomById(orderDAO.getOrderById(od.getOrder().getMaHD()).getRoom().getMaPhong()).getTenPhong());
                     cboDichVu.setSelectedItem(serviceDAO.getServiceById(od.getService().getMaDV()).getTenDV());
-                    txtSoLuong.setText(""+od.getSoLuong());
+                    txtSoLuong.setText("" + od.getSoLuong());
                 }
-                
+
             } catch (Exception ex) {
                 ex.printStackTrace();
                 System.out.println("gui.frmService.tblListServicesAddedMouseClicked(): " + ex.getMessage());
             }
-            
+
         }
     }//GEN-LAST:event_tblListServicesAddedMouseClicked
-    
+
     // CLEAR INPUTS
     private void clearInps() {
-        cboTenPhong.setSelectedIndex(0);
         cboDichVu.setSelectedIndex(0);
         txtSoLuong.setText("");
         cboTenPhong.requestFocus();
     }
-    
+
     // HANDLE BUTTON ADD SERVICE 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // SET ENABLE IS TRUE
@@ -514,31 +517,25 @@ public class frmService extends javax.swing.JInternalFrame {
             Room room = roomDAO.findRoomByNameRoom(cboTenPhong.getSelectedItem().toString());
             OrderDetail od = new OrderDetail();
             Service service = new Service();
-            
-            if(cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
+
+            if (cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(this, "Can phai nhap day du cac thong tin!");
                 return;
             }
-            
-            if(room.getTenPhong() != null) {
+
+            if (room.getTenPhong() != null) {
                 // CHECK NAME SERVICE EXISTS (MaHD, MaDV)
-//                if(orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(txtDichVu.getText()).getMaDV(), "HD006") != null) {
-//                    JOptionPane.showMessageDialog(this, "Ten dich vu da co trong phong. Vui long thuc hien chuc nang sua!");
-//                    return;
-//                }
-                
-                //if(serviceDAO.getServiceByName(txtDichVu.getText()).getMaDV() == null) {
-                //    JOptionPane.showMessageDialog(this, "Ten dich hien chua co. Vui long nhap ten dich vu ben danh sach dich vu!");
-                //   return;
-                //}
-                
+                if (orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), idOrder) != null) {
+                    JOptionPane.showMessageDialog(this, "Ten dich vu da co trong phong. Vui long thuc hien chuc nang sua!");
+                    return;
+                }
+
                 // CHECK SO LUONG
-                if(Integer.parseInt(txtSoLuong.getText()) <= 0) {
+                if (Integer.parseInt(txtSoLuong.getText()) <= 0) {
                     JOptionPane.showMessageDialog(this, "So luong phai lon hon 0!");
                     return;
                 }
-                
-                
+
                 od.setSoLuong(Integer.parseInt(txtSoLuong.getText()));
                 od.setOrder(orderDAO.getOrderById("HD006")); // GET ID HOADON FROM ROOM TO IT
                 service.setMaDV(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV());
@@ -548,10 +545,9 @@ public class frmService extends javax.swing.JInternalFrame {
                 orderDetailDAO.addServiceToOrderDetail(od);
                 JOptionPane.showMessageDialog(this, "Them thanh cong dich vu.");
                 clearInps();
-                loadDataToTblListServicesAdded();
-                
+                loadDataToTblListServicesAdded(idRoom);
             }
-                      
+
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("gui.frmService.btnThemActionPerformed(): " + ex.getMessage());
@@ -565,20 +561,20 @@ public class frmService extends javax.swing.JInternalFrame {
         cboTenPhong.setEnabled(true);
         try {
             // CHECK INPUTS
-            if(cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
+            if (cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(this, "Khong tim thay dich vu de xoa!");
                 return;
             }
             // DELETE
             int choose = JOptionPane.showConfirmDialog(this, "Ban co muon xoa dich vu nay khong?", "Thong bao", JOptionPane.YES_NO_OPTION);
-            if(choose == JOptionPane.YES_OPTION) {
-                OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), "HD006");
+            if (choose == JOptionPane.YES_OPTION) {
+                OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), idOrder);
                 orderDetailDAO.deleteServiceOutOrderDetail(od);
                 JOptionPane.showMessageDialog(this, "Xoa thanh cong dich vu.");
                 clearInps();
-                loadDataToTblListServicesAdded();
+                loadDataToTblListServicesAdded(idRoom);
             }
-           
+
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("gui.frmService.btnXoaActionPerformed(): " + ex.getMessage());
@@ -590,39 +586,39 @@ public class frmService extends javax.swing.JInternalFrame {
         // SET ENABLE IS TRUE
         cboDichVu.setEnabled(true);
         cboTenPhong.setEnabled(true);
-        
+
         Room room = roomDAO.findRoomByNameRoom(cboTenPhong.getSelectedItem().toString());
-        
+
         try {
             // CHECK INPUTS
-            if(cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
+            if (cboDichVu.getSelectedIndex() == 0 || txtSoLuong.getText().equals("") || cboTenPhong.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(this, "Khong tim thay dich vu de cap nhat!");
                 return;
             }
-            if(Integer.parseInt(txtSoLuong.getText()) <= 0) {
+            if (Integer.parseInt(txtSoLuong.getText()) <= 0) {
                 JOptionPane.showMessageDialog(this, "So luong phai lon hon 0!");
                 return;
             }
-            
-            if(room.getMaPhong() != null) {
+
+            if (room.getMaPhong() != null) {
                 // CHECK NAME SERVICE EXISTS (MaHD, MaDV)
-                if(orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), "HD006") == null) {
+                if (orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), idOrder) == null) {
                     JOptionPane.showMessageDialog(this, "Ten dich vu khong co trong phong. Vui long thuc hien chuc nang them!");
                     return;
                 }
-                
+
                 int choose = JOptionPane.showConfirmDialog(this, "Ban co muon sua dich vu nay khong?", "Thong bao", JOptionPane.YES_NO_OPTION);
-                
-                if(choose == JOptionPane.YES_OPTION) {
+
+                if (choose == JOptionPane.YES_OPTION) {
                     // UPDATE
-                    OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), "HD006");
+                    OrderDetail od = orderDetailDAO.getOrderDetail(serviceDAO.getServiceByName(cboDichVu.getSelectedItem().toString()).getMaDV(), idOrder);
 
                     od.setSoLuong(Integer.parseInt(txtSoLuong.getText()));
 
                     orderDetailDAO.updateServiceInOrderDetail(od);
                     JOptionPane.showMessageDialog(this, "Cap nhat so luong thanh cong.");
                     clearInps();
-                    loadDataToTblListServicesAdded();                   
+                    loadDataToTblListServicesAdded(idRoom);
                 }
             }
         } catch (Exception ex) {
@@ -636,6 +632,21 @@ public class frmService extends javax.swing.JInternalFrame {
         cboDichVu.setEnabled(true);
         cboTenPhong.setEnabled(true);
     }//GEN-LAST:event_jPanel5MouseClicked
+
+    private void cboTenPhongItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboTenPhongItemStateChanged
+        String name = cboTenPhong.getSelectedItem().toString();
+
+        if (name.equals("Chon phong")) {
+            modelListServicesAdded.setRowCount(0);
+            return;
+        }
+        // GET ID ROOM
+        Room room = roomDAO.findRoomByNameRoom(name);
+        idRoom = room.getMaPhong();
+        idOrder = orderDAO.getOrderIdByRoomId(idRoom);
+
+        loadDataToTblListServicesAdded(idRoom);
+    }//GEN-LAST:event_cboTenPhongItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -5,11 +5,12 @@
         <group>
             <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/ServiceDAO.java</file>
             <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/entity/OrderDetail.java</file>
+            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/OrderDetailDAO.java</file>
             <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/gui/frmBill.java</file>
+            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/entity/Order.java</file>
             <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/gui/frmService.java</file>
             <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/RoomDAO.java</file>
             <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/OrderDAO.java</file>
-            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/OrdeerDetailDAO.java</file>
         </group>
     </open-files>
 </project-private>

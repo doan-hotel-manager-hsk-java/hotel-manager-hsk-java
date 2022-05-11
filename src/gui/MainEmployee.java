@@ -330,11 +330,10 @@ public class MainEmployee extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void pnlRoomMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlRoomMousePressed
-
         setColor(pnlRoom, lblRoom);
         resetColor(pnlService, lblService);
         resetColor(pnlChangePass, lblChangePass);
-        frmBookRoom frame = new frmBookRoom();
+        frmBookRoom frame = new frmBookRoom(username);
         openComponent(frame);
 
     }//GEN-LAST:event_pnlRoomMousePressed
@@ -358,7 +357,7 @@ public class MainEmployee extends javax.swing.JFrame {
         setColor(pnlRoom, lblRoom);
         resetColor(pnlService, lblService);
         resetColor(pnlChangePass, lblChangePass);
-        frmBookRoom frame = new frmBookRoom();
+        frmBookRoom frame = new frmBookRoom(username);
         openComponent(frame);
 
     }//GEN-LAST:event_pnlRoomFocusGained

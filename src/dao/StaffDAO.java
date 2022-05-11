@@ -11,6 +11,7 @@ public class StaffDAO {
 
     //Phuong
     // variable
+    private final String Ma_NV = "maNV";
     private final String TEN_NV = "tenNV";
     private final String GIOI_TINH = "gioiTinh";
     private final String EMAIL = "email";
@@ -21,7 +22,8 @@ public class StaffDAO {
 
     // sql Server
     private final String SELECT_STAFF_BYID = "select * from NhanVien where maNV = ?";
-
+   
+    
     // Lấy nhân viên bằng mã nhân viên
     public Staff getEmployeeBYID(String maNV) {
         staffTypeDAO = new StaffTypeDAO();
@@ -49,6 +51,28 @@ public class StaffDAO {
 
         } catch (Exception e) {
             System.out.println("Connect fail");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private final String SELECT_STAFF_BYID2 = "SELECT * FROM NHANVIEN WHERE MANV = ?";
+    //Huy Tìm nhân viên theo mã
+     public Staff findStaffById(String id) {
+        staffTypeDAO = new StaffTypeDAO();
+        try(Connection conn = DatabaseConnection.opConnection();
+               PreparedStatement pstmt = conn.prepareStatement(SELECT_STAFF_BYID2) ){
+            pstmt.setString(1, id);
+            try(ResultSet rs = pstmt.executeQuery()){
+                if(rs.next()){
+                    StaffType staffType = staffTypeDAO.findStaffTypeById(rs.getString(MA_LOAI_NV));
+                    Staff staff  = new Staff(rs.getString(Ma_NV), rs.getString(TEN_NV), rs.getString(GIOI_TINH), rs.getString(EMAIL), 
+                            rs.getString(CMND), rs.getString(SDT),rs.getString(TRANG_THAI), staffType);
+                   // System.err.println(staff.toString());
+                    return staff;
+                }
+            }
+        }catch(Exception e){
             e.printStackTrace();
         }
         return null;

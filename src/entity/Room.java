@@ -103,6 +103,11 @@ public class Room {
         }
         return Objects.equals(this.tenPhong, other.tenPhong);
     }
+
+    @Override
+    public String toString() {
+        return "Room{" + "maPhong=" + maPhong + ", tenPhong=" + tenPhong + ", tang=" + tang + ", roomType=" + roomType + ", roomStatusType=" + roomStatusType + ", staff=" + staff + '}';
+    }
     
     
 }

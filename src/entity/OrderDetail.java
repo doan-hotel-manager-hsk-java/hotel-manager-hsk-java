@@ -12,7 +12,6 @@ public class OrderDetail {
     private int soLuong;
     private Order order;
     private Service service;
-    
     private double thanhTien;
 
     public OrderDetail() {
@@ -62,7 +61,6 @@ public class OrderDetail {
     public void setThanhTien(double thanhTien) {
         this.thanhTien = thanhTien;
     }
-    
     // HANDLE GET TONG TIEN
     public double getMoney() {
         return thanhTien = service.getDonGia() * getSoLuong();
