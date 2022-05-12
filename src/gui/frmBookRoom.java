@@ -709,7 +709,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
             }
         }
     }//GEN-LAST:event_btnDatPhongActionPerformed
-// forcus search
+// forcus search.
     private void txtSearchFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSearchFocusGained
         if (txtSearch.getText().equals("Tìm khách hàng")) {
             txtSearch.setText("");
