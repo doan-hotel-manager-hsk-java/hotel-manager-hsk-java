@@ -42,7 +42,7 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
        this.setFocusable(true);
        
        username = _username;
-       dtm=(DefaultTableModel) jTable1.getModel();
+       dtm=(DefaultTableModel) tblDevice.getModel();
        deviceDAO=new DeviceDAO();
        staffDAO=new StaffDAO();
         loadDataToTable(deviceDAO.getAllDevices(), dtm);
@@ -60,14 +60,14 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        txtNumberRoom = new javax.swing.JTextField();
+        txtTenThietBi = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        txtNumberRoom1 = new javax.swing.JTextField();
+        txtSoLuongTon = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        txtBasicPrice = new javax.swing.JTextField();
+        txtGia = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblDevice = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
         btnThem = new com.k33ptoo.components.KButton();
         btnSua = new com.k33ptoo.components.KButton();
@@ -112,17 +112,17 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Tên thiết bị: ");
 
-        txtNumberRoom.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtTenThietBi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Số lượng: ");
 
-        txtNumberRoom1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtSoLuongTon.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Giá: ");
 
-        txtBasicPrice.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtGia.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -137,12 +137,12 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNumberRoom, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
-                            .addComponent(txtBasicPrice)))
+                            .addComponent(txtTenThietBi, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
+                            .addComponent(txtGia)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtNumberRoom1)))
+                        .addComponent(txtSoLuongTon)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -151,22 +151,22 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNumberRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTenThietBi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(51, 51, 51)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNumberRoom1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtSoLuongTon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtBasicPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtGia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(23, 23, 23))
         );
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách thiết bị"));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblDevice.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -177,12 +177,12 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
                 "Tên thiết bị", "Số lượng", "Giá"
             }
         ));
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblDevice.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                tblDeviceMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblDevice);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -346,7 +346,7 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         if (checkData()){
             Device d= createDevice();
             try{
-                if(deviceDAO.findDeviceByName(txtNumberRoom.getText()) ==null){
+                if(deviceDAO.findDeviceByName(txtTenThietBi.getText()) ==null){
                 deviceDAO.insertDevice(d);
                 loadDataToTable(deviceDAO.getAllDevices(), dtm);
                 clearInput();
@@ -360,18 +360,18 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnThemActionPerformed
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
-        int index = jTable1.getSelectedRow();
+        int index = tblDevice.getSelectedRow();
         if (index==-1){
             JOptionPane.showMessageDialog(this, "Hãy chọn dòng cần sửa!");
         }else{
         if (checkData()){
             Device d=deviceDAO.findDeviceByName(dtm.getValueAt(index, 0)+"");
-             if(!txtNumberRoom.getText().equals(dtm.getValueAt(index, 0)+"")){
-                txtNumberRoom.setText(jTable1.getValueAt(index, 0)+"");
+             if(!txtTenThietBi.getText().equals(dtm.getValueAt(index, 0)+"")){
+                txtTenThietBi.setText(tblDevice.getValueAt(index, 0)+"");
                 JOptionPane.showMessageDialog(this, "Không được sửa tên thiết bị!");
             }else{
-            d.setSoLuongTon(Integer.parseInt(txtNumberRoom1.getText()));
-            d.setGia(Double.parseDouble(txtBasicPrice.getText()));
+            d.setSoLuongTon(Integer.parseInt(txtSoLuongTon.getText()));
+            d.setGia(Double.parseDouble(txtGia.getText()));
             if (d.getTenTTB().equals(dtm.getValueAt(index, 0)+""))
             deviceDAO.updateDeviceById(d);
             loadDataToTable(deviceDAO.getAllDevices(), dtm);
@@ -383,7 +383,7 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-        int index= jTable1.getSelectedRow();
+        int index= tblDevice.getSelectedRow();
         if (index==-1){
             JOptionPane.showMessageDialog(this, "Hãy chọn dòng cần xóa!");
         }else{
@@ -400,12 +400,12 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnXoaActionPerformed
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        int index = jTable1.getSelectedRow();
-        txtNumberRoom.setText(jTable1.getValueAt(index, 0).toString());
-        txtNumberRoom1.setText(jTable1.getValueAt(index, 1).toString());
-        txtBasicPrice.setText(jTable1.getValueAt(index, 2).toString());
-    }//GEN-LAST:event_jTable1MouseClicked
+    private void tblDeviceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDeviceMouseClicked
+        int index = tblDevice.getSelectedRow();
+        txtTenThietBi.setText(tblDevice.getValueAt(index, 0).toString());
+        txtSoLuongTon.setText(tblDevice.getValueAt(index, 1).toString());
+        txtGia.setText(tblDevice.getValueAt(index, 2).toString());
+    }//GEN-LAST:event_tblDeviceMouseClicked
 
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
         String s=txtSearch.getText();
@@ -414,7 +414,7 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
 
     private void filter(String s){
         TableRowSorter<DefaultTableModel> tr=new TableRowSorter<DefaultTableModel>(dtm);
-        jTable1.setRowSorter(tr);
+        tblDevice.setRowSorter(tr);
         tr.setRowFilter(RowFilter.regexFilter("(?i)"+s));
 
         
@@ -428,26 +428,26 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
     }
     
     private Device createDevice() {
-        String tenTTB= txtNumberRoom.getText();
-        int soLuong= Integer.parseInt(txtNumberRoom1.getText());
-        double gia=Double.parseDouble(txtBasicPrice.getText());
+        String tenTTB= txtTenThietBi.getText();
+        int soLuong= Integer.parseInt(txtSoLuongTon.getText());
+        double gia=Double.parseDouble(txtGia.getText());
         
         Staff staff = staffDAO.getEmployeeBYID(username);
         Device d=new Device(setMaTTB(), tenTTB, soLuong, "Máy", gia, 1,staff);
         return d;
     }
     private boolean checkData() {
-        if (txtNumberRoom.getText().trim().equals("") || txtNumberRoom1.getText().trim().equals("") || txtBasicPrice.getText().trim().equals("")){
+        if (txtTenThietBi.getText().trim().equals("") || txtSoLuongTon.getText().trim().equals("") || txtGia.getText().trim().equals("")){
             JOptionPane.showMessageDialog(this, "Hãy nhập đầy đủ thông tin!");
             return false;
         }else{
             String thongBao="";
-            if (!RegexHelper.regexDeviceName(txtNumberRoom.getText()))
+            if (!RegexHelper.regexDeviceName(txtTenThietBi.getText()))
                 thongBao+="* Tên thiết bị sai dịnh dạng!VD: Điều hòa\n";
-            if (Integer.parseInt(txtNumberRoom1.getText())<1 || Integer.parseInt(txtNumberRoom1.getText())>200)
-                thongBao+="* Số lượng phải lớn hơn 0 và nhỏ hơn 200\n";
-            if (Double.parseDouble(txtBasicPrice.getText())<0 || Double.parseDouble(txtBasicPrice.getText())>10000000)
-                thongBao+="* Giá của thiết bị phải lớn hơn 0 và bé hơn 10,000,000";
+            if (!RegexHelper.regexSoLuongTon(txtSoLuongTon.getText()))
+                thongBao+="* Số lượng chỉ từ 1-100\n";
+            if (!RegexHelper.regexGia(txtGia.getText()))
+                thongBao+="* Giá của thiết bị phải trên 1.000 và dưới 10.000.000";
             if (thongBao.isEmpty())
                 return true;
             else{
@@ -468,10 +468,10 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         return s;
     }
     private void clearInput(){
-        txtNumberRoom.setText("");
-        txtNumberRoom1.setText("");
-        txtBasicPrice.setText("");
-        txtNumberRoom.requestFocus();
+        txtTenThietBi.setText("");
+        txtSoLuongTon.setText("");
+        txtGia.setText("");
+        txtTenThietBi.requestFocus();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -487,13 +487,13 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblTitile;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlTitle;
-    private javax.swing.JTextField txtBasicPrice;
-    private javax.swing.JTextField txtNumberRoom;
-    private javax.swing.JTextField txtNumberRoom1;
+    private javax.swing.JTable tblDevice;
+    private javax.swing.JTextField txtGia;
     private javax.swing.JTextField txtSearch;
+    private javax.swing.JTextField txtSoLuongTon;
+    private javax.swing.JTextField txtTenThietBi;
     // End of variables declaration//GEN-END:variables
 }

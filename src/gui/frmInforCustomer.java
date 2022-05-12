@@ -27,8 +27,10 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -142,7 +144,6 @@ public class frmInforCustomer extends javax.swing.JInternalFrame {
         txtIdCustomer.setText("");
         txtPhoneNumber.setText("");
         cboGender.setSelectedIndex(0);
-        cboFilter.setSelectedIndex(0);
     }
 
     public boolean exportFileExcel(JTable table, String part) {
@@ -374,9 +375,9 @@ public class frmInforCustomer extends javax.swing.JInternalFrame {
                 txtSearchFocusLost(evt);
             }
         });
-        txtSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSearchActionPerformed(evt);
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchKeyReleased(evt);
             }
         });
 
@@ -438,11 +439,12 @@ public class frmInforCustomer extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnExportData, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cboFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnExportData, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(16, 16, 16)
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -482,24 +484,6 @@ public class frmInforCustomer extends javax.swing.JInternalFrame {
         eventChangeComboBox();
     }//GEN-LAST:event_cboFilterItemStateChanged
 
-    private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
-        // TODO add your handling code here:
-        String textFind = txtSearch.getText().trim();
-        List<Customer> customers = customerDAO.findCustomerByFirstName(textFind);
-
-        if (customers.isEmpty()) {
-            customers = customerDAO.findCustomerByLastName(textFind);
-        }
-
-        if (customers.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng này!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        } else {
-            loadDataToModelByFind(customers);
-        }
-
-    }//GEN-LAST:event_txtSearchActionPerformed
-
     private void btnChangeInforCustomerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnChangeInforCustomerMouseClicked
         int index = tblCustomer.getSelectedRow();
         if (index < 0) {
@@ -515,13 +499,16 @@ public class frmInforCustomer extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, "Tên khách hàng sai định dạng!\n VD: Lê Tuấn", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             } else if (!RegexHelper.regexPhoneNumber(sdt)) {
-                JOptionPane.showMessageDialog(this, "Số điện thoại không chứa ký tự chữ, phải đủ 10 số và bắt đầu bằng các đầu số hợp lệ!\n VD: 0343229978", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Số điện thoại không chứa ký tự chữ, phải đủ 10 số và bắt đầu bằng các đầu số hợp lệ ( 09, 08, 03, 07, 05 )!\n VD: 0343229978", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             } else {
                 Customer customer = new Customer(maKH, tenKH, sdt, gioiTinh, diaChi);
                 customerDAO.updateCustomerById(customer);
                 loadDataToTable();
-
+                Customer c=customerDAO.findCustomerById(maKH);
+                List<Customer> cs =new ArrayList<>();
+                cs.add(c);
+                loadDataToModelByFind(cs);
                 clearInput();
             }
 
@@ -542,6 +529,16 @@ public class frmInforCustomer extends javax.swing.JInternalFrame {
             }
         }
     }//GEN-LAST:event_btnExportDataMouseClicked
+
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+        String s=txtSearch.getText();
+        filter(s);
+    }//GEN-LAST:event_txtSearchKeyReleased
+     private void filter(String s){
+         TableRowSorter<DefaultTableModel> tr=new TableRowSorter<DefaultTableModel>(customerTableModel);
+        tblCustomer.setRowSorter(tr);
+        tr.setRowFilter(RowFilter.regexFilter("(?i)"+s));      
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

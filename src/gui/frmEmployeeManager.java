@@ -48,7 +48,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         initComponents();
         this.setFocusable(true);
         
-        dtm=(DefaultTableModel) jTable1.getModel();
+        dtm=(DefaultTableModel) tblEmployee.getModel();
         staffDAO=new StaffDAO();
         staffTypeDAO=new StaffTypeDAO();
         loadDataToTable(staffDAO.getAllStaffByStatus(), dtm);
@@ -80,7 +80,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         cmbChucVu = new javax.swing.JComboBox<>();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblEmployee = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
         btnThem = new com.k33ptoo.components.KButton();
         btnSua = new com.k33ptoo.components.KButton();
@@ -121,7 +121,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         cmbChucVu1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cmbChucVu1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Quản lý", "Lễ tân", "Vệ sinh", "Bảo vệ" }));
+        cmbChucVu1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tất cả", "Lễ tân", "Vệ sinh", "Bảo vệ" }));
         cmbChucVu1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbChucVu1ActionPerformed(evt);
@@ -162,7 +162,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         cmbGioiTinh.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nam", "Nữ" }));
 
         cmbChucVu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cmbChucVu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Quản lý", "Lễ tân", "Vệ sinh", "Bảo vệ" }));
+        cmbChucVu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Lễ tân", "Vệ sinh", "Bảo vệ" }));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -226,7 +226,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách nhân viên"));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblEmployee.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -237,14 +237,14 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
                 "CMND/CCCD", "Tên nhân viên", "Giới tính", "SDT", "Chức vụ", "Email", "Tài khoản"
             }
         ));
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblEmployee.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                tblEmployeeMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(30);
+        jScrollPane1.setViewportView(tblEmployee);
+        if (tblEmployee.getColumnModel().getColumnCount() > 0) {
+            tblEmployee.getColumnModel().getColumn(2).setPreferredWidth(30);
         }
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -426,12 +426,13 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtSearchFocusLost
 
     private void btnTaoAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaoAccountActionPerformed
-        int index= jTable1.getSelectedRow();
-        String chucVu= dtm.getValueAt(index, 4)+"";
+        int index= tblEmployee.getSelectedRow();        
         if (index==-1){
             JOptionPane.showMessageDialog(this, "Hãy chọn nhân viên cần tạo tài khoản!");
-        }else if ("Bảo vệ".equals(chucVu)  || "Vệ sinh".equals(chucVu)){
-                JOptionPane.showMessageDialog(this, "Chỉ có thể tạo tài khoản cho quản lý hoặc lễ tân!");
+        }else{
+            String chucVu= dtm.getValueAt(index, 4)+"";
+            if ("Bảo vệ".equals(chucVu)  || "Vệ sinh".equals(chucVu)){
+                JOptionPane.showMessageDialog(this, "Chỉ có thể tạo tài khoản cho lễ tân!");
             } else if(dtm.getValueAt(index, 6) != "Chưa có"){
                 JOptionPane.showMessageDialog(this, "Nhân viên này đã có tài khoản !!");
             }else{
@@ -443,8 +444,10 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
                     accountDAO.insertAccount(a);
                     loadDataToTable(staffDAO.getAllStaffByStatus(), dtm);
                     JOptionPane.showMessageDialog(this, "Tạo thành công! \n Username: " + taiKhoan+"\n Pass mặc định: 123456");
+                    clearInput();
                 }
-            }    
+            } 
+        }   
     }//GEN-LAST:event_btnTaoAccountActionPerformed
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
@@ -464,20 +467,20 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnThemActionPerformed
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        int index=jTable1.getSelectedRow();
-        txtCMND.setText(jTable1.getValueAt(index, 0).toString());
-        txtTen.setText(jTable1.getValueAt(index, 1).toString());
-        cmbGioiTinh.setSelectedItem(jTable1.getValueAt(index, 2).toString());
-        txtSDT.setText(jTable1.getValueAt(index, 3).toString());
-        cmbChucVu.setSelectedItem(jTable1.getValueAt(index, 4));
-        txtEmail.setText(jTable1.getValueAt(index, 5).toString());
+    private void tblEmployeeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEmployeeMouseClicked
+        int index=tblEmployee.getSelectedRow();
+        txtCMND.setText(tblEmployee.getValueAt(index, 0).toString());
+        txtTen.setText(tblEmployee.getValueAt(index, 1).toString());
+        cmbGioiTinh.setSelectedItem(tblEmployee.getValueAt(index, 2).toString());
+        txtSDT.setText(tblEmployee.getValueAt(index, 3).toString());
+        cmbChucVu.setSelectedItem(tblEmployee.getValueAt(index, 4));
+        txtEmail.setText(tblEmployee.getValueAt(index, 5).toString());
         
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_tblEmployeeMouseClicked
 
     private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
         
-        int index = jTable1.getSelectedRow();
+        int index = tblEmployee.getSelectedRow();
         if (index==-1){
             JOptionPane.showMessageDialog(this, "Hãy chọn dòng cần sửa!");
         }else{
@@ -485,7 +488,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
             staffTypeDAO=new StaffTypeDAO();
             Staff s=staffDAO.findStaffByCMND(dtm.getValueAt(index, 0)+"");            
             if(!txtCMND.getText().equals(dtm.getValueAt(index, 0)+"")){
-                txtCMND.setText(jTable1.getValueAt(index, 0)+"");
+                txtCMND.setText(tblEmployee.getValueAt(index, 0)+"");
                 JOptionPane.showMessageDialog(this, "Không được sửa CMND!");
             }else{
             s.setTenNV(txtTen.getText());
@@ -506,7 +509,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSuaActionPerformed
 
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-         int index= jTable1.getSelectedRow();
+         int index= tblEmployee.getSelectedRow();
         if (index==-1){
             JOptionPane.showMessageDialog(this, "Hãy chọn dòng cần xóa!");
         }else{
@@ -538,7 +541,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_cmbChucVu1ActionPerformed
     private void filter(String s){
         TableRowSorter<DefaultTableModel> tr=new TableRowSorter<DefaultTableModel>(dtm);
-        jTable1.setRowSorter(tr);
+        tblEmployee.setRowSorter(tr);
         tr.setRowFilter(RowFilter.regexFilter("(?i)"+s));
 
         
@@ -550,7 +553,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         for (Staff s: list) {
             String taiKhoan = "Chưa có";
             if (accountDAO.findUserName(s.getMaNV()) != null )
-                if (s.getStaffType().getIdLoaiNV().equals("LNV003") || s.getStaffType().getIdLoaiNV().equals("LNV004"))
+                if (!s.getStaffType().getIdLoaiNV().equals("LNV002"))
                     taiKhoan="Đã khóa";
                 else
                     taiKhoan=s.getMaNV();
@@ -583,7 +586,6 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
     private void clearInput(){
         txtCMND.setText("");
         txtEmail.setText("");
-        txtSearch.setText("");
         txtSDT.setText("");
         txtTen.setText("");
         txtCMND.requestFocus();
@@ -600,7 +602,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
             if(!RegexHelper.regexCustomerName(txtTen.getText()))
                 thongBao+="*Tên khách hàng sai định dạng! VD: Lê Tuấn\n";
             if(!RegexHelper.regexPhoneNumber(txtSDT.getText()))
-                thongBao+="*Số điện thoại không chứa ký tự chữ, phải đủ 10 số và bắt đầu bằng các đầu số hợp lệ! VD: 0343229978\n";
+                thongBao+="*Số điện thoại không chứa ký tự chữ, phải đủ 10 số và bắt đầu bằng các đầu số hợp lệ ( 09, 08, 03, 07, 05 )! VD: 0343229978\n";
             if (!RegexHelper.regexEmail(txtEmail.getText()))
                 thongBao+="*Email sai định dạng! VD: thu123@gmail.com";
             if (thongBao.isEmpty())
@@ -632,10 +634,10 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblTitile;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlTitle;
+    private javax.swing.JTable tblEmployee;
     private javax.swing.JTextField txtCMND;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtSDT;
