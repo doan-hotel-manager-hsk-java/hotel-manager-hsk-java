@@ -136,9 +136,9 @@
                               <Component id="jLabel13" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="btnPay" min="-2" pref="128" max="-2" attributes="0"/>
+                                  <Component id="btnThanhToan" min="-2" pref="128" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="139" max="-2" attributes="0"/>
-                                  <Component id="btnPrint" min="-2" pref="128" max="-2" attributes="0"/>
+                                  <Component id="btnInHoaDon" min="-2" pref="128" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="btnClose" min="-2" pref="128" max="-2" attributes="0"/>
                               </Group>
@@ -854,7 +854,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPayActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnThanhToanActionPerformed"/>
           </Events>
         </Component>
         <Component class="java.awt.Label" name="label3">

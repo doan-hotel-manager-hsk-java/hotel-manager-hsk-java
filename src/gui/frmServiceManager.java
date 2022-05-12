@@ -265,11 +265,6 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
                 btnThemDichVuMouseClicked(evt);
             }
         });
-        btnThemDichVu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnThemDichVuActionPerformed(evt);
-            }
-        });
 
         btnSuaDichVu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons-edit.png"))); // NOI18N
         btnSuaDichVu.setText("Sửa dịch vụ");
@@ -284,11 +279,6 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
         btnSuaDichVu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnSuaDichVuMouseClicked(evt);
-            }
-        });
-        btnSuaDichVu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSuaDichVuActionPerformed(evt);
             }
         });
 
