@@ -97,6 +97,11 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
                 txtSearchFocusLost(evt);
             }
         });
+        txtSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSearchActionPerformed(evt);
+            }
+        });
         txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtSearchKeyReleased(evt);
@@ -411,6 +416,10 @@ public class frmDeviceManager extends javax.swing.JInternalFrame {
         String s=txtSearch.getText();
         filter(s);
     }//GEN-LAST:event_txtSearchKeyReleased
+
+    private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSearchActionPerformed
 
     private void filter(String s){
         TableRowSorter<DefaultTableModel> tr=new TableRowSorter<DefaultTableModel>(dtm);

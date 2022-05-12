@@ -265,6 +265,11 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
                 btnThemDichVuMouseClicked(evt);
             }
         });
+        btnThemDichVu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemDichVuActionPerformed(evt);
+            }
+        });
 
         btnSuaDichVu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons-edit.png"))); // NOI18N
         btnSuaDichVu.setText("Sửa dịch vụ");
@@ -279,6 +284,11 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
         btnSuaDichVu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnSuaDichVuMouseClicked(evt);
+            }
+        });
+        btnSuaDichVu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaDichVuActionPerformed(evt);
             }
         });
 
@@ -553,6 +563,14 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
             loadDataToTableByFind(services);
         }
     }//GEN-LAST:event_txtSearchActionPerformed
+
+    private void btnSuaDichVuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaDichVuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSuaDichVuActionPerformed
+
+    private void btnThemDichVuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemDichVuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnThemDichVuActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
