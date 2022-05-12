@@ -3,26 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/ServiceDAO.java</file>
-            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/entity/OrderDetail.java</file>
-            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/OrderDetailDAO.java</file>
-            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/gui/frmBill.java</file>
-            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/entity/Order.java</file>
-            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/gui/frmService.java</file>
-            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/RoomDAO.java</file>
-            <file>file:/D:/HOC_2022/LapTrinhHuongSuKienJava/N12_Project/hotel-manager-hsk-java/src/dao/OrderDAO.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/gui/Login.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/connection/DatabaseConnection.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/dao/ServiceDAO.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/entity/Staff.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/dao/StaffTypeDAO.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/gui/frmServiceManager.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/dao/DeviceDAO.java</file>
             <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/gui/frmDeviceManager.java</file>
             <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/regex/RegexHelper.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/gui/MainManager.java</file>
             <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/dao/StaffDAO.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/dao/AccountDAO.java</file>
+            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/gui/frmInforCustomer.java</file>
             <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/gui/frmEmployeeManager.java</file>
         </group>
     </open-files>
