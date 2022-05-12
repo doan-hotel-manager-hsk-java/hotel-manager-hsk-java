@@ -536,8 +536,9 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         if (!chucVu.equals("Tất cả")){
         String maChucVu = staffTypeDAO.findStaffByName(chucVu).getIdLoaiNV();
         loadDataToTable(staffDAO.getAllStaffByType(maChucVu), dtm);
-        }else
-            loadDataToTable(staffDAO.getAllStaffByStatus(), dtm);
+        }else{
+            clearInput();
+            loadDataToTable(staffDAO.getAllStaffByStatus(), dtm);}
     }//GEN-LAST:event_cmbChucVu1ActionPerformed
     private void filter(String s){
         TableRowSorter<DefaultTableModel> tr=new TableRowSorter<DefaultTableModel>(dtm);
@@ -600,7 +601,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
             if (!RegexHelper.regexCMND(txtCMND.getText()))
                 thongBao+="*Số chứng minh nhân gồm 9 số, không chứa ký tự!\n";
             if(!RegexHelper.regexCustomerName(txtTen.getText()))
-                thongBao+="*Tên khách hàng sai định dạng! VD: Lê Tuấn\n";
+                thongBao+="*Tên nhân viên sai định dạng! VD: Lê Tuấn\n";
             if(!RegexHelper.regexPhoneNumber(txtSDT.getText()))
                 thongBao+="*Số điện thoại không chứa ký tự chữ, phải đủ 10 số và bắt đầu bằng các đầu số hợp lệ ( 09, 08, 03, 07, 05 )! VD: 0343229978\n";
             if (!RegexHelper.regexEmail(txtEmail.getText()))
