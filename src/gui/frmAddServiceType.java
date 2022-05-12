@@ -18,10 +18,12 @@ public class frmAddServiceType extends javax.swing.JFrame {
      * Creates new form frame1
      */
     private ServiceTypeDAO serviceTypeDAO;
+    private frmServiceManager manager;
     public frmAddServiceType() {
         this.setAlwaysOnTop(true);
         initComponents();
         serviceTypeDAO = new ServiceTypeDAO();
+        manager = new frmServiceManager("a");
     }
 
     @SuppressWarnings("unchecked")
@@ -37,6 +39,8 @@ public class frmAddServiceType extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(204, 255, 204));
+        setUndecorated(true);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Tên dịch vụ: ");

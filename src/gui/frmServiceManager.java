@@ -14,6 +14,8 @@ import gui.frmAddServiceType;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -418,6 +420,14 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
     private void btnAddServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddServiceActionPerformed
         frmAddServiceType frame = new frmAddServiceType();
         frame.setVisible(true);
+        frame.addComponentListener(new ComponentAdapter() {
+                public void componentHidden(ComponentEvent e) {
+                    if (e.getComponent().isVisible() == false) {
+                        LoadDataToCombobox();
+                        System.err.println("kkkkk");
+                    }
+                }
+            });
     }//GEN-LAST:event_btnAddServiceActionPerformed
 
     private void btnThemDichVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnThemDichVuMouseClicked
@@ -529,9 +539,17 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tableServiceManagerMouseClicked
 
     private void cboTypeService2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboTypeService2ItemStateChanged
-         modelTableService.setRowCount(0);
+            modelTableService.setRowCount(0);
             String txt = cboTypeService2.getSelectedItem().toString();
-            loadDataToTableServiceLDV(txt);
+            if(txt.equals("Tất cả"))
+            {
+                loadDataToTableService();
+            }
+            else
+            {
+                loadDataToTableServiceLDV(txt);
+            }
+            
     }//GEN-LAST:event_cboTypeService2ItemStateChanged
 
     private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
@@ -581,26 +599,28 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtServiceName;
     // End of variables declaration//GEN-END:variables
 
-    private void LoadDataToCombobox() {
+    public void LoadDataToCombobox() {
+        cboTypeService2.addItem("Tất cả");
         for (ServiceType serviceType : serviceTypeDAO.getAllServiceType()) {
             cboTypeService.addItem(serviceType.getTenLoaiDV());
             cboTypeService2.addItem(serviceType.getTenLoaiDV());
         }
     }
-public void loadDataToTableByFind(List<Service> list) {
+           
+    public void loadDataToTableByFind(List<Service> list) {
         modelTableService.setRowCount(0);
 
         for (Service service : list) {
 
             Object[] row = new Object[]{
-                service.getMaDV(), service.getTenDV(), service.getDonGia(), service.getServiceType().getTenLoaiDV()
+                service.getTenDV(), service.getDonGia(), service.getServiceType().getTenLoaiDV()
             };
             modelTableService.addRow(row);
         }
     }
     private void initColTableService() {
         modelTableService.setColumnIdentifiers(new String[]{
-            "Mã Dịch Vụ", "Tên Dịch Vụ", "Giá Dịch Vụ", "Loại Dịch Vụ"
+             "Tên Dịch Vụ", "Giá Dịch Vụ", "Loại Dịch Vụ"
         });
         tableServiceManager.setModel(modelTableService);
     }
@@ -609,7 +629,7 @@ public void loadDataToTableByFind(List<Service> list) {
         for (Service service : serviceDAO.getAllService()) {
             if (service.getTrangThai().equals("1") && service.getServiceType().getTenLoaiDV().equals(ldv)) {
                 Object[] row = new Object[]{
-                    service.getMaDV(), service.getTenDV(), service.getDonGia(), service.getServiceType().getTenLoaiDV()
+                     service.getTenDV(), service.getDonGia(), service.getServiceType().getTenLoaiDV()
                 };
                 modelTableService.addRow(row);
             }
@@ -617,12 +637,12 @@ public void loadDataToTableByFind(List<Service> list) {
         }
         modelTableService.fireTableDataChanged();
     }
-    private void loadDataToTableService() {
+    public void loadDataToTableService() {
         modelTableService.setRowCount(0);
         for (Service service : serviceDAO.getAllService()) {
-            if (service.getTrangThai().equals("1")&&service.getServiceType().getTenLoaiDV().equals("Thức ăn")) {
+            if (service.getTrangThai().equals("1")) {
                 Object[] row = new Object[]{
-                    service.getMaDV(), service.getTenDV(), service.getDonGia(), service.getServiceType().getTenLoaiDV()
+                     service.getTenDV(), service.getDonGia(), service.getServiceType().getTenLoaiDV()
                 };
                 modelTableService.addRow(row);
             }

@@ -69,20 +69,15 @@
                                       <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lblMaHoaDon" alignment="0" min="-2" pref="43" max="-2" attributes="0"/>
-                                      <Component id="lblTenKhach" alignment="0" min="-2" pref="43" max="-2" attributes="0"/>
-                                      <Component id="lblSoPhong" alignment="0" min="-2" pref="43" max="-2" attributes="0"/>
-                                      <Component id="lblSDT" alignment="0" min="-2" pref="43" max="-2" attributes="0"/>
-                                      <Component id="lblLoaiPhong" alignment="0" min="-2" pref="43" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="lblSdt" pref="162" max="32767" attributes="0"/>
+                                      <Component id="lblCmnd" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="lblTenKH" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="lblTenPhong" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="lblLoaiPhong" alignment="0" max="32767" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="194" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-                                          <Component id="lblGioVao" min="-2" pref="43" max="-2" attributes="0"/>
-                                      </Group>
+                                  <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Group type="102" attributes="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
