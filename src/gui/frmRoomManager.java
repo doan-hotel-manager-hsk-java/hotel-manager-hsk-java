@@ -505,7 +505,7 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
                     room.setTang(Integer.parseInt(tang));
                     room.setStaff(staff);
                     room.setTenPhong(name);
-                    if (roomDao.updateRoom(room)) {
+                    if (roomDao.updateRoomByID(room)) {
                         JOptionPane.showMessageDialog(this, "Chỉnh sửa phòng thành công!");
                         clearText();
                         loadDataToRoomList();

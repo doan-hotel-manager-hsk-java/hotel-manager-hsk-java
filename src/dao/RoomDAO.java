@@ -212,7 +212,7 @@ public class RoomDAO {
         return null;
     }
     
-      public boolean updateBookRoom(Room room) {
+      public boolean updateRoom(Room room) {
         try (Connection conn = DatabaseConnection.opConnection();
                 PreparedStatement pstmt = conn.prepareStatement(UPDATE_ROOM)) {
             pstmt.setString(1, room.getTenPhong());
@@ -242,7 +242,7 @@ public class RoomDAO {
         return false;
     }
 
-    public boolean updateRoom(Room room) {
+    public boolean updateRoomByID(Room room) {
         try (Connection conn = DatabaseConnection.opConnection();
                 PreparedStatement pstmt = conn.prepareStatement(UPDATE_ROOM_BYID)) {
             pstmt.setString(1, room.getTenPhong());

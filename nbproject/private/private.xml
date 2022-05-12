@@ -3,23 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/dao/CustomerDAO.java</file>
+            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/gui/frmChangeRoom.java</file>
+            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/dao/StaffDAO.java</file>
             <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/dao/BookRoomDAO.java</file>
             <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/gui/frmBookRoom.java</file>
-            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/gui/frmStatistical.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/gui/Login.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/connection/DatabaseConnection.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/dao/ServiceDAO.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/entity/Staff.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/dao/StaffTypeDAO.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/gui/frmServiceManager.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/dao/DeviceDAO.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/gui/frmDeviceManager.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/regex/RegexHelper.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/gui/MainManager.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/dao/StaffDAO.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/dao/AccountDAO.java</file>
-            <file>file:/D:/BAITAPLON/hotel-manager-hsk-java/src/gui/frmEmployeeManager.java</file>
+            <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/gui/frmService.java</file>
         </group>
     </open-files>
 </project-private>

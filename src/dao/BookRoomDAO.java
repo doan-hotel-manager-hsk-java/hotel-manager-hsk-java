@@ -36,11 +36,11 @@ public class BookRoomDAO {
     private final String SELECT_BOOKROM_BY_ID = "SELECT * FROM DONDATPHONG WHERE MADDP = ?";
     private final String SELECT_BOOKROM_BY_IDPHONG = "SELECT * FROM DONDATPHONG WHERE MAPHONG = ?";
     private final String SELECT_BOOKROM_BY_IDKH = "SELECT * FROM DONDATPHONG WHERE MAKH = ?";
-    private final String SELECT_BOOKROM_BY_IDROOM = "SELECT * FROM DONDATPHONG WHERE MAPHONG = ?";
     private final String SELECT_BOOKROM_BY_IDNV = "SELECT * FROM DONDATPHONG WHERE MANV = ?";
     private final String INSERT_BOOKROM = "INSERT INTO DONDATPHONG(maDDP,ngayDat,gioDat,ngayNhan,gioNhan,maPhong,maKH,maNV)"
             + " VALUES(?,?,?,?,?,?,?,?)";
-    private final String UPDATE_BOOKROOM = "UPDATE DONDATPHONG SET maPhong = ? where MADDP = ?";
+    private final String UPDATE_BOOKROOM = "UPDATE DONDATPHONG SET NGAYDAT=?,GIODAT=?,NGAYNHAN=?,"
+            + "GIONHAN=?, MAPHONG =?, MAKH=?, MANV =? where MADDP = ?";
 
     public List<BookRoom> getAlLBookRooms() {
         customerDAO = new CustomerDAO();
@@ -78,40 +78,11 @@ public class BookRoomDAO {
 
         return null;
     }
-    
-     public BookRoom findBookRoomByIDRoom(String idRoom) {
+
+    public BookRoom findBookRoomByIDRoom(String idRoom) {
         try (Connection conn = DatabaseConnection.opConnection();
                 PreparedStatement pstmt = conn.prepareStatement(SELECT_BOOKROM_BY_IDPHONG)) {
             pstmt.setString(1, idRoom);
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    String ngayDat = rs.getString(NGAY_DAT);
-                    String gioDat = rs.getString(GIO_DAT);
-                    String ngayNhan = rs.getString(NGAY_NHAN);
-                    String gioNhan = rs.getString(GIO_NHAN);
-                    Room room = roomDAO.findRoomById(rs.getString(MA_PHONG));
-                    Customer customer = customerDAO.findCustomerById(MA_KH);
-                    Staff staff = staffDAO.findStaffById(rs.getString(MA_NV));
-
-                    BookRoom bookRoom = new BookRoom(idRoom, ngayDat, gioDat, ngayNhan, gioNhan, room, customer, staff);
-                    return bookRoom;
-                }
-            } catch (Exception e) {
-                System.err.println("findCustomerById(): get data fail");
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            System.err.println("findCustomerById(): connect db fail");
-            e.printStackTrace();
-        }
-        return null;
-    }
-     
-     public BookRoom findBookRoomByNameRoom(String nameRoom) {
-        try (Connection conn = DatabaseConnection.opConnection();
-                PreparedStatement pstmt = conn.prepareStatement(SELECT_BOOKROM_BY_IDROOM)) {
-            pstmt.setString(1, nameRoom);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -121,7 +92,7 @@ public class BookRoomDAO {
                     String ngayNhan = rs.getString(NGAY_NHAN);
                     String gioNhan = rs.getString(GIO_NHAN);
                     Room room = roomDAO.findRoomById(rs.getString(MA_PHONG));
-                    Customer customer = customerDAO.findCustomerById(MA_KH);
+                    Customer customer = customerDAO.findCustomerById(rs.getString(MA_KH));
                     Staff staff = staffDAO.findStaffById(rs.getString(MA_NV));
 
                     BookRoom bookRoom = new BookRoom(maDDP, ngayDat, gioDat, ngayNhan, gioNhan, room, customer, staff);
@@ -135,10 +106,9 @@ public class BookRoomDAO {
             System.err.println("findCustomerById(): connect db fail");
             e.printStackTrace();
         }
-
         return null;
     }
-     
+
     public boolean insertBookRoom(BookRoom bookRoom) {
         try (Connection conn = DatabaseConnection.opConnection();
                 PreparedStatement pstmt = conn.prepareStatement(INSERT_BOOKROM)) {
@@ -158,11 +128,19 @@ public class BookRoomDAO {
         }
         return false;
     }
-    
-     public boolean updateBookRoom(BookRoom bookRoom) {
+
+    public boolean updateBookRoom(BookRoom bookRoom) {
         try (Connection conn = DatabaseConnection.opConnection();
                 PreparedStatement pstmt = conn.prepareStatement(UPDATE_BOOKROOM)) {
-            pstmt.setString(1, bookRoom.getRoom().getMaPhong());
+            pstmt.setString(1, bookRoom.getNgayDat());
+            pstmt.setString(2, bookRoom.getGioDat());
+            pstmt.setString(3, bookRoom.getNgayNhan());
+            pstmt.setString(4, bookRoom.getGioNhan());
+            pstmt.setString(5, bookRoom.getRoom().getMaPhong());
+            pstmt.setString(6, bookRoom.getCustomer().getMaKH());
+            pstmt.setString(7, bookRoom.getStaff().getMaNV());
+            pstmt.setString(8, bookRoom.getMaDDP());
+            
             return pstmt.executeUpdate() > 0;
         } catch (Exception e) {
             System.err.println("connect db fail");
