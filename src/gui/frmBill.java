@@ -411,17 +411,17 @@ public class frmBill extends javax.swing.JFrame {
         lblTongTien.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         lblTongTien.setText("100.000 đ");
 
-        btnThanhToan.setText("Thanh Toán");
-        btnThanhToan.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        btnThanhToan.setkEndColor(new java.awt.Color(51, 255, 255));
-        btnThanhToan.setkHoverEndColor(new java.awt.Color(102, 255, 255));
-        btnThanhToan.setkHoverForeGround(new java.awt.Color(0, 204, 0));
-        btnThanhToan.setkHoverStartColor(new java.awt.Color(0, 204, 255));
-        btnThanhToan.setkPressedColor(new java.awt.Color(0, 153, 153));
-        btnThanhToan.setkStartColor(new java.awt.Color(51, 51, 255));
-        btnThanhToan.addActionListener(new java.awt.event.ActionListener() {
+        btnPay.setText("Thanh Toán");
+        btnPay.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        btnPay.setkEndColor(new java.awt.Color(51, 255, 255));
+        btnPay.setkHoverEndColor(new java.awt.Color(102, 255, 255));
+        btnPay.setkHoverForeGround(new java.awt.Color(0, 204, 0));
+        btnPay.setkHoverStartColor(new java.awt.Color(0, 204, 255));
+        btnPay.setkPressedColor(new java.awt.Color(0, 153, 153));
+        btnPay.setkStartColor(new java.awt.Color(51, 51, 255));
+        btnPay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnThanhToanActionPerformed(evt);
+                btnPayActionPerformed(evt);
             }
         });
 
@@ -532,9 +532,9 @@ public class frmBill extends javax.swing.JFrame {
                             .addComponent(jLabel13)
                             .addComponent(jLabel5)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnThanhToan, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnPay, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(139, 139, 139)
-                                .addComponent(btnInHoaDon, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)

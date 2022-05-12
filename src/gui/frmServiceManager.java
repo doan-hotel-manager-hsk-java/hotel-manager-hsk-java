@@ -564,14 +564,6 @@ public class frmServiceManager extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txtSearchActionPerformed
 
-    private void btnSuaDichVuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaDichVuActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSuaDichVuActionPerformed
-
-    private void btnThemDichVuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemDichVuActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnThemDichVuActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.k33ptoo.components.KButton btnAddService;

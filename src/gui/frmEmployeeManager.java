@@ -488,7 +488,6 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
             staffTypeDAO=new StaffTypeDAO();
             Staff s=staffDAO.findStaffByCMND(dtm.getValueAt(index, 0)+"");            
             if(!txtCMND.getText().equals(dtm.getValueAt(index, 0)+"")){
-                txtCMND.setText(tblEmployee.getValueAt(index, 0)+"");
                 JOptionPane.showMessageDialog(this, "Không được sửa CMND!");
             }else{
             s.setTenNV(txtTen.getText());
@@ -586,6 +585,7 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
     private void clearInput(){
         txtCMND.setText("");
         txtEmail.setText("");
+        txtSearch.setText("");
         txtSDT.setText("");
         txtTen.setText("");
         txtCMND.requestFocus();
