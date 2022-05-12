@@ -815,6 +815,7 @@ public class frmBookRoom extends javax.swing.JInternalFrame {
                         createRoom();
                         loadAllDSDatPhong();
                         clearText();
+                        
                         JOptionPane.showMessageDialog(null, "Đổi phòng thành công");
                     }
                 }
