@@ -534,9 +534,12 @@ public class frmEmployeeManager extends javax.swing.JInternalFrame {
         String chucVu= cmbChucVu1.getSelectedItem().toString();
         if (!chucVu.equals("Tất cả")){
         String maChucVu = staffTypeDAO.findStaffByName(chucVu).getIdLoaiNV();
+        clearInput();
         loadDataToTable(staffDAO.getAllStaffByType(maChucVu), dtm);
-        }else
+        }else{
+            clearInput();
             loadDataToTable(staffDAO.getAllStaffByStatus(), dtm);
+        }
     }//GEN-LAST:event_cmbChucVu1ActionPerformed
     private void filter(String s){
         TableRowSorter<DefaultTableModel> tr=new TableRowSorter<DefaultTableModel>(dtm);
