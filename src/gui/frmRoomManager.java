@@ -610,7 +610,7 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
         for (Room room : list) {
 
             Object[] row = new Object[]{
-                room.getMaPhong(), room.getTenPhong(), room.getTang(), room.getRoomType().getTenLoaiPhong(), room.getRoomType().getDonGia()
+                 room.getTenPhong(), room.getTang(), room.getRoomType().getTenLoaiPhong(), room.getRoomType().getDonGia()
             };
             modelListRoom.addRow(row);
         }
@@ -647,12 +647,13 @@ public class frmRoomManager extends javax.swing.JInternalFrame {
 
     private void initColRoomList() {
         modelListRoom.setColumnIdentifiers(new String[]{
-            "Mã Phòng", "Tên Phòng", "Tầng", "Loại Phòng", "Giá Phòng"
+           "Tên Phòng", "Tầng", "Loại Phòng", "Giá Phòng"
         });
         tableRoom.setModel(modelListRoom);
     }
 
     private void loadDataToCombobox() {
+        cboStyleRoom2.addItem("Tất cả");
         for (RoomType room : roomTypeDAO.getAllRoomTypes()) {
             cboStyleRoom.addItem(room.getTenLoaiPhong());
             cboStyleRoom2.addItem(room.getTenLoaiPhong());
@@ -663,7 +664,7 @@ private void loadDataToRoomListByTypeService(String type) {
         for (Room room : roomDao.getAllRooms()) {
             if (room.getRoomStatusType().getTenLoai().equals("Trống") && room.getRoomType().getTenLoaiPhong().equals(type)) {
                 Object[] row = new Object[]{
-                    room.getMaPhong(), room.getTenPhong(), room.getTang(), room.getRoomType().getTenLoaiPhong(), room.getRoomType().getDonGia()
+                     room.getTenPhong(), room.getTang(), room.getRoomType().getTenLoaiPhong(), room.getRoomType().getDonGia()
                 };
                 modelListRoom.addRow(row);
             }
@@ -673,9 +674,9 @@ private void loadDataToRoomListByTypeService(String type) {
    private void loadDataToRoomList() {
         modelListRoom.setRowCount(0);
         for (Room room : roomDao.getAllRooms()) {
-            if (room.getRoomStatusType().getTenLoai().equals("Trống") && room.getRoomType().getTenLoaiPhong().equals("VIP")) {
+            if (room.getRoomStatusType().getTenLoai().equals("Trống")) {
                 Object[] row = new Object[]{
-                    room.getMaPhong(), room.getTenPhong(), room.getTang(), room.getRoomType().getTenLoaiPhong(), room.getRoomType().getDonGia()
+                     room.getTenPhong(), room.getTang(), room.getRoomType().getTenLoaiPhong(), room.getRoomType().getDonGia()
                 };
                 modelListRoom.addRow(row);
             }

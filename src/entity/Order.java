@@ -123,9 +123,7 @@ public class Order {
     public void setStaff(Staff staff) {
         this.staff = staff;
     }
-
-
-
+    
     @Override
     public int hashCode() {
         int hash = 5;

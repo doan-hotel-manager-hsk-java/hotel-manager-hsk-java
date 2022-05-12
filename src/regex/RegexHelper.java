@@ -45,7 +45,7 @@ public class RegexHelper {
     }
     public static boolean regexPriceService(String price)
     {
-        String regex = "^\\d$";
+        String regex = "^[0-9]+";
         return  price.matches(regex);
     }
     public static boolean regexTangPhong(String tang)

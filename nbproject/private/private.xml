@@ -3,6 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/Huy/Desktop/DestopHSK/hotel-manager-hsk-java/src/gui/frmStatistical.java</file>
+            <file>file:/C:/Users/Huy/Desktop/DestopHSK/hotel-manager-hsk-java/src/gui/frmAddDeviceForRoom.java</file>
+            <file>file:/C:/Users/Huy/Desktop/DestopHSK/hotel-manager-hsk-java/src/dao/OrderDAO.java</file>
+            <file>file:/C:/Users/Huy/Desktop/DestopHSK/hotel-manager-hsk-java/src/dao/ServiceDAO.java</file>
+            <file>file:/C:/Users/Huy/Desktop/DestopHSK/hotel-manager-hsk-java/src/dao/RoomDAO.java</file>
+            <file>file:/C:/Users/Huy/Desktop/DestopHSK/hotel-manager-hsk-java/src/dao/ServiceTypeDAO.java</file>
+            <file>file:/C:/Users/Huy/Desktop/DestopHSK/hotel-manager-hsk-java/src/gui/frmAddServiceType.java</file>
+            <file>file:/C:/Users/Huy/Desktop/DestopHSK/hotel-manager-hsk-java/src/entity/Service.java</file>
+            <file>file:/C:/Users/Huy/Desktop/DestopHSK/hotel-manager-hsk-java/src/gui/frmServiceManager.java</file>
+            <file>file:/C:/Users/Huy/Desktop/DestopHSK/hotel-manager-hsk-java/src/entity/Order.java</file>
+            <file>file:/C:/Users/Huy/Desktop/DestopHSK/hotel-manager-hsk-java/src/gui/frmRoomManager.java</file>
+            <file>file:/C:/Users/Huy/Desktop/DestopHSK/hotel-manager-hsk-java/src/regex/RegexHelper.java</file>
             <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/dao/RoomDAO.java</file>
             <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/gui/frmDeviceManager.java</file>
             <file>file:/D:/HK2/Envent(JAVA)/DoAn/hotel-manager-hsk-java/src/gui/frmAddServiceType.java</file>
